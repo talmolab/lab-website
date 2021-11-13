@@ -9,3 +9,4 @@ nav:
 
 Interested in our work? We're recruiting at all levels!
 
+Reach out to [talmo@salk.edu](mailto:talmo@salk.edu) with your CV to discuss opportunities.
