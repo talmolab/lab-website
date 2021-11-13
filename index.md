@@ -2,25 +2,27 @@
 title: Home
 ---
 
-# Your Lab Slogan
+# Welcome to Talmo Pereira's Lab at Salk!
 
-[Lab Website Template](https://github.com/greenelab/lab-website-template) is an easy-to-use, flexible website template for [labs](https://www.greenelab.com/), with automatic citations, GitHub tag imports, pre-built components, and more.
-Spend less time reinventing the wheel, and more time running your lab.
-  
+Our group's emphasis is on building computational tools that leverage deep learning and
+computer vision to study complex biological systems. Our core areas of interest include 
+**quantification of animal behavior**, **phenotyping of plant root systems** and 
+**neural network-based modeling of the brain**.
+
 {%
   include link.html
-  type="github"
-  icon=""
-  text="See the template on GitHub"
-  link="greenelab/lab-website-template"
+  type="link"
+  icon="fas fa-microscope"
+  text="Our research"
+  link="research"
   style="button"
 %}
 {%
   include link.html
-  type="docs"
-  icon=""
-  text="See the documentation"
-  link="https://github.com/greenelab/lab-website-template/wiki"
+  type="link"
+  icon="fas fa-user-plus"
+  text="Join us"
+  link="join"
   style="button"
 %}
 {:.center}
@@ -29,7 +31,7 @@ Spend less time reinventing the wheel, and more time running your lab.
 
 {% include banner.html image="images/banner.jpg" %}
 
-{% include section.html %}
+<!-- {% include section.html %}
 
 # Highlights
 
@@ -79,3 +81,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   headline="Our Team"
   text=text
 %}
+ -->

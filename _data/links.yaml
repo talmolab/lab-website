@@ -68,23 +68,23 @@ twitter:
   tooltip: Twitter
   link: https://twitter.com/$LINK
 
-facebook:
-  icon: fab fa-facebook
-  text: Facebook
-  tooltip: Facebook
-  link: https://facebook.com/$LINK
+# facebook:
+#   icon: fab fa-facebook
+#   text: Facebook
+#   tooltip: Facebook
+#   link: https://facebook.com/$LINK
 
-instagram:
-  icon: fab fa-instagram
-  text: Instagram
-  tooltip: Instagram
-  link: https://instagram.com/$LINK
+# instagram:
+#   icon: fab fa-instagram
+#   text: Instagram
+#   tooltip: Instagram
+#   link: https://instagram.com/$LINK
 
-youtube:
-  icon: fab fa-youtube
-  text: YouTube
-  tooltip: YouTube
-  link: https://youtube.com/$LINK
+# youtube:
+#   icon: fab fa-youtube
+#   text: YouTube
+#   tooltip: YouTube
+#   link: https://youtube.com/$LINK
 
 linkedin:
   icon: fab fa-linkedin

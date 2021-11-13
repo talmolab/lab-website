@@ -2,7 +2,7 @@
 title: Research
 nav:
   order: 1
-  tooltip: Published works
+  tooltip: Learn more about the work we're doing.
 ---
 
 # <i class="fas fa-microscope"></i>Research
