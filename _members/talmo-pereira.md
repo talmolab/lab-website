@@ -2,6 +2,7 @@
 name: Talmo Pereira
 image: images/talmo-pereira.jpg
 role: pi
+description: Principal Investigator
 links:
   home-page: https://talmopereira.com
   email: talmo@salk.edu

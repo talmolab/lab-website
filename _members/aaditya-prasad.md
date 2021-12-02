@@ -2,7 +2,7 @@
 name: Aaditya Prasad
 image: images/member.jpg
 role: undergrad
-description: UCSD Neuroscience Major
+description: Undergraduate Research Intern
 ---
 
-Aadi is an undergraduate research intern co-advised by [Uri Manor](https://manor.salk.edu/). He works on understanding deep learning-based models of the brain.
+Aadi is majoring in Neuroscience at UCSD and is co-advised by [Uri Manor](https://manor.salk.edu/). He works on understanding deep learning-based models of the brain.

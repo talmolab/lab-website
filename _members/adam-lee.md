@@ -2,8 +2,8 @@
 name: Adam Lee
 image: images/member.jpg
 role: undergrad
-description: UCSD Data Science Major
+description: Undergraduate Research Intern
 homepage: https://adamlee.me
 ---
 
-Adam is an undergraduate research intern working on agent-based models of behaving animals.
+Adam is majoring in Data Science at UCSD. He is working on agent-based models of behaving animals.

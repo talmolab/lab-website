@@ -2,7 +2,7 @@
 name: Dexter Tsin
 image: images/member.jpg
 role: undergrad
-description: UCSD Neuroscience Major
+description: Undergraduate Research Intern
 ---
 
-Dexter is an undergraduate research intern co-advised by [Kay Tye](https://tyelab.org/). He works on interpretable methods for segmenting behavioral motifs.
+Dexter is majoring in Neuroscience at UCSD co-advised by [Kay Tye](https://tyelab.org/). He works on interpretable methods for segmenting behavioral motifs.
