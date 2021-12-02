@@ -27,3 +27,203 @@
   publisher: Cold Spring Harbor Laboratory
   date: '2020-09-02'
   link: https://doi.org/ghc95b
+- id: doi:10.7554/eLife.57258
+  title: A machine-vision approach for automated pain measurement at millisecond timescales
+  authors:
+  - Jessica M Jones
+  - William Foster
+  - Colin R Twomey
+  - Justin Burdge
+  - Osama M Ahmed
+  - Talmo D Pereira
+  - Jessica A Wojick
+  - Gregory Corder
+  - Joshua B Plotkin
+  - Ishmail Abdus-Saboor
+  publisher: eLife
+  date: '2020-08-06'
+  link: https://doi.org/gnnwn4
+- id: doi:10.1146/annurev-neuro-100119-110036
+  title: 'Toward Community-Driven Big Open Brain Science: Open Big Data and Tools
+    for Structure, Function, and Genetics'
+  authors:
+  - Adam S. Charles
+  - Benjamin Falk
+  - Nicholas Turner
+  - Talmo D. Pereira
+  - Daniel Tward
+  - Benjamin D. Pedigo
+  - Jaewon Chung
+  - Randal Burns
+  - Satrajit S. Ghosh
+  - Justus M. Kebschull
+  - William Silversmith
+  - Joshua T. Vogelstein
+  publisher: Annual Review of Neuroscience
+  date: '2020-07-08'
+  link: https://doi.org/ghcstk
+- id: doi:10.1101/2020.06.29.20141283
+  title: Inexpensive multi-patient respiratory monitoring system for helmet ventilation
+    during COVID-19 pandemic
+  authors:
+  - Philippe Bourrianne
+  - Stanley Chidzik
+  - Daniel Cohen
+  - Peter Elmer
+  - Thomas Hallowell
+  - Todd J. Kilbaugh
+  - David Lange
+  - Andrew M. Leifer
+  - Daniel R. Marlow
+  - Peter D. Meyers
+  - Edna Normand
+  - Janine Nunes
+  - Myungchul Oh
+  - Lyman Page
+  - Talmo Periera
+  - Jim Pivarski
+  - Henry Schreiner
+  - Howard A. Stone
+  - David W. Tank
+  - Stephan Thiberge
+  - Christopher Tully
+  - ' '
+  publisher: Cold Spring Harbor Laboratory
+  date: '2021-06-14'
+  link: https://doi.org/gk698d
+- id: doi:10.7554/eLife.59502
+  title: The neural basis for a persistent internal state in Drosophila females
+  authors:
+  - David Deutsch
+  - Diego Pacheco
+  - Lucas Encarnacion-Rivera
+  - Talmo Pereira
+  - Ramie Fathy
+  - Jan Clemens
+  - Cyrille Girardin
+  - Adam Calhoun
+  - Elise Ireland
+  - Austin Burke
+  - Sven Dorkenwald
+  - Claire McKellar
+  - Thomas Macrina
+  - Ran Lu
+  - Kisuk Lee
+  - Nico Kemnitz
+  - Dodam Ih
+  - Manuel Castro
+  - Akhilesh Halageri
+  - Chris Jordan
+  - William Silversmith
+  - Jingpeng Wu
+  - H Sebastian Seung
+  - Mala Murthy
+  publisher: eLife
+  date: '2020-11-23'
+  link: https://doi.org/ghk767
+- id: doi:10.1038/s41592-018-0234-5
+  title: Fast animal pose estimation using deep neural networks
+  authors:
+  - Talmo D. Pereira
+  - Diego E. Aldarondo
+  - Lindsay Willmore
+  - Mikhail Kislin
+  - Samuel S.-H. Wang
+  - Mala Murthy
+  - Joshua W. Shaevitz
+  publisher: Nature Methods
+  date: '2018-12-20'
+  link: https://doi.org/gfrj62
+- id: doi:10.7554/eLife.36401
+  title: Normal cognitive and social development require posterior cerebellar activity
+  authors:
+  - Aleksandra Badura
+  - Jessica L Verpeut
+  - Julia W Metzger
+  - Talmo D Pereira
+  - Thomas J Pisano
+  - Ben Deverett
+  - Dariya E Bakshinskaya
+  - Samuel S-H Wang
+  publisher: eLife
+  date: '2018-09-20'
+  link: https://doi.org/gncqxr
+- id: doi:10.1016/j.cub.2018.06.011
+  title: Discovery of a New Song Mode in Drosophila Reveals Hidden Structure in the
+    Sensory and Neural Drivers of Behavior
+  authors:
+  - Jan Clemens
+  - Philip Coen
+  - Frederic A. Roemschied
+  - Talmo D. Pereira
+  - David Mazumder
+  - Diego E. Aldarondo
+  - Diego A. Pacheco
+  - Mala Murthy
+  publisher: Current Biology
+  date: '2018-08-01'
+  link: https://doi.org/gd4bk5
+- id: doi:10.1007/978-3-319-96661-8_30
+  title: "Quantifying Humans\u2019 Priors Over Graphical Representations of Tasks"
+  authors:
+  - Gecia Bravo Hermsdorff
+  - Talmo Pereira
+  - Yael Niv
+  publisher: Springer Proceedings in Complexity
+  date: '2018-01-01'
+  link: https://doi.org/gnnwpj
+- id: doi:10.1016/j.jneumeth.2017.07.014
+  title: Automated gesture tracking in head-fixed mice
+  authors:
+  - A. Giovannucci
+  - E.A. Pnevmatikakis
+  - B. Deverett
+  - T. Pereira
+  - J. Fondriest
+  - M.J. Brady
+  - S.S.-H. Wang
+  - W. Abbas
+  - "P. Par\xE9s"
+  - D. Masip
+  publisher: Journal of Neuroscience Methods
+  date: '2018-04-01'
+  link: https://doi.org/gds8q9
+- id: doi:10.1016/j.neuron.2017.08.029
+  title: To Fight or Not to Fight
+  authors:
+  - Talmo D. Pereira
+  - Mala Murthy
+  publisher: Neuron
+  date: '2017-08-01'
+  link: https://doi.org/gnf48t
+- id: doi:10.1038/nn.4531
+  title: Cerebellar granule cells acquire a widespread predictive feedback signal
+    during motor learning
+  authors:
+  - Andrea Giovannucci
+  - Aleksandra Badura
+  - Ben Deverett
+  - Farzaneh Najafi
+  - Talmo D Pereira
+  - Zhenyu Gao
+  - Ilker Ozden
+  - Alexander D Kloth
+  - Eftychios Pnevmatikakis
+  - Liam Paninski
+  - Chris I De Zeeuw
+  - Javier F Medina
+  - Samuel S-H Wang
+  publisher: Nature Neuroscience
+  date: '2017-03-20'
+  link: https://doi.org/f9vrt6
+- id: doi:10.1186/s13015-016-0082-8
+  title: A Bayesian inference method for the analysis of transcriptional regulatory
+    networks in metagenomic data
+  authors:
+  - Elizabeth T. Hobbs
+  - Talmo Pereira
+  - "Patrick K. O\u2019Neill"
+  - Ivan Erill
+  publisher: Algorithms for Molecular Biology
+  date: '2016-07-08'
+  link: https://doi.org/gnnwpk
