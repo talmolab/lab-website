@@ -29,7 +29,7 @@ computer vision to study complex biological systems. Our core areas of interest 
 
 {% include section.html full=true %}
 
-{% include banner.html image="images/banner.jpg" %}
+{% include banner.html image="images/banner.jpg" dark=true%}
 
 <!-- {% include section.html %}
 
