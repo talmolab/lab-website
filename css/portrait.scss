@@ -33,10 +33,14 @@
   .portrait_name,
   .portrait_description {
     font-family: $sans;
-    font-size: 0.9rem;
+  }
+
+  .portrait_description {
+    font-size: 0.8rem;
   }
 
   .portrait_name {
+    font-size: 0.9rem;
     font-weight: $medium;
   }
 

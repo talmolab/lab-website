@@ -1,6 +1,6 @@
 ---
 name: Dexter Tsin
-image: images/member.jpg
+image: images/dexter-tsin.png
 role: undergrad
 description: Undergraduate Research Intern
 ---
