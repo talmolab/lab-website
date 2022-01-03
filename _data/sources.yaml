@@ -1,78 +1,62 @@
 # Z Yan Wang, Grace C McKenzie-Smith, Weijie Liu, Hyo Jin Cho, Talmo D Pereira, Zahra Dhanerawala, Joshua W Shaevitz, Sarah D Kocher (2021). Isolation disrupts social interactions and destabilizes brain development in bumblebees. bioRxiv.
 - id: doi:10.1101/2021.12.16.472962
+  image: images/papers/wang-2021.png
+  publisher: bioRxiv
 
 # Talmo D Pereira, Joshua W Shaevitz, Mala Murthy (2020). Quantifying behavior to understand the brain. Nature Neuroscience.
 - id: doi:10.1038/s41593-020-00734-z
+  image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41593-020-00734-z/MediaObjects/41593_2020_734_Fig3_HTML.png?as=webp
 
 # Talmo D Pereira, Nathaniel Tabris, Junyu Li, Shruthi Ravindranath, Eleni S Papadoyannis, Z Yan Wang, David M Turner, Grace McKenzie-Smith, Sarah D Kocher, Annegret Lea Falkner, Joshua W Shaevitz, Mala Murthy (2020). SLEAP: Multi-animal pose tracking. bioRxiv.
 - id: doi:10.1101/2020.08.31.276246
+  publisher: bioRxiv
+  image: images/sleap_movie.gif
 
 # Jessica M Jones, William Foster, Colin R Twomey, Justin Burdge, Osama M Ahmed, Talmo D Pereira, Jessica A Wojick, Gregory Corder, Joshua B Plotkin, Ishmail Abdus-Saboor (2020). A machine-vision approach for automated pain measurement at millisecond timescales. Elife.
 - id: doi:10.7554/eLife.57258
+  image: https://iiif.elifesciences.org/lax/57258%2Felife-57258-fig2-v2.tif/full/617,/0/default.webp
 
 # Adam S Charles, Benjamin Falk, Nicholas Turner, Talmo D Pereira, Daniel Tward, Benjamin D Pedigo, Jaewon Chung, Randal Burns, Satrajit S Ghosh, Justus M Kebschull, William Silversmith, Joshua T Vogelstein (2020). Toward Community-Driven Big Open Brain Science: Open Big Data and Tools for Structure, Function, and Genetics. Annu. Rev. Neurosci..
 - id: doi:10.1146/annurev-neuro-100119-110036
+  image: images/papers/charles-2020.png
 
 # Princeton Open Ventilation Monitor Collaboration, Philippe Bourrianne, Stanley Chidzik, Daniel J Cohen, Peter Elmer, Thomas Hallowell, Todd J Kilbaugh, David Lange, Andrew M Leifer, Daniel R Marlow, Peter D Meyers, Edna Normand, Janine Nunes, Myungchul Oh, Lyman Page, Talmo Pereira, Jim Pivarski, Henry Schreiner, Howard A Stone, David W Tank, Stephan Thiberge, Christopher Tully (2020). Inexpensive multi-patient respiratory monitoring system for helmet ventilation during COVID-19 pandemic. medRxiv.
 - id: doi:10.1101/2020.06.29.20141283
+  publisher: medRxiv
+  image: https://www.medrxiv.org/content/medrxiv/early/2021/06/14/2020.06.29.20141283/F1.medium.gif
 
 # David Deutsch, Diego A Pacheco, Lucas J Encarnacion-Rivera, Talmo Pereira, Ramie Fathy, Adam Calhoun, Elise C Ireland, Austin T Burke, Sven Dorkenwald, Claire McKellar, Thomas Macrina, Ran Lu, Kisuk Lee, Nico Kemnitz, Dodam Ih, Manuel Castro, Akhilesh Halageri, Chris Jordan, William Silversmith, Jingpeng Wu, H Sebastian Seung, Mala Murthy (2020). The Neural Basis for a Persistent Internal State in Drosophila Females. eLife.
 - id: doi:10.7554/eLife.59502
+  image: images/papers/deutsch-2020.png
 
 # Talmo D Pereira, Diego E Aldarondo, Lindsay Willmore, Mikhail Kislin, Samuel S-H Wang, Mala Murthy, Joshua W Shaevitz (2019). Fast animal pose estimation using deep neural networks. Nat. Methods.
 - id: doi:10.1038/s41592-018-0234-5
+  image: images/papers/pereira-2019.png
 
 # Aleksandra Badura, Jessica L Verpeut, Julia W Metzger, Talmo D Pereira, Thomas J Pisano, Ben Deverett, Dariya E Bakshinskaya, Samuel S-H Wang (2018). Normal cognitive and social development require posterior cerebellar activity. Elife.
 - id: doi:10.7554/eLife.36401
+  image: https://iiif.elifesciences.org/lax/36401%2Felife-36401-fig9-v3.tif/full/617,/0/default.webp
 
 # Jan Clemens, Philip Coen, Frederic A Roemschied, Talmo D Pereira, David Mazumder, Diego E Aldarondo, Diego A Pacheco, Mala Murthy (2018). Discovery of a New Song Mode in Drosophila Reveals Hidden Structure in the Sensory and Neural Drivers of Behavior. Curr. Biol..
 - id: doi:10.1016/j.cub.2018.06.011
+  image: images/papers/clemens-2018.png
 
 # Gecia Bravo Hermsdorff, Talmo Pereira, Yael Niv (2018). Quantifying Humans' Priors Over Graphical Representations of Tasks. International Conference on Complex Systems.
 - id: doi:10.1007/978-3-319-96661-8_30
+  image: images/papers/hermsdorff-2018.png
 
 # A Giovannucci, E A Pnevmatikakis, B Deverett, T Pereira, J Fondriest, M J Brady, S S-H Wang, W Abbas, P Parés, D Masip (2018). Automated gesture tracking in head-fixed mice. J. Neurosci. Methods.
 - id: doi:10.1016/j.jneumeth.2017.07.014
+  image: https://ars.els-cdn.com/content/image/1-s2.0-S0165027017302509-gr2.jpg
 
 # Talmo D Pereira, Mala Murthy (2017). To Fight or Not to Fight. Neuron.
 - id: doi:10.1016/j.neuron.2017.08.029
+  image: https://els-jbs-prod-cdn.jbs.elsevierhealth.com/cms/attachment/cc6b48f6-bbb3-47d7-9429-eeb7472861c4/gr1.jpg
 
 # Andrea Giovannucci, Aleksandra Badura, Ben Deverett, Farzaneh Najafi, Talmo D Pereira, Zhenyu Gao, Ilker Ozden, Alexander D Kloth, Eftychios Pnevmatikakis, Liam Paninski, Chris I De Zeeuw, Javier F Medina, Samuel S-H Wang (2017). Cerebellar granule cells acquire a widespread predictive feedback signal during motor learning. Nat. Neurosci..
 - id: doi:10.1038/nn.4531
+  image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fnn.4531/MediaObjects/41593_2017_Article_BFnn4531_Fig2_HTML.jpg?as=webp
 
 # Elizabeth T Hobbs, Talmo Pereira, Patrick K O'Neill, Ivan Erill (2016). A Bayesian inference method for the analysis of transcriptional regulatory networks in metagenomic data. Algorithms Mol. Biol..
 - id: doi:10.1186/s13015-016-0082-8
-
-# - id: doi:10.1016/j.csbj.2020.05.017
-#   image: https://ars.els-cdn.com/content/image/1-s2.0-S2001037020302804-gr1.jpg
-#   date: 2020-6-2
-#   extra-links:
-#     - type: manubot
-#       link: https://greenelab.github.io/knowledge-graph-review/
-#   tags:
-#     - knowledge graphs
-
-# - id: doi:10.1371/journal.pcbi.1007128
-#   image: https://journals.plos.org/ploscompbiol/article/figure/image?size=inline&id=info:doi/10.1371/journal.pcbi.1007128.g001&rev=2
-#   repo: greenelab/meta-review
-#   extra-links:
-#     - type: manubot
-#       link: https://greenelab.github.io/meta-review/
-#     - type: source
-#       link: https://github.com/greenelab/meta-review
-#     - type: website
-#       link: http://manubot.org/
-
-# - id: doi:10.7554/eLife.32822
-#   image: https://iiif.elifesciences.org/lax:32822%2Felife-32822-fig8-v3.tif/full/863,/0/default.webp
-#   extra-links:
-#     - type: preprint
-#       link: https://doi.org/10.7287/peerj.preprints.3100v1
-#     - type: manubot
-#       link: https://greenelab.github.io/scihub-manuscript/
-#     - type: source
-#       link: https://github.com/greenelab/scihub-manuscript
-#       text: Manuscript source
-#     - type: source
-#       link: https://github.com/greenelab/scihub
-#       text: Analyses source
+  image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1186%2Fs13015-016-0082-8/MediaObjects/13015_2016_82_Fig4_HTML.gif?as=webp
