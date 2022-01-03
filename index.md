@@ -8,7 +8,7 @@ nav:
 
 The lab is led by [Talmo Pereira](https://talmopereira.com) and located at the [Salk Institute for Biological Studies](https://salk.edu). Our emphasis is on building computational tools that leverage deep learning and computer vision to study complex biological systems.
 
-{% include section.html background="images/banner.jpg" dark=true%}
+{% include section.html dark=true%}
 
 {%
   include link.html
