@@ -7,7 +7,7 @@ nav:
 
 # <i class="fas fa-user-plus"></i>Join the team
 
-Interested in our work? We're recruiting at all levels!
+Interested in our work? We're recruiting at all levels! Reach out to [talmo@salk.edu](mailto:talmo@salk.edu) with your CV to discuss opportunities or apply to open positions below.
 
 {% capture text %}
 Come work in sunny San Diego! The lab is located in the [Salk Institute for Biological Studies](https://salk.edu), a non-profit research institute located right next to the University of California San Diego (UCSD).
@@ -20,8 +20,6 @@ Come work in sunny San Diego! The lab is located in the [Salk Institute for Biol
   text=text
 %}
 
-
-Reach out to [talmo@salk.edu](mailto:talmo@salk.edu) with your CV to discuss opportunities or apply to open positions below.
 
 ## Open positions
 

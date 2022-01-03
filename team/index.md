@@ -41,7 +41,6 @@ nav:
 %}
 {:.center}
 
-{% include section.html background="images/banner.jpg" dark=true%}
 
 {%
   include link.html
@@ -56,6 +55,8 @@ nav:
 ## Alumni
 
 - 2021: Pranav Sankar (High School Intern)
+
+{% include section.html background="images/banner.jpg" dark=true%}
 
 <!-- {% include section.html %} -->
 <!-- 
