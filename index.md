@@ -6,9 +6,8 @@ nav:
 
 # Welcome to Talmo Pereira's Lab at Salk!
 
-The lab is led by [Talmo Pereira](https://talmopereira.com) and located at the [Salk Institute for Biological Studies](https://salk.edu). Our emphasis is on building computational tools that leverage deep learning and computer vision to study complex biological systems.
+The lab is led by [Talmo Pereira](members/talmo-pereira.html) and located at the [Salk Institute for Biological Studies](https://salk.edu). Our emphasis is on building computational tools that leverage deep learning and computer vision to study complex biological systems.
 
-{% include section.html dark=true%}
 
 {%
   include link.html
