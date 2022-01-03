@@ -12,9 +12,10 @@
   - Zahra Dhanerawala
   - Joshua W. Shaevitz
   - Sarah D. Kocher
-  publisher: Animal Behavior and Cognition
+  publisher: bioRxiv
   date: '2021-12-17'
   link: https://doi.org/gnx5fx
+  image: images/papers/wang-2021.png
 - id: doi:10.1038/s41593-020-00734-z
   title: Quantifying behavior to understand the brain
   authors:
@@ -24,6 +25,7 @@
   publisher: Nature Neuroscience
   date: '2020-11-09'
   link: https://doi.org/ghm6fd
+  image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41593-020-00734-z/MediaObjects/41593_2020_734_Fig3_HTML.png?as=webp
 - id: doi:10.1101/2020.08.31.276246
   title: 'SLEAP: Multi-animal pose tracking'
   authors:
@@ -39,9 +41,10 @@
   - Annegret L. Falkner
   - Joshua W. Shaevitz
   - Mala Murthy
-  publisher: Cold Spring Harbor Laboratory
+  publisher: bioRxiv
   date: '2020-09-02'
   link: https://doi.org/ghc95b
+  image: images/sleap_movie.gif
 - id: doi:10.7554/eLife.57258
   title: A machine-vision approach for automated pain measurement at millisecond timescales
   authors:
@@ -58,6 +61,7 @@
   publisher: eLife
   date: '2020-08-06'
   link: https://doi.org/gnnwn4
+  image: https://iiif.elifesciences.org/lax/57258%2Felife-57258-fig2-v2.tif/full/617,/0/default.webp
 - id: doi:10.1146/annurev-neuro-100119-110036
   title: 'Toward Community-Driven Big Open Brain Science: Open Big Data and Tools
     for Structure, Function, and Genetics'
@@ -77,6 +81,7 @@
   publisher: Annual Review of Neuroscience
   date: '2020-07-08'
   link: https://doi.org/ghcstk
+  image: images/papers/charles-2020.png
 - id: doi:10.1101/2020.06.29.20141283
   title: Inexpensive multi-patient respiratory monitoring system for helmet ventilation
     during COVID-19 pandemic
@@ -103,9 +108,10 @@
   - Stephan Thiberge
   - Christopher Tully
   - ' '
-  publisher: Cold Spring Harbor Laboratory
+  publisher: medRxiv
   date: '2021-06-14'
   link: https://doi.org/gk698d
+  image: https://www.medrxiv.org/content/medrxiv/early/2021/06/14/2020.06.29.20141283/F1.medium.gif
 - id: doi:10.7554/eLife.59502
   title: The neural basis for a persistent internal state in Drosophila females
   authors:
@@ -136,6 +142,7 @@
   publisher: eLife
   date: '2020-11-23'
   link: https://doi.org/ghk767
+  image: images/papers/deutsch-2020.png
 - id: doi:10.1038/s41592-018-0234-5
   title: Fast animal pose estimation using deep neural networks
   authors:
@@ -149,6 +156,7 @@
   publisher: Nature Methods
   date: '2018-12-20'
   link: https://doi.org/gfrj62
+  image: images/papers/pereira-2019.png
 - id: doi:10.7554/eLife.36401
   title: Normal cognitive and social development require posterior cerebellar activity
   authors:
@@ -163,6 +171,7 @@
   publisher: eLife
   date: '2018-09-20'
   link: https://doi.org/gncqxr
+  image: https://iiif.elifesciences.org/lax/36401%2Felife-36401-fig9-v3.tif/full/617,/0/default.webp
 - id: doi:10.1016/j.cub.2018.06.011
   title: Discovery of a New Song Mode in Drosophila Reveals Hidden Structure in the
     Sensory and Neural Drivers of Behavior
@@ -178,6 +187,7 @@
   publisher: Current Biology
   date: '2018-08-01'
   link: https://doi.org/gd4bk5
+  image: images/papers/clemens-2018.png
 - id: doi:10.1007/978-3-319-96661-8_30
   title: "Quantifying Humans\u2019 Priors Over Graphical Representations of Tasks"
   authors:
@@ -187,6 +197,7 @@
   publisher: Springer Proceedings in Complexity
   date: '2018-01-01'
   link: https://doi.org/gnnwpj
+  image: images/papers/hermsdorff-2018.png
 - id: doi:10.1016/j.jneumeth.2017.07.014
   title: Automated gesture tracking in head-fixed mice
   authors:
@@ -203,6 +214,7 @@
   publisher: Journal of Neuroscience Methods
   date: '2018-04-01'
   link: https://doi.org/gds8q9
+  image: https://ars.els-cdn.com/content/image/1-s2.0-S0165027017302509-gr2.jpg
 - id: doi:10.1016/j.neuron.2017.08.029
   title: To Fight or Not to Fight
   authors:
@@ -211,6 +223,7 @@
   publisher: Neuron
   date: '2017-08-01'
   link: https://doi.org/gnf48t
+  image: https://els-jbs-prod-cdn.jbs.elsevierhealth.com/cms/attachment/cc6b48f6-bbb3-47d7-9429-eeb7472861c4/gr1.jpg
 - id: doi:10.1038/nn.4531
   title: Cerebellar granule cells acquire a widespread predictive feedback signal
     during motor learning
@@ -231,6 +244,7 @@
   publisher: Nature Neuroscience
   date: '2017-03-20'
   link: https://doi.org/f9vrt6
+  image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fnn.4531/MediaObjects/41593_2017_Article_BFnn4531_Fig2_HTML.jpg?as=webp
 - id: doi:10.1186/s13015-016-0082-8
   title: A Bayesian inference method for the analysis of transcriptional regulatory
     networks in metagenomic data
@@ -242,3 +256,4 @@
   publisher: Algorithms for Molecular Biology
   date: '2016-07-08'
   link: https://doi.org/gnnwpk
+  image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1186%2Fs13015-016-0082-8/MediaObjects/13015_2016_82_Fig4_HTML.gif?as=webp
