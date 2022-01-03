@@ -1,13 +1,15 @@
 ---
 title: Home
+nav:
+  order: 0
 ---
 
 # Welcome to Talmo Pereira's Lab at Salk!
 
 Our group's emphasis is on building computational tools that leverage deep learning and
-computer vision to study complex biological systems. Our core areas of interest include 
-**quantification of animal behavior**, **phenotyping of plant root systems** and 
-**neural network-based modeling of the brain**.
+computer vision to study complex biological systems.
+
+See below to learn more about our work.
 
 {%
   include link.html
