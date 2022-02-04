@@ -23,9 +23,7 @@ Come work in sunny San Diego! The lab is located in the [Salk Institute for Biol
 
 ## Open positions
 
-[**Scientific Programmer**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=e7d20f83-de48-4b65-b1ac-4d953affe7c1) (*part-time or full-time*): We are looking for software engineers to help us develop open-source software like [SLEAP](https://sleap.ai), as well as other frameworks for AI-centric scientific computing.
-
-[**Research Assistant**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=7d329afd-27f1-4fef-b346-cbd148bf832e) (*full-time*): Get extended research and software engineering experience while working on a diversity of projects in the lab! RAs in the lab receive guidance and mentorship while working in teams as they develop the skills to do research in deep learning, computer vision, computational neuroscience and more.
+We do not currently have open staff positions, but if you are interested in the positions below feel free to reach out to chat with us about potential upcoming opportunities.
 
 ## Postdoctoral fellows
 
