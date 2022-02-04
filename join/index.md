@@ -27,7 +27,7 @@ We do not currently have open staff positions, but if you are interested in the 
 
 ## Postdoctoral fellows
 
-Finishing your PhD soon in neuroscience, computer science, physics, or another computational field? We are recruiting post-docs to work directly with us or jointly with one of our collaborators. Reach out to [talmo@salk.edu](mailto:talmo@salk.edu) to chat about potential projects.
+Finishing your PhD soon in neuroscience, computer science, physics, or another computational field? We regularly recruit post-docs to work directly with us or jointly with one of our collaborators. Reach out to [talmo@salk.edu](mailto:talmo@salk.edu) to chat about potential projects.
 
 ## Graduate students
 
