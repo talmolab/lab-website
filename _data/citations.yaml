@@ -1,5 +1,16 @@
 # GENERATED AUTOMATICALLY, DO NOT EDIT
 
+- id: doi:10.1186/s13007-022-00851-9
+  title: Fast estimation of plant growth dynamics using deep neural networks
+  authors:
+  - Gabriella E. C. Gall
+  - Talmo D. Pereira
+  - Alex Jordan
+  - Yasmine Meroz
+  publisher: Plant Methods
+  date: '2022-02-20'
+  link: https://doi.org/gpj4ms
+  image: images/papers/gall-2022.png
 - id: doi:10.1101/2021.12.16.472962
   title: Isolation disrupts social interactions and destabilizes brain development
     in bumblebees
