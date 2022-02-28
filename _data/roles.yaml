@@ -15,7 +15,7 @@ undergrad:
   text: Undergraduate Student
 
 programmer:
-  icon: fas fa-code-fork
+  icon: fas fa-code-compare
   text: Programmer
 
 ra:
