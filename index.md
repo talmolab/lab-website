@@ -13,10 +13,14 @@ The lab is led by [Talmo Pereira](members/talmo-pereira.html) and located at the
   include link.html
   type="link"
   icon="fas fa-microscope"
-  text="Our research"
+  text="Learn about our work"
   link="research"
   style="button"
 %}
+{:.center}
+
+{% include banner.html image="images/salk_sunset.jpg" %}
+
 {%
   include link.html
   type="link"
@@ -26,4 +30,3 @@ The lab is led by [Talmo Pereira](members/talmo-pereira.html) and located at the
   style="button"
 %}
 {:.center}
-
