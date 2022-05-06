@@ -17,10 +17,6 @@ The lab is led by [Talmo Pereira](members/talmo-pereira.html) and located at the
   link="research"
   style="button"
 %}
-{:.center}
-
-{% include banner.html image="images/salk_sunset.jpg" %}
-
 {%
   include link.html
   type="link"
@@ -30,3 +26,11 @@ The lab is led by [Talmo Pereira](members/talmo-pereira.html) and located at the
   style="button"
 %}
 {:.center}
+
+{%
+  include figure.html
+  image="images/the-lab.jpg"
+  caption="The lab, ca. 2022. Photo credit: Chris Keeney"
+  link="team"
+  width="1400px"
+%}

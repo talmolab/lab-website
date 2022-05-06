@@ -7,29 +7,67 @@ nav:
 
 # <i class="fas fa-user-plus"></i>Join the team
 
-Interested in our work? We're recruiting at all levels! Reach out to [talmo@salk.edu](mailto:talmo@salk.edu) with your CV to discuss opportunities or apply to open positions below.
+{%
+  include figure.html
+  image="images/the-team.jpg"
+  caption="The group, ca. 2022. Photo credit: Chris Keeney"
+  link="team"
+  width="1400px"
+%}
+
+Interested in our work? Apply to open positions below or reach out to [talmo@salk.edu](mailto:talmo@salk.edu) with your CV to discuss [potential opportunities](#opportunities) at any level.
+
 
 {% capture text %}
-Come work in sunny San Diego! The lab is located in the [Salk Institute for Biological Studies](https://salk.edu), a non-profit research institute located right next to the University of California San Diego (UCSD).
-{:.center}
+A core belief in our lab is that being happy is essential to doing good science. We believe that your success is everyone's success, and therefore place an extremely high value on **mentorship**, **work-life balance** and **open communication**.
+
+Lab members should expect to be able to **ask for help whenever they need it**, and be eager to pay it forward during their tenure here and beyond.
+
+Our group's culture is intended to reflect the reality that **not everyone is afforded the same opportunities** before they arrive here, but that that does not mean they are not as qualified or worthy of the chance to prove themselves. It is only by acknowledging the structural disparities that are inherent in academia that we can **effect real change** &mdash; and do amazing science along the way!
 {% endcapture %}
 {%
   include feature.html
-  image="images/salk_sunset.jpg"
-  headline="The Salk Institute for Biological Studies"
+  image="images/lab-action.jpg"
+  headline="Philosophy"
+  width="500px"
   text=text
 %}
 
 
-## Open positions
+{% capture text %}
+Come work in sunny San Diego! The lab is located in the [Salk Institute for Biological Studies](https://salk.edu), a non-profit research institute located right next to the University of California San Diego (UCSD).
+
+Surfing before or after work is recommended, but not required.
+{% endcapture %}
+{%
+  include feature.html
+  image="images/salk_sunset.jpg"
+  headline="Location, location, location!"
+  width="600px"
+  text=text
+%}
+
+
+## Opportunities
+
+If you are interested in any of the positions below, reach out to [talmo@salk.edu](mailto:talmo@salk.edu) for a casual chat. **We strongly recommend including your CV and GitHub.**
+
+
+### Open positions
 
 We do not currently have open staff positions, but if you are interested in the positions below feel free to reach out to chat with us about potential upcoming opportunities.
 
-## Postdoctoral fellows
+### Software engineers
 
-Finishing your PhD soon in neuroscience, computer science, physics, or another computational field? We regularly recruit post-docs to work directly with us or jointly with one of our collaborators. Reach out to [talmo@salk.edu](mailto:talmo@salk.edu) to chat about potential projects.
+We are always on the look out for scientific programmers! If you have a background in DevOps, MLOps, web dev or other software engineering skillsets and an interest in deep learning/computer vision, we'd like to chat with you! Prior experience in machine learning research is not required &mdash; just show us your code!
 
-## Graduate students
+We offer very competitive compensation and are happy to provide training to prepare our engineers for a continuing career in research or engineering in academia or industry!
+
+### Postdoctoral fellows
+
+Finishing your PhD soon in neuroscience, computer science, physics, or another computational field? We regularly recruit post-docs to work directly with us or jointly with one of our collaborators.
+
+### Graduate students
 
 If you are interested in pursuing a MS or PhD while working in the lab, you will need to apply to one of the graduate programs at UCSD. We are open to potentially accepting students from any program, but we recommend:
 
@@ -38,11 +76,11 @@ If you are interested in pursuing a MS or PhD while working in the lab, you will
 - [Data Science](https://datascience.ucsd.edu/academics/graduate/admissions/)
 - [Computer Science and Engineering](https://cse.ucsd.edu/graduate/degree-programs)
 
-If you have questions, aren't sure which program to apply to, or just want to chat about graduate school options, feel free to reach out to [talmo@salk.edu](mailto:talmo@salk.edu).
+If you have questions, aren't sure which program to apply to, or just want to chat about graduate school options, feel free to reach out.
 
-## High school and undergraduate internships
+### High school and undergraduate internships
 
-Interested in doing research with us during the school year or for a summer? Reach out to [talmo@salk.edu](mailto:talmo@salk.edu) with your CV and research interests.
+Interested in doing research with us during the school year or for a summer? We are always looking for talented undergraduates to take on ambitious independent research projects. You will be treated like a graduate student, but we will provide all the support and mentoring you need to meet our mutual expectations and succeed in transitioning to the next stage of your career.
 
 **UCSD students**: To work at Salk, you will need to enroll in a research for academic credit course such as [BISP 199](https://biology.ucsd.edu/education/undergrad/research/research-acad-cred/), [COGS 199](https://cogsci.ucsd.edu/undergraduates/student-resources/research.html) or [CSE 199](https://cse.ucsd.edu/undergraduate/cse199-independent-study-undergraduates). Make sure to check out the [general requirements for enrollment](https://students.ucsd.edu/academics/enroll/special-enrollment/special-studies-classes.html).
 

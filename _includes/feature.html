@@ -1,7 +1,7 @@
 <div class="feature">
   <a 
     {% if include.link %}href="{{ include.link | relative_url }}"{% endif %}
-    class="feature_image"
+    class="feature_image" {% if include.width %}style="width: {{ include.width }};"{% endif %}
   >
     <img src="{{ include.image | relative_url }}" loading="lazy" />
   </a>
