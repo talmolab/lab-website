@@ -6,6 +6,7 @@
 # Luxem et al, 2022. Open-Source Tools for Behavioral Video Analysis: Setup, Methods, and Development.
 - id: doi:10.48550/arXiv.2204.02842
   publisher: arXiv
+  image: images/papers/luxem-2022.png
 
 # Gall, Gabriella E. C., Talmo D. Pereira, Alex Jordan, and Yasmine Meroz. 2022. "Fast Estimation of Plant Growth Dynamics Using Deep Neural Networks." Plant Methods 18 (1): 21. https://doi.org/10.1186/s13007-022-00851-9.
 - id: doi:10.1186/s13007-022-00851-9
