@@ -12,6 +12,25 @@ How easy is the template to use?
 How flexible is it?
 How's our documentation?
 
+## Setup for local development
+
+On Ubuntu/WSL, first install build tools and Ruby:
+
+```
+sudo apt update && sudo apt install build-essentials && sudo apt install ruby-full
+```
+
+Next install Bundler:
+```
+sudo gem install bundler
+```
+
+Then just run `start.sh` in this folder or:
+
+```
+bundle && bundle exec jekyll serve --trace --open-url --livereload
+```
+
 ## Gallery
 
 <kbd>
