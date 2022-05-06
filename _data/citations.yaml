@@ -1,5 +1,47 @@
 # GENERATED AUTOMATICALLY, DO NOT EDIT
 
+- id: doi:10.1038/s41592-022-01426-1
+  title: 'SLEAP: A deep learning system for multi-animal pose tracking'
+  authors:
+  - Talmo D. Pereira
+  - Nathaniel Tabris
+  - Arie Matsliah
+  - David M. Turner
+  - Junyu Li
+  - Shruthi Ravindranath
+  - Eleni S. Papadoyannis
+  - Edna Normand
+  - David S. Deutsch
+  - Z. Yan Wang
+  - Grace C. McKenzie-Smith
+  - Catalin C. Mitelut
+  - Marielisa Diez Castro
+  - "John D\u2019Uva"
+  - Mikhail Kislin
+  - Dan H. Sanes
+  - Sarah D. Kocher
+  - Samuel S.-H. Wang
+  - Annegret L. Falkner
+  - Joshua W. Shaevitz
+  - Mala Murthy
+  publisher: Nature Methods
+  date: '2022-04-01'
+  link: https://doi.org/gp33w2
+  image: images/sleap_movie.gif
+- id: doi:10.48550/arXiv.2204.02842
+  title: 'Open-Source Tools for Behavioral Video Analysis: Setup, Methods, and Development'
+  authors:
+  - Kevin Luxem
+  - Jennifer J. Sun
+  - Sean P. Bradley
+  - Keerthi Krishnan
+  - Talmo D. Pereira
+  - Eric A. Yttri
+  - Jan Zimmermann
+  - Mark Laubach
+  publisher: arXiv
+  date: '2022-01-01'
+  link: https://doi.org/gp33w3
 - id: doi:10.1186/s13007-022-00851-9
   title: Fast estimation of plant growth dynamics using deep neural networks
   authors:
@@ -37,25 +79,6 @@
   date: '2020-11-09'
   link: https://doi.org/ghm6fd
   image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41593-020-00734-z/MediaObjects/41593_2020_734_Fig3_HTML.png?as=webp
-- id: doi:10.1101/2020.08.31.276246
-  title: 'SLEAP: Multi-animal pose tracking'
-  authors:
-  - Talmo D. Pereira
-  - Nathaniel Tabris
-  - Junyu Li
-  - Shruthi Ravindranath
-  - Eleni S. Papadoyannis
-  - Z. Yan Wang
-  - David M. Turner
-  - Grace McKenzie-Smith
-  - Sarah D. Kocher
-  - Annegret L. Falkner
-  - Joshua W. Shaevitz
-  - Mala Murthy
-  publisher: bioRxiv
-  date: '2020-09-02'
-  link: https://doi.org/ghc95b
-  image: images/sleap_movie.gif
 - id: doi:10.7554/eLife.57258
   title: A machine-vision approach for automated pain measurement at millisecond timescales
   authors:
