@@ -1,3 +1,12 @@
+# Pereira et al, 2022. SLEAP: A deep learning system for multi-animal pose tracking.
+- id: doi:10.1038/s41592-022-01426-1
+  publisher: Nature Methods
+  image: images/sleap_movie.gif
+
+# Luxem et al, 2022. Open-Source Tools for Behavioral Video Analysis: Setup, Methods, and Development.
+- id: doi:10.48550/arXiv.2204.02842
+  publisher: arXiv
+
 # Gall, Gabriella E. C., Talmo D. Pereira, Alex Jordan, and Yasmine Meroz. 2022. "Fast Estimation of Plant Growth Dynamics Using Deep Neural Networks." Plant Methods 18 (1): 21. https://doi.org/10.1186/s13007-022-00851-9.
 - id: doi:10.1186/s13007-022-00851-9
   image: images/papers/gall-2022.png
@@ -10,11 +19,6 @@
 # Talmo D Pereira, Joshua W Shaevitz, Mala Murthy (2020). Quantifying behavior to understand the brain. Nature Neuroscience.
 - id: doi:10.1038/s41593-020-00734-z
   image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41593-020-00734-z/MediaObjects/41593_2020_734_Fig3_HTML.png?as=webp
-
-# Talmo D Pereira, Nathaniel Tabris, Junyu Li, Shruthi Ravindranath, Eleni S Papadoyannis, Z Yan Wang, David M Turner, Grace McKenzie-Smith, Sarah D Kocher, Annegret Lea Falkner, Joshua W Shaevitz, Mala Murthy (2020). SLEAP: Multi-animal pose tracking. bioRxiv.
-- id: doi:10.1101/2020.08.31.276246
-  publisher: bioRxiv
-  image: images/sleap_movie.gif
 
 # Jessica M Jones, William Foster, Colin R Twomey, Justin Burdge, Osama M Ahmed, Talmo D Pereira, Jessica A Wojick, Gregory Corder, Joshua B Plotkin, Ishmail Abdus-Saboor (2020). A machine-vision approach for automated pain measurement at millisecond timescales. Elife.
 - id: doi:10.7554/eLife.57258
