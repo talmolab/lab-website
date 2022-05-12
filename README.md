@@ -17,7 +17,7 @@ How's our documentation?
 On Ubuntu/WSL, first install build tools and Ruby:
 
 ```
-sudo apt update && sudo apt install build-essentials && sudo apt install ruby-full
+sudo apt update && sudo apt install build-essential && sudo apt install ruby-full
 ```
 
 Next install Bundler:
