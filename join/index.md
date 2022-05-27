@@ -56,6 +56,7 @@ If you are interested in any of the positions below, reach out to [talmo@salk.ed
 ### Open positions
 
 - [**Scientific Programmer I**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=a0b147a2-ec26-45a6-ae2b-a7e3c0f00809): In collaboration with the [Busch Lab](https://busch.salk.edu/) and the [Harnessing Plants Initiative](https://www.salk.edu/harnessing-plants-initiative/), we are looking for a software engineer with a background in deep learning and computer vision to help realize our vision of combating climate change through plant bioengineering. [See this flyer for more details](https://talmolab.org/f/RAPTR_HPI_Recruitment.pdf).
+- [**Post-Doctoral Fellow (Data Science)**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/6340e3d6-9512-4def-9fdf-68be001be337/OpportunityDetail?opportunityId=7340249b-5318-4aa6-a8ce-f91f8a06ec81): In collaboration with the [Busch Lab](https://busch.salk.edu/) and the [Harnessing Plants Initiative](https://www.salk.edu/harnessing-plants-initiative/), we are looking for a post-doc with a background in deep learning and computer vision to help realize our vision of combating climate change through plant bioengineering. [See this flyer for more details](https://talmolab.org/f/RAPTR_HPI_Recruitment.pdf).
 
 If you are interested in the positions below feel free to reach out to chat with us about potential upcoming opportunities.
 
