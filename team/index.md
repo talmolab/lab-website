@@ -40,7 +40,12 @@ nav:
   component="portrait"
   filters="role: undergrad"
 %}
-
+{%
+  include list.html
+  data="members"
+  component="portrait"
+  filters="role: highschool"
+%}
 
 {%
   include link.html
@@ -54,4 +59,4 @@ nav:
 
 ## Alumni
 
-- 2021: Pranav Sankar (High School Research Intern). Now at UCLA.
+- 2021: **Pranav Sankar** (High School Research Intern). Now at UCLA.
