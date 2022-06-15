@@ -1,1 +1,1 @@
-bundle && bundle exec jekyll serve --trace --open-url --livereload
+bundle exec jekyll serve --force_polling --livereload
