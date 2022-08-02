@@ -26,6 +26,13 @@ nav:
   include list.html
   data="members"
   component="portrait"
+  filters="role: postdoc"
+%}
+{:.center}
+{%
+  include list.html
+  data="members"
+  component="portrait"
   filters="role: phd"
 %}
 {%
@@ -59,4 +66,5 @@ nav:
 
 ## Alumni
 
-- 2021: **Pranav Sankar** (High School Research Intern). Now at UCLA.
+- 2021: **Pranav Sankar** (High School Research Intern). Now at UCLA for undergrad.
+- 2022: [**Dexter Tsin**](/members/dexter-tsin.html) (Undergraduate Research Intern). Now at Princeton doing his PhD in Neuroscience.
