@@ -1,7 +1,7 @@
 ---
 name: Yaxin (Nancy) Guo
 image: images/nancy-guo.jpg
-role: ra
+role: alumni
 description: Research Assistant
 links:
   home-page: https://www.nancyyes.com/

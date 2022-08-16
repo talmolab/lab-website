@@ -1,7 +1,7 @@
 ---
 name: David Samy
 image: images/david-samy.jpg
-role: highschool
+role: alumni
 description: High School Research Intern
 links:
   home-page: http://davidsamy.com/

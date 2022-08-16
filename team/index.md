@@ -67,4 +67,6 @@ nav:
 ## Alumni
 
 - 2021: **Pranav Sankar** (High School Research Intern). Now at UCLA for undergrad.
-- 2022: [**Dexter Tsin**](/members/dexter-tsin.html) (Undergraduate Research Intern). Now at Princeton doing his PhD in Neuroscience.
+- 2022: [**Dexter Tsin**](/members/dexter-tsin.html) (Undergraduate Research Intern). Now at Princeton pursuing a PhD in Neuroscience.
+- 2022: [**Nancy Guo**](/members/nancy-guo.html) (Research Assistant). Now at NYU pursuing a PhD in Bioengineering.
+- 2022: [**David Samy**](/members/david-samy.html) (High School Research Intern). Now back in high school!
