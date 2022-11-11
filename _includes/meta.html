@@ -1,6 +1,23 @@
-{% capture title%}
-{{ site.title }}{% if page.title %} - {% endif %}{{ page.title }}
-{% endcapture %}
+{% assign emptyarray = "" | split: "," %}
+
+{% assign title = emptyarray %}
+
+{% assign filename = page.path | split: "/" | last %}
+{% if page.name and page.name != filename %}
+  {% assign title = title | push: page.name %}
+{% elsif page.title %}
+  {% assign title = title | push: page.title %}
+{% endif %}
+
+{% if site.title %}
+  {% assign title = title | push: site.title %}
+{% endif %}
+
+{% assign title = title | join: " | " %}
+
+<title>{{ title }}</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <!-- https://metatags.io/ -->
 <meta name="title" content="{{ title }}" />
