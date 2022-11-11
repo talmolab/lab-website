@@ -82,10 +82,10 @@
   - Jan Zimmermann
   - Mark Laubach
   publisher: arXiv
-  date: '2022-01-01'
+  date: '2022-04-06'
   link: https://doi.org/gp33w3
   image: images/papers/luxem-2022.png
-  _cache: 1c0fdb4f7b31bcb3b10cda0063f01d88970d43fc820408f72cf3f59969e17107
+  _cache: fd62f0ad7c683df6a7712d9effeb29cd5d62fe090e65352ee9ef35de903dc689
 - id: doi:10.1186/s13007-022-00851-9
   title: Fast estimation of plant growth dynamics using deep neural networks
   authors:
