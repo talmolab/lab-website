@@ -50,4 +50,4 @@ We are interested in exploring how artificial neural networks (**ANNs**) can be 
 
 {% include section.html %}
 
-See [Publications](publications/) for a list of recent published works from the lab.
+See [Publications](/publications/) for a list of recent published works from the lab.
