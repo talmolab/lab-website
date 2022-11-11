@@ -4,7 +4,8 @@
   image: images/papers/mills-2022.jpg
 
 # Prasad et al 2022: Exploring the role of image domain in self-supervised DNN models of rodent brains
-- title: Exploring the role of image domain in self-supervised DNN models of rodent brains
+- id: 
+  title: Exploring the role of image domain in self-supervised DNN models of rodent brains
   authors:
     - Aaditya Prasad
     - Uri Manor
