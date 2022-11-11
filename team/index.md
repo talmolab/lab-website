@@ -35,24 +35,35 @@ nav:
   component="portrait"
   filters="role: phd"
 %}
+{:.center}
+{%
+  include list.html
+  data="members"
+  component="portrait"
+  filters="role: ms"
+%}
+{:.center}
 {%
   include list.html
   data="members"
   component="portrait"
   filters="role: ra"
 %}
+{:.center}
 {%
   include list.html
   data="members"
   component="portrait"
   filters="role: undergrad"
 %}
+{:.center}
 {%
   include list.html
   data="members"
   component="portrait"
   filters="role: highschool"
 %}
+{:.center}
 
 {%
   include link.html

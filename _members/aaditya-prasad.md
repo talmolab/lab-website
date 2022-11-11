@@ -1,8 +1,8 @@
 ---
 name: Aaditya Prasad
 image: images/aaditiya-prasad.jpg
-role: undergrad
-description: Undergraduate Research Intern
+role: ms
+description: Master's Student
 ---
 
-Aadi is majoring in Bioinformatics at UCSD and is co-advised by [Uri Manor](https://manor.salk.edu/) and [Terry Sejnowski](https://cnl.salk.edu/). He works on understanding deep learning-based models of the brain.
+Aadi majored in Bioinformatics at UCSD and is now doing a MS in Data Science. He is co-advised by [Uri Manor](https://manor.salk.edu/) and [Terry Sejnowski](https://cnl.salk.edu/). He works on understanding deep learning-based models of the brain.
