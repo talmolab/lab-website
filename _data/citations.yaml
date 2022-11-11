@@ -1,5 +1,46 @@
-# GENERATED AUTOMATICALLY, DO NOT EDIT
+# DO NOT EDIT, GENERATED AUTOMATICALLY FROM SOURCES.YAML (AND ELSEWHERE)
+# See https://github.com/greenelab/lab-website-template/wiki/Citations
 
+- id: doi:10.1101/2022.10.28.514263
+  title: Amygdalostriatal transition zone neurons encode sustained valence to direct
+    conditioned behaviors
+  authors:
+  - Fergil Mills
+  - Christopher R. Lee
+  - James R. Howe
+  - Hao Li
+  - Shan Shao
+  - Maria N. Keisler
+  - Mackenzie E. Lemieux
+  - Felix H. Taschbach
+  - Laurel R. Keyes
+  - Matilde Borio
+  - Hannah S. Chen
+  - Reesha R. Patel
+  - Alexa L. Gross
+  - Jeremy Delahanty
+  - Christian Cazares
+  - Liezl Maree
+  - Romy Wichmann
+  - Talmo D. Pereira
+  - Marcus K. Benna
+  - Cory M. Root
+  - Kay M. Tye
+  publisher: bioRxiv
+  date: '2022-10-29'
+  link: https://doi.org/gq7rc5
+  image: images/papers/mills-2022.jpg
+  _cache: 327b8ac60ca3379b8a78151815feafa5eb3d2c7322049df589ef378a3dfd63f0
+- title: Exploring the role of image domain in self-supervised DNN models of rodent
+    brains
+  authors:
+  - Aaditya Prasad
+  - Uri Manor
+  - Talmo Pereira
+  publisher: SVRHM 2022 Workshop @ NeurIPS
+  date: ''
+  link: https://openreview.net/forum?id=KIlSyKTulXO
+  _cache: 622a2c8195f46ce19feec743581f6402a61fb2aa300560b4e43fe450a9f26351
 - id: doi:10.1038/s41592-022-01426-1
   title: 'SLEAP: A deep learning system for multi-animal pose tracking'
   authors:
@@ -28,6 +69,7 @@
   date: '2022-04-01'
   link: https://doi.org/gp33w2
   image: images/sleap_movie.gif
+  _cache: 2d597d8b15fccc175eae39953a40fc7d4df6c74db885a1c36754d2ba4676255a
 - id: doi:10.48550/arXiv.2204.02842
   title: 'Open-Source Tools for Behavioral Video Analysis: Setup, Methods, and Development'
   authors:
@@ -43,6 +85,7 @@
   date: '2022-01-01'
   link: https://doi.org/gp33w3
   image: images/papers/luxem-2022.png
+  _cache: 1c0fdb4f7b31bcb3b10cda0063f01d88970d43fc820408f72cf3f59969e17107
 - id: doi:10.1186/s13007-022-00851-9
   title: Fast estimation of plant growth dynamics using deep neural networks
   authors:
@@ -54,11 +97,12 @@
   date: '2022-02-20'
   link: https://doi.org/gpj4ms
   image: images/papers/gall-2022.png
-- id: doi:10.1101/2021.12.16.472962
+  _cache: 72e740d190d6c7ece90f3f7a0bb68a0a0449626df83737bc1d53bde11d27187f
+- id: doi:10.1016/j.cub.2022.04.066
   title: Isolation disrupts social interactions and destabilizes brain development
     in bumblebees
   authors:
-  - Z Yan Wang
+  - Z. Yan Wang
   - Grace C. McKenzie-Smith
   - Weijie Liu
   - Hyo Jin Cho
@@ -66,10 +110,11 @@
   - Zahra Dhanerawala
   - Joshua W. Shaevitz
   - Sarah D. Kocher
-  publisher: bioRxiv
-  date: '2021-12-17'
-  link: https://doi.org/gnx5fx
+  publisher: Current Biology
+  date: '2022-06-01'
+  link: https://doi.org/gqg63z
   image: images/papers/wang-2021.png
+  _cache: 5f191ffcfe8093651cbaf96fa69256fd0221f99dde8bec85dafbd4fcbb9ae49f
 - id: doi:10.1038/s41593-020-00734-z
   title: Quantifying behavior to understand the brain
   authors:
@@ -80,6 +125,7 @@
   date: '2020-11-09'
   link: https://doi.org/ghm6fd
   image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41593-020-00734-z/MediaObjects/41593_2020_734_Fig3_HTML.png?as=webp
+  _cache: b491568a4e3db8e6fb7ea7d17f1193ffd1695d51ecdd6c99bed3979d5af129ff
 - id: doi:10.7554/eLife.57258
   title: A machine-vision approach for automated pain measurement at millisecond timescales
   authors:
@@ -97,6 +143,7 @@
   date: '2020-08-06'
   link: https://doi.org/gnnwn4
   image: https://iiif.elifesciences.org/lax/57258%2Felife-57258-fig2-v2.tif/full/617,/0/default.webp
+  _cache: 4ce03c636e83e33371bf723c949b6811532a9d2a638f1225c2eace7bdb1db681
 - id: doi:10.1146/annurev-neuro-100119-110036
   title: 'Toward Community-Driven Big Open Brain Science: Open Big Data and Tools
     for Structure, Function, and Genetics'
@@ -117,13 +164,15 @@
   date: '2020-07-08'
   link: https://doi.org/ghcstk
   image: images/papers/charles-2020.png
-- id: doi:10.1101/2020.06.29.20141283
-  title: Inexpensive multi-patient respiratory monitoring system for helmet ventilation
-    during COVID-19 pandemic
+  _cache: 671c89926d3c1c177dc88f2f7b60f1b1e3deb07d591ab8b21f735254af26fb7f
+- id: doi:10.1115/1.4053386
+  title: Inexpensive Multipatient Respiratory Monitoring System for Helmet Ventilation
+    During COVID-19 Pandemic
   authors:
+  - ' '
   - Philippe Bourrianne
   - Stanley Chidzik
-  - Daniel Cohen
+  - Daniel J. Cohen
   - Peter Elmer
   - Thomas Hallowell
   - Todd J. Kilbaugh
@@ -142,11 +191,11 @@
   - David W. Tank
   - Stephan Thiberge
   - Christopher Tully
-  - ' '
-  publisher: medRxiv
-  date: '2021-06-14'
-  link: https://doi.org/gk698d
+  publisher: Journal of Medical Devices
+  date: '2022-02-03'
+  link: https://doi.org/gq7rgc
   image: https://www.medrxiv.org/content/medrxiv/early/2021/06/14/2020.06.29.20141283/F1.medium.gif
+  _cache: 3d17e65b16b89ba1665119acd1e5e4d58b46d6acc66cedb6d65c6649153e5367
 - id: doi:10.7554/eLife.59502
   title: The neural basis for a persistent internal state in Drosophila females
   authors:
@@ -178,6 +227,7 @@
   date: '2020-11-23'
   link: https://doi.org/ghk767
   image: images/papers/deutsch-2020.png
+  _cache: c88ca8c6d77501cbc45d2d22e35eb34c2eb37068fa684f46972bee4b8b911e9c
 - id: doi:10.1038/s41592-018-0234-5
   title: Fast animal pose estimation using deep neural networks
   authors:
@@ -192,6 +242,7 @@
   date: '2018-12-20'
   link: https://doi.org/gfrj62
   image: images/papers/pereira-2019.png
+  _cache: ecd53bf3bcaaa6826ef180af342661e875c19dc6506393446b671b6b090183f8
 - id: doi:10.7554/eLife.36401
   title: Normal cognitive and social development require posterior cerebellar activity
   authors:
@@ -207,6 +258,7 @@
   date: '2018-09-20'
   link: https://doi.org/gncqxr
   image: https://iiif.elifesciences.org/lax/36401%2Felife-36401-fig9-v3.tif/full/617,/0/default.webp
+  _cache: e7686f5dfad80b25dd0a78f77a88fc132453ef6e14a017e146a695fd58ba2426
 - id: doi:10.1016/j.cub.2018.06.011
   title: Discovery of a New Song Mode in Drosophila Reveals Hidden Structure in the
     Sensory and Neural Drivers of Behavior
@@ -223,16 +275,18 @@
   date: '2018-08-01'
   link: https://doi.org/gd4bk5
   image: images/papers/clemens-2018.png
+  _cache: c86726216aa4f38e14f968ae3d5f3b7afbf5bfcc92ea93f31295550f18f63637
 - id: doi:10.1007/978-3-319-96661-8_30
   title: "Quantifying Humans\u2019 Priors Over Graphical Representations of Tasks"
   authors:
   - Gecia Bravo Hermsdorff
   - Talmo Pereira
   - Yael Niv
-  publisher: Springer Proceedings in Complexity
+  publisher: Unifying Themes in Complex Systems IX
   date: '2018-01-01'
   link: https://doi.org/gnnwpj
   image: images/papers/hermsdorff-2018.png
+  _cache: e0dcad151a8b84b8623457426eab1b9bef9621795d6fe091ac91b6f87ce879e7
 - id: doi:10.1016/j.jneumeth.2017.07.014
   title: Automated gesture tracking in head-fixed mice
   authors:
@@ -250,6 +304,7 @@
   date: '2018-04-01'
   link: https://doi.org/gds8q9
   image: https://ars.els-cdn.com/content/image/1-s2.0-S0165027017302509-gr2.jpg
+  _cache: b5045c556bacb7ea1af0f22f9d1faf6c7eabbebb2012bb038f25ed23b646dcd8
 - id: doi:10.1016/j.neuron.2017.08.029
   title: To Fight or Not to Fight
   authors:
@@ -259,6 +314,7 @@
   date: '2017-08-01'
   link: https://doi.org/gnf48t
   image: https://els-jbs-prod-cdn.jbs.elsevierhealth.com/cms/attachment/cc6b48f6-bbb3-47d7-9429-eeb7472861c4/gr1.jpg
+  _cache: 3b8ae398a9ca70038f03b5e3a01e136d970b86178e81ef49b03731977ae58662
 - id: doi:10.1038/nn.4531
   title: Cerebellar granule cells acquire a widespread predictive feedback signal
     during motor learning
@@ -280,6 +336,7 @@
   date: '2017-03-20'
   link: https://doi.org/f9vrt6
   image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fnn.4531/MediaObjects/41593_2017_Article_BFnn4531_Fig2_HTML.jpg?as=webp
+  _cache: cc5cac8eabe1072cafbd6d188d395f20fd8ac996e31f09dac1183d6798726aef
 - id: doi:10.1186/s13015-016-0082-8
   title: A Bayesian inference method for the analysis of transcriptional regulatory
     networks in metagenomic data
@@ -292,3 +349,4 @@
   date: '2016-07-08'
   link: https://doi.org/gnnwpk
   image: https://media.springernature.com/lw685/springer-static/image/art%3A10.1186%2Fs13015-016-0082-8/MediaObjects/13015_2016_82_Fig4_HTML.gif?as=webp
+  _cache: 5e670dc9cc30a710b8ef8dead97cfd30d2b5b2fe7956e1c2e569c0007e910b9e
