@@ -1,3 +1,26 @@
+# Mills et al 2022: Amygdalostriatal transition zone neurons encode sustained valence to direct conditioned behaviors
+- id: doi:10.1101/2022.10.28.514263
+  publisher: bioRxiv
+  image: images/papers/mills-2022.jpg
+
+# Prasad et al 2022: Exploring the role of image domain in self-supervised DNN models of rodent brains
+- title: Exploring the role of image domain in self-supervised DNN models of rodent brains
+  authors:
+    - Aaditya Prasad
+    - Uri Manor
+    - Talmo Pereira
+  publisher: SVRHM 2022 Workshop @ NeurIPS
+  date: 2022-09-27
+  link: https://openreview.net/forum?id=KIlSyKTulXO
+# @inproceedings{
+# prasad2022exploring,
+# title={Exploring the role of image domain in self-supervised {DNN} models of rodent brains},
+# author={Aaditya Prasad and Uri Manor and Talmo Pereira},
+# booktitle={SVRHM 2022 Workshop @ NeurIPS },
+# year={2022},
+# url={https://openreview.net/forum?id=KIlSyKTulXO}
+# }
+
 # Pereira et al, 2022. SLEAP: A deep learning system for multi-animal pose tracking.
 - id: doi:10.1038/s41592-022-01426-1
   publisher: Nature Methods
@@ -13,9 +36,8 @@
   image: images/papers/gall-2022.png
 
 # Z Yan Wang, Grace C McKenzie-Smith, Weijie Liu, Hyo Jin Cho, Talmo D Pereira, Zahra Dhanerawala, Joshua W Shaevitz, Sarah D Kocher (2021). Isolation disrupts social interactions and destabilizes brain development in bumblebees. bioRxiv.
-- id: doi:10.1101/2021.12.16.472962
+- id: doi:10.1016/j.cub.2022.04.066
   image: images/papers/wang-2021.png
-  publisher: bioRxiv
 
 # Talmo D Pereira, Joshua W Shaevitz, Mala Murthy (2020). Quantifying behavior to understand the brain. Nature Neuroscience.
 - id: doi:10.1038/s41593-020-00734-z
@@ -30,8 +52,8 @@
   image: images/papers/charles-2020.png
 
 # Princeton Open Ventilation Monitor Collaboration, Philippe Bourrianne, Stanley Chidzik, Daniel J Cohen, Peter Elmer, Thomas Hallowell, Todd J Kilbaugh, David Lange, Andrew M Leifer, Daniel R Marlow, Peter D Meyers, Edna Normand, Janine Nunes, Myungchul Oh, Lyman Page, Talmo Pereira, Jim Pivarski, Henry Schreiner, Howard A Stone, David W Tank, Stephan Thiberge, Christopher Tully (2020). Inexpensive multi-patient respiratory monitoring system for helmet ventilation during COVID-19 pandemic. medRxiv.
-- id: doi:10.1101/2020.06.29.20141283
-  publisher: medRxiv
+- id: doi:10.1115/1.4053386
+  publisher: Journal of Medical Devices
   image: https://www.medrxiv.org/content/medrxiv/early/2021/06/14/2020.06.29.20141283/F1.medium.gif
 
 # David Deutsch, Diego A Pacheco, Lucas J Encarnacion-Rivera, Talmo Pereira, Ramie Fathy, Adam Calhoun, Elise C Ireland, Austin T Burke, Sven Dorkenwald, Claire McKellar, Thomas Macrina, Ran Lu, Kisuk Lee, Nico Kemnitz, Dodam Ih, Manuel Castro, Akhilesh Halageri, Chris Jordan, William Silversmith, Jingpeng Wu, H Sebastian Seung, Mala Murthy (2020). The Neural Basis for a Persistent Internal State in Drosophila Females. eLife.
