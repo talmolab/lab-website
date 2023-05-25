@@ -1,3 +1,12 @@
+# Weinreb et al 2023: Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics
+- id: doi:10.1101/2023.03.16.532307
+  publisher: bioRxiv
+  image: images/papers/weinreb-2023.png
+
+# Luxem et al 2023: Open-source tools for behavioral video analysis: Setup, methods, and best practices
+- id: doi:10.7554/eLife.79305
+  image: images/papers/luxem-2022.png
+
 # Mills et al 2022: Amygdalostriatal transition zone neurons encode sustained valence to direct conditioned behaviors
 - id: doi:10.1101/2022.10.28.514263
   publisher: bioRxiv
@@ -29,10 +38,10 @@
   image: images/sleap_movie.gif
 
 # Luxem et al, 2022. Open-Source Tools for Behavioral Video Analysis: Setup, Methods, and Development.
-- id: doi:10.48550/arXiv.2204.02842
-  publisher: arXiv
-  image: images/papers/luxem-2022.png
-  date: "2022-04-06"
+# - id: doi:10.48550/arXiv.2204.02842
+#   publisher: arXiv
+#   image: images/papers/luxem-2022.png
+#   date: "2022-04-06"
 
 # Gall, Gabriella E. C., Talmo D. Pereira, Alex Jordan, and Yasmine Meroz. 2022. "Fast Estimation of Plant Growth Dynamics Using Deep Neural Networks." Plant Methods 18 (1): 21. https://doi.org/10.1186/s13007-022-00851-9.
 - id: doi:10.1186/s13007-022-00851-9
