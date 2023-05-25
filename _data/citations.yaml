@@ -1,6 +1,46 @@
 # DO NOT EDIT, GENERATED AUTOMATICALLY FROM SOURCES.YAML (AND ELSEWHERE)
 # See https://github.com/greenelab/lab-website-template/wiki/Citations
 
+- id: doi:10.1101/2023.03.16.532307
+  title: 'Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics'
+  authors:
+  - Caleb Weinreb
+  - Mohammed Abdal Monium Osman
+  - Libby Zhang
+  - Sherry Lin
+  - Jonah Pearl
+  - Sidharth Annapragada
+  - Eli Conlin
+  - Winthrop F. Gillis
+  - Maya Jay
+  - Ye Shaokai
+  - Alexander Mathis
+  - Mackenzie Weygandt Mathis
+  - Talmo Pereira
+  - Scott W. Linderman
+  - Sandeep Robert Datta
+  publisher: bioRxiv
+  date: '2023-03-17'
+  link: https://doi.org/gr9f25
+  image: images/papers/weinreb-2023.png
+  _cache: 73d5bf51d34c9aa026e95bcc9c05fd5e629c26155b6545cbc46540c696864df9
+- id: doi:10.7554/eLife.79305
+  title: 'Open-source tools for behavioral video analysis: Setup, methods, and best
+    practices'
+  authors:
+  - Kevin Luxem
+  - Jennifer J Sun
+  - Sean P Bradley
+  - Keerthi Krishnan
+  - Eric Yttri
+  - Jan Zimmermann
+  - Talmo D Pereira
+  - Mark Laubach
+  publisher: eLife
+  date: '2023-03-23'
+  link: https://doi.org/gr9f26
+  image: images/papers/luxem-2022.png
+  _cache: 7880eb41cf1f96279e2353002cc8b181c031fbd6a5de8348df0a839292762362
 - id: doi:10.1101/2022.10.28.514263
   title: Amygdalostriatal transition zone neurons encode sustained valence to direct
     conditioned behaviors
@@ -71,22 +111,6 @@
   link: https://doi.org/gp33w2
   image: images/sleap_movie.gif
   _cache: 2d597d8b15fccc175eae39953a40fc7d4df6c74db885a1c36754d2ba4676255a
-- id: doi:10.48550/arXiv.2204.02842
-  title: 'Open-Source Tools for Behavioral Video Analysis: Setup, Methods, and Development'
-  authors:
-  - Kevin Luxem
-  - Jennifer J. Sun
-  - Sean P. Bradley
-  - Keerthi Krishnan
-  - Talmo D. Pereira
-  - Eric A. Yttri
-  - Jan Zimmermann
-  - Mark Laubach
-  publisher: arXiv
-  date: '2022-04-06'
-  link: https://doi.org/gp33w3
-  image: images/papers/luxem-2022.png
-  _cache: fd62f0ad7c683df6a7712d9effeb29cd5d62fe090e65352ee9ef35de903dc689
 - id: doi:10.1186/s13007-022-00851-9
   title: Fast estimation of plant growth dynamics using deep neural networks
   authors:
