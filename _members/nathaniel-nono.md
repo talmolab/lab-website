@@ -1,6 +1,6 @@
 ---
 name: Nathaniel Nono
-image: images/member.jpg
+image: images/nathaniel-nono.jpg
 role: undergrad
 description: Undergraduate Research Intern
 ---
