@@ -81,3 +81,5 @@ nav:
 - 2022: [**Dexter Tsin**](/members/dexter-tsin.html) (Undergraduate Research Intern). Now at Princeton pursuing a PhD in Neuroscience.
 - 2022: [**Nancy Guo**](/members/nancy-guo.html) (Research Assistant). Now at NYU pursuing a PhD in Bioengineering.
 - 2022: [**David Samy**](/members/david-samy.html) (High School Research Intern). Now back in high school!
+- 2023: [**Adam Lee**](/members/adam-lee.html) (Undergraduate Research Intern). Now at Harvard pursuing a PhD in Computer Science.
+- 2023: [**Arlo Sheridan**](/members/arlo-sheridan.html) (Scientific Programmer). Now at [E11 Bio](https://e11.bio/).
