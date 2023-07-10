@@ -1,7 +1,7 @@
 ---
 name: Arlo Sheridan
 image: images/arlo-sheridan.jpg
-role: programmer
+role: alumni
 description: Scientific Programmer
 links:
   github: sheridana
