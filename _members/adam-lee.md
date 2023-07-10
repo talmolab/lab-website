@@ -1,7 +1,7 @@
 ---
 name: Adam Lee
 image: images/adam-lee.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern (TRELS Scholar)
 links:
   home-page: https://adamlee.me
