@@ -1,6 +1,6 @@
 ---
 name: Will Knickrehm
-image: images/member.jpg
+image: images/will-knickrehm.jpg
 role: highschool
 description: High School Research Intern
 ---
