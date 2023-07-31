@@ -24,6 +24,18 @@ bundle exec jekyll serve --force_polling --livereload
 ([See this issue for livereloading on WSL.](https://github.com/microsoft/WSL/issues/216#issuecomment-756424551))
 
 
+## Editing SVG logo
+
+First, edit one of the existing variants:
+
+- [`images/logo.svg`](images/logo.svg): Animated
+- [`images/logo_static.svg`](images/logo_static.svg): Static, white stroke with transparent background
+- [`images/logo_static_grey_bg.svg`](images/logo_static_grey_bg.svg): Static, white stroke with grey background (this looks the nicest for static)
+- [`images/logo_static_outline.svg`](images/logo_static_outline.svg): Static, white stroke with thin black outline
+
+Then, to render to PNG, use an online service. [This is a nice open-source one](https://github.com/vincerubinetti/svg-to-png).
+
+
 ## Documentation
 
 [▶️ Get Started](https://github.com/greenelab/lab-website-template/wiki/Get-Started)
