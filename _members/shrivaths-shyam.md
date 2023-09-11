@@ -1,6 +1,6 @@
 ---
 name: Shrivaths Shyam
-image: images/member.jpg
+image: images/shrivaths-shyam.jpg
 role: ms
 description: Master's Student
 ---

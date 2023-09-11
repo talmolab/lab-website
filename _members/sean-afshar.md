@@ -1,7 +1,7 @@
 ---
 name: Sean Afshar
 image: images/sean-afshar.jpg
-role: ra
+role: alumni
 description: Research Assistant
 ---
 
