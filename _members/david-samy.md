@@ -8,4 +8,4 @@ links:
   github: davidasamy
 ---
 
-David is a rising junior at Canyon Crest Academy in San Diego, CA. He is working on extensions to SLEAP as a high school summer research intern (summer 2023).
+David worked in the lab as a high school research intern at Canyon Crest Academy in San Diego, CA (summer 2022 and summer 2023). He worked on developing extensions to SLEAP.
