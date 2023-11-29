@@ -1,3 +1,18 @@
+# Berrigan et al 2023: Fast and efficient root phenotyping via pose estimation
+- id: doi:10.1101/2023.11.20.567949
+  publisher: bioRxiv
+  image: images/papers/berrigan-2023.png
+
+# Mitelut et al 2023: Distinct developmental trajectories of autonomous behaviors and agency in rodents
+- id: doi:10.1101/2023.11.10.566632
+  publisher: bioRxiv
+  image: images/papers/mitelut-2023.png
+
+# Patel et al 2023: Social isolation recruits amygdala-cortical circuitry to escalate alcohol drinking
+- id: doi:10.1101/2023.11.09.566421
+  publisher: bioRxiv
+  image: images/papers/patel-2023.png
+
 # Weinreb et al 2023: Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics
 - id: doi:10.1101/2023.03.16.532307
   publisher: bioRxiv
