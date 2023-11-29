@@ -1,6 +1,84 @@
 # DO NOT EDIT, GENERATED AUTOMATICALLY FROM SOURCES.YAML (AND ELSEWHERE)
 # See https://github.com/greenelab/lab-website-template/wiki/Citations
 
+- id: doi:10.1101/2023.11.20.567949
+  title: Fast and efficient root phenotyping via pose estimation
+  authors:
+  - Elizabeth M. Berrigan
+  - Lin Wang
+  - Hannah Carrillo
+  - Kimberly Echegoyen
+  - Mikayla Kappes
+  - Jorge Torres
+  - Angel Ai-Perreira
+  - Erica McCoy
+  - Emily Shane
+  - Charles D. Copeland
+  - Lauren Ragel
+  - Charidimos Georgousakis
+  - Sanghwa Lee
+  - Dawn Reynolds
+  - Avery Talgo
+  - Juan Gonzalez
+  - Ling Zhang
+  - Ashish B. Rajurkar
+  - Michel Ruiz
+  - Erin Daniels
+  - Liezl Maree
+  - Shree Pariyar
+  - Wolfgang Busch
+  - Talmo D. Pereira
+  publisher: bioRxiv
+  date: '2023-11-21'
+  link: https://doi.org/gs7djd
+  image: images/papers/berrigan-2023.png
+  _cache: 532da464c643f3641539f672a08e4aa75b6e1420e80b0b115dd126900ae27d5e
+- id: doi:10.1101/2023.11.10.566632
+  title: Distinct developmental trajectories of autonomous behaviors and agency in
+    rodents
+  authors:
+  - C Mitelut
+  - M Diez Castro
+  - RE Peterson
+  - "M Gon\xE7alves"
+  - MM Gamer
+  - SRO Nilsson
+  - TD Pereira
+  - DH Sanes
+  publisher: bioRxiv
+  date: '2023-11-13'
+  link: https://doi.org/gs7djf
+  image: images/papers/mitelut-2023.png
+  _cache: bebe2898c9cafff92d08bac12914c6428e91a3aa515c79c338484c0b68f73ec1
+- id: doi:10.1101/2023.11.09.566421
+  title: Social isolation recruits amygdala-cortical circuitry to escalate alcohol
+    drinking
+  authors:
+  - Reesha R. Patel
+  - Makenzie Patarino
+  - Kelly Kim
+  - Rachelle Pamintuan
+  - Felix H. Taschbach
+  - Hao Li
+  - Christopher R. Lee
+  - Aniek van Hoek
+  - Rogelio Castro
+  - Christian Cazares
+  - Raymundo L. Miranda
+  - Caroline Jia
+  - Jeremy Delahanty
+  - Kanha Batra
+  - Laurel R. Keyes
+  - Avraham Libster
+  - Romy Wichmann
+  - Talmo D. Pereira
+  - Marcus K. Benna
+  - Kay M. Tye
+  publisher: bioRxiv
+  date: '2023-11-10'
+  link: https://doi.org/gs7djg
+  image: images/papers/patel-2023.png
+  _cache: 4074134689ed880c100c784cbce3315bf265ebfbc63ea9638e80728374252ac7
 - id: doi:10.1101/2023.03.16.532307
   title: 'Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics'
   authors:
