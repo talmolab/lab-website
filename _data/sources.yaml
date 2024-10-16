@@ -1,7 +1,35 @@
-# Berrigan et al 2023: Fast and efficient root phenotyping via pose estimation
-- id: doi:10.1101/2023.11.20.567949
+# Weinreb et al 2024: Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics
+- id: doi:10.1038/s41592-024-02318-2
+  publisher: Nature Methods
+  image: images/papers/weinreb-2023.png
+
+# Maree et al 2024: Multi-view triangulation-enabled annotation for multi-animal 3D pose in SLEAP
+- title: Multi-view triangulation-enabled annotation for multi-animal 3D pose in SLEAP
+  authors:
+    - Liezl Maree
+    - Sean Afshar
+    - Stefan Oline
+    - Eric Leonardis
+    - Annegret Falkner
+    - Talmo Pereira
+  publisher: Measuring Behavior 2024
+  image: images/papers/maree-2024.jpg
+  date: "2024-05-15"
+  link: images/papers/maree-2024.pdf
+
+# Rose et al 2024: Deep Imputation for Skeleton Data (DISK) for Behavioral Science
+- id: doi:10.1101/2024.05.03.592173v1
   publisher: bioRxiv
+  image: images/papers/rose-2024.png
+
+# Berrigan et al 2024: Fast and efficient root phenotyping via pose estimation
+- id: doi:10.34133/plantphenomics.0175
   image: images/papers/berrigan-2023.png
+
+# Berrigan et al 2023: Fast and efficient root phenotyping via pose estimation
+# - id: doi:10.1101/2023.11.20.567949
+#   publisher: bioRxiv
+#   image: images/papers/berrigan-2023.png
 
 # Mitelut et al 2023: Distinct developmental trajectories of autonomous behaviors and agency in rodents
 - id: doi:10.1101/2023.11.10.566632
@@ -14,9 +42,9 @@
   image: images/papers/patel-2023.png
 
 # Weinreb et al 2023: Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics
-- id: doi:10.1101/2023.03.16.532307
-  publisher: bioRxiv
-  image: images/papers/weinreb-2023.png
+# - id: doi:10.1101/2023.03.16.532307
+#   publisher: bioRxiv
+#   image: images/papers/weinreb-2023.png
 
 # Luxem et al 2023: Open-source tools for behavioral video analysis: Setup, methods, and best practices
 - id: doi:10.7554/eLife.79305
