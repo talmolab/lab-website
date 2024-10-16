@@ -1,7 +1,7 @@
 ---
 name: Vincent Tu
 image: images/member.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern
 ---
 

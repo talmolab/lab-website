@@ -1,7 +1,7 @@
 ---
 name: Marcus Intal
 image: images/marcus-intal.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern
 ---
 

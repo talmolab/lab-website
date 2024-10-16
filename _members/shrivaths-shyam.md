@@ -1,7 +1,7 @@
 ---
 name: Shrivaths Shyam
 image: images/shrivaths-shyam.jpg
-role: ms
+role: alumni
 description: Master's Student
 ---
 

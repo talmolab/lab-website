@@ -1,7 +1,7 @@
 ---
 name: Aaditya Prasad
 image: images/aaditiya-prasad.jpg
-role: ms
+role: alumni
 description: Master's Student
 ---
 

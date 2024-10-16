@@ -1,7 +1,7 @@
 ---
 name: Zaher Abbara
 image: images/zaher-abbara.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern
 ---
 

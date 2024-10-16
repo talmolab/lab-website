@@ -1,7 +1,7 @@
 ---
 name: Chaitanya Kapoor
 image: images/ck.png
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern
 ---
 

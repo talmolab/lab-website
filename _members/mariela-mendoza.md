@@ -1,7 +1,7 @@
 ---
 name: Mariela Mendoza
 image: images/mariela-mendoza.jpg
-role: ra
+role: alumni
 description: Research Assistant
 ---
 
