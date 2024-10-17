@@ -1,6 +1,6 @@
 ---
 name: Elizabeth Berrigan
-image: images/elizabeth-berrigan.png
+image: images/elizabeth-berrigan.jpg
 role: programmer
 description: Scientific Programmer
 links:
