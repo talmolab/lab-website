@@ -26,14 +26,6 @@ Lab members should expect to be able to **ask for help whenever they need it**, 
 Our group's culture is intended to reflect the reality that **not everyone is afforded the same opportunities** before they arrive here, but that that does not mean they are not as qualified or worthy of the chance to prove themselves. It is only by acknowledging the structural disparities that are inherent in academia that we can **effect real change** &mdash; and do amazing science along the way!
 {% endcapture %}
 {%
-  include feature.html
-  image="images/lab-action.jpg"
-  headline="Philosophy"
-  width="500px"
-  text=text
-%}
-
-{%
   include figure.html
   image="images/2024-09-05.action.jpg"
   caption="The lab, ca. 2024. Photo credit: Chris Keeney"
@@ -71,9 +63,7 @@ If you are interested in any of the positions below, reach out to [talmo@salk.ed
 - **Bioinformatics Analyst**: Junior software engineering position to work in the SLEAP team on cloud-based platform engineering to facilitate the use of deep learning-based technology for motion capture.
 - **Bioinformatics Analyst**: Junior software engineering position to work in the Bloom team on cloud-based platform engineering to develop a data warehouse for phenotypic and genetic data in support of [Salk's Harnessing Plants Initiative](https://www.salk.edu/harnessing-plants-initiative/) and our mission to enhance carbon sequestration in crops to curb climate change.
 
-<!-- - [**Post-Doctoral Fellow (Data Science)**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/6340e3d6-9512-4def-9fdf-68be001be337/OpportunityDetail?opportunityId=7340249b-5318-4aa6-a8ce-f91f8a06ec81): In collaboration with the [Busch Lab](https://busch.salk.edu/) and the [Harnessing Plants Initiative](https://www.salk.edu/harnessing-plants-initiative/), we are looking for a post-doc with a background in deep learning and computer vision to help realize our vision of combating climate change through plant bioengineering. [See this flyer for more details](https://talmolab.org/f/RAPTR_HPI_Recruitment.pdf). -->
-
-We do not curently have open positions. If you are interested in the positions below feel free to reach out to chat with us about potential upcoming opportunities.
+<!-- We do not curently have open positions. If you are interested in the positions below feel free to reach out to chat with us about potential upcoming opportunities. -->
 
 ### Software engineers
 
@@ -87,6 +77,7 @@ Finishing your PhD soon in neuroscience, computer science, physics, or another c
 
 ### Graduate students
 
+{% capture text %}
 If you are interested in pursuing a MS or PhD while working in the lab, you will need to apply to one of the graduate programs at UCSD. We are open to potentially accepting students from any program, but we recommend:
 
 - [Neuroscience](https://neurograd.ucsd.edu/index.html) (particularly the [Computational Neuroscience specialization](https://neurograd.ucsd.edu/program/comp-neuro/index.html))
@@ -95,6 +86,14 @@ If you are interested in pursuing a MS or PhD while working in the lab, you will
 - [Computer Science and Engineering](https://cse.ucsd.edu/graduate/degree-programs)
 
 If you have questions, aren't sure which program to apply to, or just want to chat about graduate school options, feel free to reach out.
+{% endcapture %}
+{%
+  include feature.html
+  image="images/lab-action.jpg"
+  headline="Philosophy"
+  width="500px"
+  text=text
+%}
 
 ### High school and undergraduate internships
 
