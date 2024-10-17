@@ -1,8 +1,63 @@
 # DO NOT EDIT, GENERATED AUTOMATICALLY FROM SOURCES.YAML (AND ELSEWHERE)
 # See https://github.com/greenelab/lab-website-template/wiki/Citations
 
-- id: doi:10.1101/2023.11.20.567949
-  title: Fast and efficient root phenotyping via pose estimation
+- id: doi:10.1038/s41592-024-02318-2
+  title: 'Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics'
+  authors:
+  - Caleb Weinreb
+  - Jonah E. Pearl
+  - Sherry Lin
+  - Mohammed Abdal Monium Osman
+  - Libby Zhang
+  - Sidharth Annapragada
+  - Eli Conlin
+  - Red Hoffmann
+  - Sofia Makowska
+  - Winthrop F. Gillis
+  - Maya Jay
+  - Shaokai Ye
+  - Alexander Mathis
+  - Mackenzie W. Mathis
+  - Talmo Pereira
+  - Scott W. Linderman
+  - Sandeep Robert Datta
+  publisher: Nature Methods
+  date: '2024-07-01'
+  link: https://doi.org/g8khf2
+  image: images/papers/weinreb-2023.png
+  _cache: 9672c3df1d805b9228670ed25c72cbc60cc85d9fef501a840a626b810573319e
+- title: Multi-view triangulation-enabled annotation for multi-animal 3D pose in SLEAP
+  authors:
+  - Liezl Maree
+  - Sean Afshar
+  - Stefan Oline
+  - Eric Leonardis
+  - Annegret Falkner
+  - Talmo Pereira
+  publisher: Measuring Behavior 2024
+  image: images/papers/maree-2024.jpg
+  date: '2024-05-15'
+  link: images/papers/maree-2024.pdf
+  _cache: 1812da7b25896aa22af0da680aa563fd196a444581b26a7b0aa7b46ed089cba3
+- id: doi:10.1101/2024.05.03.592173
+  title: Deep Imputation for Skeleton Data (DISK) for Behavioral Science
+  authors:
+  - France Rose
+  - Monika Michaluk
+  - Timon Blindauer
+  - Bogna M Ignatowska-Jankowska
+  - Liam O'Shaughnessy
+  - Greg J. Stephens
+  - Talmo D Pereira
+  - Marylka Y. Uusisaari
+  - Katarzyna Bozek
+  publisher: bioRxiv
+  date: '2024-05-05'
+  link: https://doi.org/g8khh3
+  image: images/papers/rose-2024.png
+  _cache: 9d13a1a1bf34efd4cbc06190a65f249678f9644b0220b32c72d76cc5a17d63d6
+- id: doi:10.34133/plantphenomics.0175
+  title: Fast and Efficient Root Phenotyping via Pose Estimation
   authors:
   - Elizabeth M. Berrigan
   - Lin Wang
@@ -28,11 +83,11 @@
   - Shree Pariyar
   - Wolfgang Busch
   - Talmo D. Pereira
-  publisher: bioRxiv
-  date: '2023-11-21'
-  link: https://doi.org/gs7djd
+  publisher: Plant Phenomics
+  date: '2024-01-01'
+  link: https://doi.org/g8khf3
   image: images/papers/berrigan-2023.png
-  _cache: 532da464c643f3641539f672a08e4aa75b6e1420e80b0b115dd126900ae27d5e
+  _cache: e235b2cd016be0c88bd8c87fe438a8d10e3498f668fc73854b914b0a911ae977
 - id: doi:10.1101/2023.11.10.566632
   title: Distinct developmental trajectories of autonomous behaviors and agency in
     rodents
@@ -79,29 +134,6 @@
   link: https://doi.org/gs7djg
   image: images/papers/patel-2023.png
   _cache: 4074134689ed880c100c784cbce3315bf265ebfbc63ea9638e80728374252ac7
-- id: doi:10.1101/2023.03.16.532307
-  title: 'Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics'
-  authors:
-  - Caleb Weinreb
-  - Mohammed Abdal Monium Osman
-  - Libby Zhang
-  - Sherry Lin
-  - Jonah Pearl
-  - Sidharth Annapragada
-  - Eli Conlin
-  - Winthrop F. Gillis
-  - Maya Jay
-  - Ye Shaokai
-  - Alexander Mathis
-  - Mackenzie Weygandt Mathis
-  - Talmo Pereira
-  - Scott W. Linderman
-  - Sandeep Robert Datta
-  publisher: bioRxiv
-  date: '2023-03-17'
-  link: https://doi.org/gr9f25
-  image: images/papers/weinreb-2023.png
-  _cache: 73d5bf51d34c9aa026e95bcc9c05fd5e629c26155b6545cbc46540c696864df9
 - id: doi:10.7554/eLife.79305
   title: 'Open-source tools for behavioral video analysis: Setup, methods, and best
     practices'
