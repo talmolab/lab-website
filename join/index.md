@@ -28,7 +28,7 @@ Our group's culture is intended to reflect the reality that **not everyone is af
 {%
   include figure.html
   image="images/2024-09-05.action.jpg"
-  caption="The lab, ca. 2024. Photo credit: Chris Keeney"
+  headline="Philosophy"
   width="500px"
 %}
 
@@ -80,7 +80,7 @@ Finishing your PhD soon in neuroscience, computer science, physics, or another c
 {% capture text %}
 If you are interested in pursuing a MS or PhD while working in the lab, you will need to apply to one of the graduate programs at UCSD. We are open to potentially accepting students from any program, but we recommend:
 
-- [Neuroscience](https://neurograd.ucsd.edu/index.html) (particularly the [Computational Neuroscience specialization](https://neurograd.ucsd.edu/program/comp-neuro/index.html))
+- [Neuroscience](https://neurograd.ucsd.edu/index.html)
 - [Cognitive Science](https://cogsci.ucsd.edu/graduates/phd-program/index.html)
 - [Data Science](https://datascience.ucsd.edu/academics/graduate/admissions/)
 - [Computer Science and Engineering](https://cse.ucsd.edu/graduate/degree-programs)
@@ -90,7 +90,7 @@ If you have questions, aren't sure which program to apply to, or just want to ch
 {%
   include feature.html
   image="images/lab-action.jpg"
-  headline="Philosophy"
+  headline="Come learn with us!"
   width="500px"
   text=text
 %}
