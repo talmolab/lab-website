@@ -35,10 +35,10 @@
   - Annegret Falkner
   - Talmo Pereira
   publisher: Measuring Behavior 2024
-  image: images/papers/maree-2024.jpg
+  image: images/papers/maree-2024.png
   date: '2024-05-15'
-  link: images/papers/maree-2024.pdf
-  _cache: 1812da7b25896aa22af0da680aa563fd196a444581b26a7b0aa7b46ed089cba3
+  link: /images/papers/maree-2024.pdf
+  _cache: edd100a34c3afa15ba5fecde282d0011fa53b7d6aacdf89c80361c0a07fc9c61
 - id: doi:10.1101/2024.05.03.592173
   title: Deep Imputation for Skeleton Data (DISK) for Behavioral Science
   authors:
