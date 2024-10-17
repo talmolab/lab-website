@@ -29,6 +29,14 @@ The lab is led by [Talmo Pereira](members/talmo-pereira.html) and located at the
 
 {%
   include figure.html
+  image="images/2024-08-06.lab-group1.jpg"
+  caption="The lab, ca. 2024. Photo credit: Chris Keeney"
+  link="team"
+  width="1400px"
+%}
+
+{%
+  include figure.html
   image="images/the-lab.jpg"
   caption="The lab, ca. 2022. Photo credit: Chris Keeney"
   link="team"

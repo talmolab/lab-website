@@ -9,8 +9,8 @@ nav:
 
 {%
   include figure.html
-  image="images/the-team.jpg"
-  caption="The group, ca. 2022. Photo credit: Chris Keeney"
+  image="images/2024-08-06.lab-group2.jpg"
+  caption="The group, ca. 2024. Photo credit: Chris Keeney"
   link="team"
   width="1400px"
 %}
@@ -31,6 +31,13 @@ Our group's culture is intended to reflect the reality that **not everyone is af
   headline="Philosophy"
   width="500px"
   text=text
+%}
+
+{%
+  include figure.html
+  image="images/2024-09-05.action.jpg"
+  caption="The lab, ca. 2024. Photo credit: Chris Keeney"
+  width="500px"
 %}
 
 
@@ -54,6 +61,15 @@ If you are interested in any of the positions below, reach out to [talmo@salk.ed
 
 
 ### Open positions
+
+- [**Postdoctoral Fellow**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/6340e3d6-9512-4def-9fdf-68be001be337/OpportunityDetail?opportunityId=999bd878-5d5f-4e13-8732-ab570be1c835) (joint with [Eiman Azim](https://azim.salk.edu/)): Our groups are looking for a postdoctoral fellow with strong expertise in biomechanics, deep reinforcement learning and/or NeuroAI to work with us on simulating brains, bodies and behavior.
+- [**Research Assistant**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=e594843b-80bb-46ac-a0b0-29908724879f) (joint with [Eiman Azim](https://azim.salk.edu/)): Our groups are looking for a full-time research assistant to help us develop our high throughput behavioral phenotyping systems for characterizing the progression of neurodegenerative diseases in rodents.
+- [**Summer Undergraduate Research Fellowship (SURF) Intern**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=b49f1750-4779-435c-8b23-ca8ef6cd8526): We are taking undergraduate summer students through [Salk's SURF Program](https://www.salk.edu/about/diversity-equity-inclusion/summer-research-opportunities/). Positions are available in either modeling or software engineering for computational neuroscience.
+
+*To be posted soon (Oct 2024):*
+
+- **Bioinformatics Analyst**: Junior software engineering position to work in the SLEAP team on cloud-based platform engineering to facilitate the use of deep learning-based technology for motion capture.
+- **Bioinformatics Analyst**: Junior software engineering position to work in the Bloom team on cloud-based platform engineering to develop a data warehouse for phenotypic and genetic data in support of [Salk's Harnessing Plants Initiative](https://www.salk.edu/harnessing-plants-initiative/) and our mission to enhance carbon sequestration in crops to curb climate change.
 
 <!-- - [**Post-Doctoral Fellow (Data Science)**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/6340e3d6-9512-4def-9fdf-68be001be337/OpportunityDetail?opportunityId=7340249b-5318-4aa6-a8ce-f91f8a06ec81): In collaboration with the [Busch Lab](https://busch.salk.edu/) and the [Harnessing Plants Initiative](https://www.salk.edu/harnessing-plants-initiative/), we are looking for a post-doc with a background in deep learning and computer vision to help realize our vision of combating climate change through plant bioengineering. [See this flyer for more details](https://talmolab.org/f/RAPTR_HPI_Recruitment.pdf). -->
 
@@ -87,3 +103,11 @@ Interested in doing research with us during the school year or for a summer? We 
 **UCSD students**: To work at Salk, you will need to enroll in a research for academic credit course such as [BISP 199](https://biology.ucsd.edu/education/undergrad/research/research-acad-cred/), [COGS 199](https://cogsci.ucsd.edu/undergraduates/student-resources/research.html) or [CSE 199](https://cse.ucsd.edu/undergraduate/cse199-independent-study-undergraduates). Make sure to check out the [general requirements for enrollment](https://students.ucsd.edu/academics/enroll/special-enrollment/special-studies-classes.html).
 
 We especially recommend that UCSD students considering working with us for a longer period of time apply for the [Triton Research & Experiential Learning Scholars (TRELS) program](https://ugresearch.ucsd.edu/research-programs/trels/index.html). This opportunity provides funding to conduct and present your research.
+
+{%
+  include figure.html
+  image="images/the-team.jpg"
+  caption="The group, ca. 2022. Photo credit: Chris Keeney"
+  link="team"
+  width="1400px"
+%}

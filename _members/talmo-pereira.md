@@ -1,6 +1,6 @@
 ---
 name: Talmo Pereira
-image: images/talmo-pereira.jpg
+image: images/talmo-pereira-2024-09-alt@1x.png
 role: pi
 description: Principal Investigator
 links:
