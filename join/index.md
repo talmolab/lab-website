@@ -26,10 +26,11 @@ Lab members should expect to be able to **ask for help whenever they need it**, 
 Our group's culture is intended to reflect the reality that **not everyone is afforded the same opportunities** before they arrive here, but that that does not mean they are not as qualified or worthy of the chance to prove themselves. It is only by acknowledging the structural disparities that are inherent in academia that we can **effect real change** &mdash; and do amazing science along the way!
 {% endcapture %}
 {%
-  include figure.html
+  include feature.html
   image="images/2024-09-05.action.jpg"
   headline="Philosophy"
   width="500px"
+  text=text
 %}
 
 
