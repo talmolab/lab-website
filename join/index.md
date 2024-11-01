@@ -56,12 +56,11 @@ If you are interested in any of the positions below, reach out to [talmo@salk.ed
 ### Open positions
 
 - [**Postdoctoral Fellow**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/6340e3d6-9512-4def-9fdf-68be001be337/OpportunityDetail?opportunityId=999bd878-5d5f-4e13-8732-ab570be1c835) (joint with [Eiman Azim](https://azim.salk.edu/)): Our groups are looking for a postdoctoral fellow with strong expertise in biomechanics, deep reinforcement learning and/or NeuroAI to work with us on simulating brains, bodies and behavior.
-- [**Research Assistant**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=e594843b-80bb-46ac-a0b0-29908724879f) (joint with [Eiman Azim](https://azim.salk.edu/)): Our groups are looking for a full-time research assistant to help us develop our high throughput behavioral phenotyping systems for characterizing the progression of neurodegenerative diseases in rodents.
+- [**Bioinformatics Analyst**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=24c336db-cd56-4bc8-a079-b45b040d703f): Junior software engineering position to work in the SLEAP team on cloud-based platform engineering to facilitate the use of deep learning-based technology for motion capture.
 - [**Summer Undergraduate Research Fellowship (SURF) Intern**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=b49f1750-4779-435c-8b23-ca8ef6cd8526): We are taking undergraduate summer students through [Salk's SURF Program](https://www.salk.edu/about/diversity-equity-inclusion/summer-research-opportunities/). Positions are available in either modeling or software engineering for computational neuroscience.
+<!-- - [**Research Assistant**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=e594843b-80bb-46ac-a0b0-29908724879f) (joint with [Eiman Azim](https://azim.salk.edu/)): Our groups are looking for a full-time research assistant to help us develop our high throughput behavioral phenotyping systems for characterizing the progression of neurodegenerative diseases in rodents. -->
 
-*To be posted soon (Oct 2024):*
-
-- **Bioinformatics Analyst**: Junior software engineering position to work in the SLEAP team on cloud-based platform engineering to facilitate the use of deep learning-based technology for motion capture.
+*Coming up (late 2024):*
 - **Bioinformatics Analyst**: Junior software engineering position to work in the Bloom team on cloud-based platform engineering to develop a data warehouse for phenotypic and genetic data in support of [Salk's Harnessing Plants Initiative](https://www.salk.edu/harnessing-plants-initiative/) and our mission to enhance carbon sequestration in crops to curb climate change.
 
 <!-- We do not curently have open positions. If you are interested in the positions below feel free to reach out to chat with us about potential upcoming opportunities. -->
