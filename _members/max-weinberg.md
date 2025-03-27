@@ -1,7 +1,7 @@
 ---
 name: Max Weinberg
 image: images/max-weinberg.jpg
-role: phd
+role: alumni
 description: PhD Student (rotation)
 ---
 

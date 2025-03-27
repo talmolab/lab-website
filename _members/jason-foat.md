@@ -1,7 +1,7 @@
 ---
 name: Jason Foat
 image: images/jason-foat.jpg
-role: programmer
+role: alumni
 description: Scientific Programmer
 links:
   github: jf514

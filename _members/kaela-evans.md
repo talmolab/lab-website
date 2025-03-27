@@ -1,7 +1,7 @@
 ---
 name: Kaela Evans
 image: images/kaela-evans.jpg
-role: ra
+role: alumni
 description: Research Assistant
 ---
 

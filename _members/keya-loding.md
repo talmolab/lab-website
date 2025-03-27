@@ -1,7 +1,7 @@
 ---
 name: Keya Loding
 image: images/keya-loding.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern
 ---
 

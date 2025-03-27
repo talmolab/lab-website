@@ -93,6 +93,10 @@ nav:
 - 2024: [**Chaitanya Kapoor**](/members/chaitanya-kapoor.html) (Undergrad Research Intern). **Next:** UCSD RA with Meenakshi Khosla.
 - 2024: [**Arnav Dagar**](/members/arnav-dagar.html) (High School Summer Research Intern).
 - 2024: [**Ava Barbano**](/members/ava-barbano.html) (Undergraduate Summer Research Intern).
-<!-- - 2024: [**Keya Loding**](/members/keya-loding.html) (Undergraduate Summer Research Intern). -->
 - 2024: [**Arthur Mayo III**](/members/arthur-mayo.html) (Undergraduate Summer Research Intern).
+- 2024: [**Jason Foat**](/members/jason-foat.html) (Software Engineer).
+- 2024: [**Max Weinberg**](/members/max-weinberg.html) (PhD Rotation Student).
+- 2024: [**Kaela Evans**](/members/kaela-evans.html) (Research Assistant).
+- 2024: [**Keya Loding**](/members/keya-loding.html) (Undergrad Research Intern).
+- 2024: [**Nathaniel Nono**](/members/nathaniel-nono.html) (Undergrad Research Intern).
 - 2024: [**Aaditya Prasad**](/members/aaditya-prasad.html) (Undergrad, MS). **Next:** MIT pursuing a PhD in Brain and Cognitive Sciences.
