@@ -57,7 +57,13 @@ If you are interested in any of the positions below, reach out to [talmo@salk.ed
 
 - [**Postdoctoral Fellow**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/6340e3d6-9512-4def-9fdf-68be001be337/OpportunityDetail?opportunityId=999bd878-5d5f-4e13-8732-ab570be1c835) (joint with [Eiman Azim](https://azim.salk.edu/)): Our groups are looking for a postdoctoral fellow with strong expertise in biomechanics, deep reinforcement learning and/or NeuroAI to work with us on simulating brains, bodies and behavior.
 
+- **Software Engineer**: We are seeking software engineers to support core development of our multi-animal pose tracking software, [SLEAP](https://sleap.ai). SLEAP supports a substantial userbase (140k+ downloads, 1.2k+ citations, 25k+ users, 70+ countries) so your work will immediately impact the research of folks all around the world.
+
+- **Research Assistants**: We are hiring for research assistants with expertise in deep learning, computer vision or deep reinforcement learning for a variety of projects in NeuroAI, quantitative behavior phenotyping and more.
+
 <!-- We do not curently have open positions. If you are interested in the positions below feel free to reach out to chat with us about potential upcoming opportunities. -->
+
+Again, if you are interested in any of the positions, reach out to [talmo@salk.edu](mailto:talmo@salk.edu) for a casual chat. **We strongly recommend including your CV and GitHub.**
 
 ### Software engineers
 
