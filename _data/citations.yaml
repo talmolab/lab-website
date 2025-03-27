@@ -1,6 +1,52 @@
 # DO NOT EDIT, GENERATED AUTOMATICALLY FROM SOURCES.YAML (AND ELSEWHERE)
 # See https://github.com/greenelab/lab-website-template/wiki/Citations
 
+- id: doi:10.1038/s41526-025-00460-5
+  title: The utility of animal models to inform the next generation of human space
+    exploration
+  authors:
+  - Isla Duporge
+  - Talmo Pereira
+  - Santiago Castiello de Obeso
+  - Julius G. Bright Ross
+  - Stephen J. Lee
+  - Allyson G. Hindle
+  publisher: npj Microgravity
+  date: '2025-02-22'
+  link: https://doi.org/g893th
+  _cache: d32cd48b84dd4c7ebefc51164f79207c5a62fbdde21e637a9b88c917788d2b04
+- id: doi:10.1101/2024.12.18.629202
+  title: Predicting Future Development of Stress-Induced Anhedonia From Cortical Dynamics
+    and Facial Expression
+  authors:
+  - Austin A. Coley
+  - Kanha Batra
+  - Jeremy M. Delahanty
+  - Laurel R. Keyes
+  - Rachelle Pamintuan
+  - Assaf Ramot
+  - Jim Hagemann
+  - Christopher R. Lee
+  - Vivian Liu
+  - Harini Adivikolanu
+  - Jianna Cressy
+  - Caroline Jia
+  - Francesca Massa
+  - Deryn LeDuke
+  - Moumen Gabir
+  - "Bra\u2019a Durubeh"
+  - Lexe Linderhof
+  - Reesha Patel
+  - Romy Wichmann
+  - Hao Li
+  - Kyle B. Fischer
+  - Talmo Pereira
+  - Kay M. Tye
+  publisher: bioRxiv
+  date: '2024-12-20'
+  link: https://doi.org/g893tj
+  image: images/papers/coley-2024.png
+  _cache: 76b20b1d2bf78ddf9ccb740249d69a914ba8fe1312a25a525490f0007abdfba7
 - id: doi:10.1038/s41592-024-02318-2
   title: 'Keypoint-MoSeq: parsing behavior by linking point tracking to pose dynamics'
   authors:
