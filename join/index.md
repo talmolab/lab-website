@@ -59,7 +59,7 @@ If you are interested in any of the positions below, reach out to [talmo@salk.ed
 
 - **Software Engineer**: We are seeking software engineers to support core development of our multi-animal pose tracking software, [SLEAP](https://sleap.ai). SLEAP supports a substantial userbase (140k+ downloads, 1.2k+ citations, 25k+ users, 70+ countries) so your work will immediately impact the research of folks all around the world.
 
-- **Research Assistants**: We are hiring for research assistants with expertise in deep learning, computer vision or deep reinforcement learning for a variety of projects in NeuroAI, quantitative behavior phenotyping and more.
+- [**Research Assistant**](https://recruiting2.ultipro.com/SAL1013SIBS/JobBoard/e9f055e1-a105-4f91-9a67-21aea61655fa/OpportunityDetail?opportunityId=f9e94765-52a4-41c3-b84e-8bddb5a17b6f): We are hiring for research assistants with expertise in deep learning, computer vision or deep reinforcement learning for a variety of projects in NeuroAI, quantitative behavior phenotyping and more.
 
 <!-- We do not curently have open positions. If you are interested in the positions below feel free to reach out to chat with us about potential upcoming opportunities. -->
 
