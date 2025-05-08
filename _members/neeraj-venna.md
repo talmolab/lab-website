@@ -1,7 +1,7 @@
 ---
 name: Neeraj Venna
 image: images/neeraj-venna.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern
 ---
 

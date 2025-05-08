@@ -1,7 +1,7 @@
 ---
 name: Gregory Quach
 image: images/gregory-quach.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern
 ---
 

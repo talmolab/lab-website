@@ -1,7 +1,7 @@
 ---
 name: Liezl Maree
 image: images/liezl-maree.jpg
-role: programmer
+role: alumni
 description: Scientific Programmer
 links:
   github: roomrys

@@ -1,7 +1,7 @@
 ---
 name: Amitha Attapu
 image: images/amitha-attapu.jpg
-role: programmer
+role: alumni
 description: Bioinformatics Analyst
 links:
   github: amitha-attapu

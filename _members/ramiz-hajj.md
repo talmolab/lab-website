@@ -1,7 +1,7 @@
 ---
 name: Ramiz Hajj
 image: images/ramiz-hajj.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern
 ---
 

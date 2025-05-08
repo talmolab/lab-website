@@ -2,7 +2,7 @@
 name: Fabian Plum
 image: images/fabian-plum.jpg
 role: postdoc
-description: Postdoctoral Fellow (Visitng)
+description: Postdoctoral Fellow (Visiting)
 links:
   github: FabianPlum
   twitter: fabian_plum

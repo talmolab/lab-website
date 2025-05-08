@@ -1,8 +1,8 @@
 ---
 name: Scott Yang
 image: images/scott-yang.jpg
-role: ms
-description: Master's Student
+role: phd
+description: PhD Student
 ---
 
-Scott majored in Data Science and Cognitive Science at UCSD and is now doing a MS in Computer Science. They joined the lab in September 2023 and works on building computational models of the brain and behavior using deep reinforcement learning.
+Scott is a PhD student in the Neuroscience Graduate Program at UCSD. They received their BS in Data Science and Cognitive Science and MS in Computer Science from UCSD. Scott joined the lab in September 2023 as an undergrad to work on building computational models of the brain and behavior using deep reinforcement learning.
