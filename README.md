@@ -3,37 +3,54 @@
 **Live at:** https://talmolab.org
 
 
-## Setup for local development
+## Install (local development)
 
-On Ubuntu/WSL, first install build tools and Ruby:
+### Ubuntu / WSL
+
+Install build tools and Ruby:
 
 ```
 sudo apt update && sudo apt install build-essential && sudo apt install ruby-full
 ```
 
-Next install Bundler:
+Install Bundler:
 ```
 sudo gem install bundler
 ```
 
-Then just run `start.sh` in this folder or:
+Install dependencies for this repo:
+```
+bundle install
+```
+
+### MacOS
+
+Install Ruby:
+
+```
+brew install ruby && echo 'export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' >> ~/.zprofile && source ~/.zprofile
+```
+
+Install Bundler:
+
+```
+gem install bundler
+```
+
+Install dependencies for this repo:
+```
+bundle install
+```
+
+
+## Local preview
+
+Just run `start.sh` in this folder or:
 
 ```
 bundle exec jekyll serve --force_polling --livereload
 ```
 ([See this issue for livereloading on WSL.](https://github.com/microsoft/WSL/issues/216#issuecomment-756424551))
-
-
-## Editing SVG logo
-
-First, edit one of the existing variants:
-
-- [`images/logo.svg`](images/logo.svg): Animated
-- [`images/logo_static.svg`](images/logo_static.svg): Static, white stroke with transparent background
-- [`images/logo_static_grey_bg.svg`](images/logo_static_grey_bg.svg): Static, white stroke with grey background (this looks the nicest for static)
-- [`images/logo_static_outline.svg`](images/logo_static_outline.svg): Static, white stroke with thin black outline
-
-Then, to render to PNG, use an online service. [This is a nice open-source one](https://github.com/vincerubinetti/svg-to-png).
 
 
 ## Documentation
