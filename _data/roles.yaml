@@ -6,6 +6,10 @@ postdoc:
   icon: fas fa-glasses
   text: Postdoctoral Researcher
 
+staff:
+  icon: fas fa-user-tie
+  text: Staff Scientist
+
 phd:
   icon: fas fa-graduation-cap
   text: PhD Student
@@ -29,6 +33,10 @@ programmer:
 ra:
   icon: fas fa-code
   text: Research Assistant
+
+friends:
+  icon: fas fa-heart
+  text: Friends of the Lab
 
 alumni:
   icon: fas fa-graduation-cap

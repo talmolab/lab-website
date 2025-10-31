@@ -1,7 +1,7 @@
 ---
 name: Nick Andrews
 image: images/nick-andrews.png
-role: postdoc
+role: friends
 description: Staff Scientist
 ---
 

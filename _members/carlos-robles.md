@@ -1,7 +1,7 @@
 ---
 name: Carlos Robles
 image: images/carlos-robles.jpeg
-role: ra
+role: alumni
 description: Research Assistant
 ---
 

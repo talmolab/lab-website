@@ -1,7 +1,7 @@
 ---
 name: Lin Wang
 image: images/lin-wang.png
-role: programmer
+role: friends
 description: Bioinformatics Analyst
 links:
   github: linwang9926

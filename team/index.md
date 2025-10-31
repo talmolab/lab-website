@@ -33,6 +33,13 @@ nav:
   include list.html
   data="members"
   component="portrait"
+  filters="role: staff"
+%}
+{:.center}
+{%
+  include list.html
+  data="members"
+  component="portrait"
   filters="role: phd"
 %}
 {:.center}
@@ -64,6 +71,13 @@ nav:
   filters="role: highschool"
 %}
 {:.center}
+{%
+  include list.html
+  data="members"
+  component="portrait"
+  filters="role: friends"
+%}
+{:.center}
 
 {%
   include link.html
@@ -77,6 +91,13 @@ nav:
 
 ## Alumni
 
+- 2025: [**Hutton Saunders**](/members/hutton-saunders.html) (Undergraduate Summer Research Intern).
+- 2025: [**Rusham Bhatt**](/members/rusham-bhatt.html) (Undergraduate Summer Research Intern).
+- 2025: [**Papa Manu**](/members/papa-manu.html) (Undergraduate Summer Research Intern).
+- 2025: [**Drake Thompson**](/members/drake-thompson.html) (Undergraduate Summer Research Intern).
+- 2025: [**Van Nguyen**](/members/van-nguyen.html) (Undergraduate Summer Research Intern).
+- 2025: [**Advaith Ravishankar**](/members/advaith-ravishankar.html) (Undergraduate Research Intern, TRELS Scholar). **Next:** Harvard pursuing a MS in Computer Science.
+- 2025: [**Carlos Robles**](/members/carlos-robles.html) (Research Assistant). **Next:** Mt. Sinai School of Medicine pursuing a MD.
 - 2025: [**Amitha Attapu**](/members/amitha-attapu.html) (Software Engineer). **Next:** AWS
 - 2025: [**Liezl Maree**](/members/liezl-maree.html) (Software Engineer).
 - 2024: [**Aaditya Prasad**](/members/aaditya-prasad.html) (Undergraduate Research Intern, Master's Student). **Next:** MIT pursuing a PhD in Brain and Cognitive Sciences.

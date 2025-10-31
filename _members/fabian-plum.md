@@ -1,7 +1,7 @@
 ---
 name: Fabian Plum
 image: images/fabian-plum.jpg
-role: postdoc
+role: friends
 description: Postdoctoral Fellow (Visiting)
 links:
   github: FabianPlum

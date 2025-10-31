@@ -1,7 +1,7 @@
 ---
 name: Advaith Ravishankar
 image: images/advaith-ravishankar.jpg
-role: undergrad
+role: alumni
 description: Undergraduate Research Intern (TRELS Scholar)
 ---
 
