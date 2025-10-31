@@ -1,5 +1,5 @@
 ---
-name: Benfica Xavier
+name: Benfica Xavier Fernando
 image: images/benfica-xavier.jpg
 role: programmer
 description: Bioinformatics Analyst
