@@ -55,11 +55,19 @@ bundle exec jekyll serve --force_polling --livereload
 
 ## Claude Code Development
 
-This repository includes custom skills for common tasks. For local testing with Playwright:
+This repository includes custom skills for common tasks:
+
+- **add-member**: Interactive guide for adding lab members with web research and bio drafting
+- **lab-roster**: Generate comprehensive team rosters with role transitions and career tracking
+- **local-test**: Test local Jekyll build and visualize pages with Playwright MCP
+
+For local testing with Playwright:
 
 ```
 claude mcp add playwright npx '@playwright/mcp@latest'
 ```
+
+See `.claude/skills/` for detailed skill documentation.
 
 
 ## Documentation
