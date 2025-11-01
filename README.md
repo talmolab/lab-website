@@ -53,6 +53,15 @@ bundle exec jekyll serve --force_polling --livereload
 ([See this issue for livereloading on WSL.](https://github.com/microsoft/WSL/issues/216#issuecomment-756424551))
 
 
+## Claude Code Development
+
+This repository includes custom skills for common tasks. For local testing with Playwright:
+
+```
+claude mcp add playwright npx '@playwright/mcp@latest'
+```
+
+
 ## Documentation
 
 [▶️ Get Started](https://github.com/greenelab/lab-website-template/wiki/Get-Started)
