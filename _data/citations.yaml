@@ -7,8 +7,8 @@
   - Charles Y. Zhang
   - Yuanjia Yang
   - Aidan Sirbu
-  - Elliott T.T. Abe
-  - Emil Wärnberg
+  - Elliott T. T. Abe
+  - "Emil W\xE4rnberg"
   - Eric J. Leonardis
   - Diego E. Aldarondo
   - Adam Lee
@@ -28,13 +28,13 @@
   - Blake A. Richards
   - Bingni W. Brunton
   - Eiman Azim
-  - Bence P. Ölveczky
+  - "Bence P. \xD6lveczky"
   - Talmo D. Pereira
   publisher: arXiv
-  date: '2025-11-25'
-  link: https://arxiv.org/abs/2511.20532
+  date: '2025-01-01'
+  link: https://doi.org/hbswqs
   image: images/papers/zhang-2025.png
-
+  _cache: 50f0d6194e9e73d90ee4207d06bad9caa94822e5c0ed03a97c9b64aee7a6078b
 - id: doi:10.1038/s41526-025-00460-5
   title: The utility of animal models to inform the next generation of human space
     exploration
