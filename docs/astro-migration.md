@@ -587,3 +587,60 @@ at **700 / -0.02em** rather than Bricolage's 600 / -0.025em, because Source Sans
 and needs the extra weight to hold at display size — those are the site's own `h1` numbers, so
 card and page heading now agree. Dropping IBM Plex Mono also removes the last trace of a family
 §13 rejected on Greek coverage (2%).
+
+### 2026-08-30 — Phase 2a: people collection extracted
+
+56 people, 55 member pages, all 55 existing `/members/<slug>.html` URLs still
+resolving. `docs/phase2-people-review.md` carries what needs Talmo's judgement;
+§12 open question 4 is surfaced there rather than decided.
+
+The extraction refused to guess. Where the prose does not say, the field is absent
+and reported — the `lab-roster` skill's habit of *estimating* end dates from role
+duration is exactly wrong for a structured collection, because an estimate written
+into the data is indistinguishable from a fact a week later.
+
+Sources actually used, in order of confidence: the bio's own words ("joined the lab
+in March 2022" — present in **37 of 55**), then the alumni bullet's year, then git
+history as evidence only. Two semantics were established empirically:
+
+- **The alumni bullet year is the DEPARTURE year**, not arrival. Advaith Ravishankar
+  is listed under 2025 and joined 2022-03. So the list never recorded tenure at all;
+  the collection now does, and the table shows `2022–2025` where the old list showed
+  `2025`.
+- **`description` is a more reliable role source than `role`**, which is just
+  `alumni` for everyone who left.
+
+Four bugs on the live site fell out of the reconciliation:
+
+1. **Four people are invisible today** — Gregory Quach, Neeraj Venna, Ramiz Hajj,
+   Vincent Tu. `role: alumni` filters them off the team page, and nobody added them
+   to the hand-written list, so they appear nowhere while their pages sit unlinked.
+   This is the single strongest argument for the structural model, and it drove a
+   schema decision: **alumni-ness is derived from `end`, never stored.** A separate
+   flag is what fell out of sync. `end: "unknown"` exists so "departed, date not
+   recorded" stays distinct from "still here" — omitting `end` would recreate the
+   exact bug.
+2. **Ten member files reference portraits that do not exist**, rendering broken
+   images today. The new team page falls back to initials.
+3. **Seven role conflicts** between the list and the member files (Liezl Maree is
+   "Software Engineer" in one and "Scientific Programmer" in the other).
+4. **Pranav Sankar would have silently vanished.** He has no member file, so he is
+   not in `_members/` at all and a naive migration drops him — while the live site
+   does list him, as plain text. Added explicitly with `page: false`, which is also
+   the mechanism §6.2b needs for dropping thin pages later.
+
+Two display cases look identical in the source prose and must not look identical
+in the table, so they are distinguished structurally rather than by guessing:
+Will Knickrehm's `2023, 2024` is two separate summers, Aaditya Prasad's is one
+tenure with a role change. A run is contiguous when an appointment has no `end` or
+the next has no `start` — which is exactly how an unrecorded handover is encoded.
+They render `2023, 2024` and `2021–2024` respectively.
+
+Role ordering is now derived from a rank enum (§6.2), fixing the live site's
+manual ordering that puts staff scientists below undergraduate interns.
+
+Portraits moved to `src/assets/people/` for the Image pipeline — Astro is cutting
+them hard (577kB → 4kB webp). **Still open for Phase 5:** the other ~22 files under
+`images/`, including `/images/papers/maree-2024.pdf`, which §8 flags as the actual
+target of a cited work rather than a thumbnail. Astro serves none of `/images/**`
+today, so that must be resolved before cutover.

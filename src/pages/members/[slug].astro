@@ -1,14 +1,47 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { roleHistory, years, isCurrent } from '../../lib/people';
 
-// Placeholder route. Phase 2 replaces this with the `people` collection; it
-// exists now so the /members/<slug>.html URL shape stays under test.
-export function getStaticPaths() {
-  return [{ params: { slug: 'talmo-pereira' } }, { params: { slug: 'aaditya-prasad' } }];
+export async function getStaticPaths() {
+  const people = await getCollection('people');
+  return people
+    // §6.2b: not everyone in the collection has a page. Those who do not are
+    // still listed on the team page, as plain text.
+    .filter((p) => p.data.page)
+    .map((p) => ({ params: { slug: p.id }, props: { person: p } }));
 }
-const { slug } = Astro.params;
+
+const { person } = Astro.props;
+const { Content } = await render(person);
+const roles = roleHistory(person);
 ---
-<BaseLayout title={`${slug} — talmolab`}>
-  <h1>{slug}</h1>
-  <p class="muted">Placeholder member page.</p>
+<BaseLayout title={`${person.data.name} — talmolab`}>
+  <article class="member">
+    <header>
+      {person.data.image && (
+        <Image src={person.data.image} alt="" width={200} height={200} class="portrait" />
+      )}
+      <div>
+        <h1>{person.data.name}</h1>
+        <p class="roles">{roles.join(', ')}</p>
+        <p class="muted">
+          {years(person)}{!isCurrent(person) && person.data.next && (
+            <> · Now at {person.data.next.url
+              ? <a href={person.data.next.url}>{person.data.next.org}</a>
+              : person.data.next.org}</>
+          )}
+        </p>
+      </div>
+    </header>
+    <div class="bio"><Content /></div>
+  </article>
 </BaseLayout>
+
+<style>
+  .member header { display: flex; gap: 1.5rem; align-items: start; flex-wrap: wrap; }
+  .portrait { width: 160px; height: 160px; object-fit: cover; border-radius: 0.5rem; background: var(--sunk); }
+  .roles { font-weight: 600; margin-top: 0.25rem; }
+  .bio { margin-top: 2rem; }
+</style>

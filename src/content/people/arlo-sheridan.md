@@ -1,0 +1,16 @@
+---
+name: "Arlo Sheridan"
+image: ../../assets/people/arlo-sheridan.jpg
+appointments:
+  - role: scientific-programmer
+    start: "2022-03"
+    end: "2023"
+next:
+  org: "E11 Bio"
+  url: "https://e11.bio/"
+links:
+  github: "sheridana"
+  twitter: "SheridanArlo"
+---
+
+Arlo is a scientific programmer (software engineer) joint with [Uri Manor](https://manor.salk.edu/) who joined the lab in March 2022. He received his BS in Neuroscience from Knox College before working in the groups of Srini Turaga and Jan Funke at Janelia Research Campus. He is working on our core software stack, including SLEAP, and on developing new computer vision-based methods for multi-object tracking.
