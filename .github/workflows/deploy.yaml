@@ -1,0 +1,49 @@
+name: Deploy
+
+# Builds and deploys the Astro site to Cloudflare Workers.
+#
+# Until the Phase 5 DNS change, the Worker has NO routes, so this publishes to
+# talmolab-site.talmo-lab.workers.dev and cannot affect talmolab.org — which is
+# still served by GitHub Pages from main's Jekyll files.
+on:
+  push:
+    branches: [main, astro-migration]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # `npm run build` is `astro check && astro build && pagefind --site dist`.
+      # The type check runs here as well as locally because §7 makes the schemas
+      # the only guardrail on content input — there is no CMS to reject bad data.
+      - name: Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+        run: npm run build
+
+      - name: Deploy
+        if: github.event_name != 'pull_request'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Assert every live URL still resolves
+        if: github.event_name != 'pull_request'
+        run: ./scripts/check-urls.sh https://talmolab-site.talmo-lab.workers.dev

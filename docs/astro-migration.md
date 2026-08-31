@@ -826,3 +826,57 @@ University)" and "bioRxiv (Cold Spring Harbor Laboratory)", which nobody cites t
 way. The trailing parenthetical is stripped and the overlay can still override.
 
 §8 gate still passing 72/72 after all of it.
+
+### 2026-08-31 — Phase 4: automation, skills, CLAUDE.md
+
+**Discovery scripts + workflows.** `scripts/discover-publications.mjs` and
+`scripts/discover-news.mjs`, driven weekly by `.github/workflows/discover.yaml`,
+which opens a **PR** and never commits to `main` or publishes. News items also carry
+`draft: true`, so even merging does not put them on the site — two gates, because a
+release tag is not necessarily something the lab wants to announce.
+
+**It found a fifth missing publication.** §4.1 listed four; discovery turned up
+**Maree et al. 2023, "Quantifying Behavior Using Deep Learning", Biological
+Psychiatry** (`10.1016/j.biopsych.2023.02.038`) — Liezl Maree first author, Talmo
+last, genuinely absent from the site. Staged in the overlay as `maree-2023`.
+
+Two filter calibrations, both from real output rather than guesswork:
+
+- **The articles bucket was too permissive.** OpenAlex types conference abstracts as
+  `article`, so the APS Bulletin entries and a NAPPN abstract came through as
+  journal papers. Filtered by venue and title with the reason recorded. Also,
+  nothing without a DOI can be staged (the overlay keys off one), so those are
+  surfaced separately rather than dropped — a real paper occasionally lands there.
+- **Every GitHub release is not news.** Taking all of them produced **45 items in
+  eight months**, roughly one every five days: a changelog, not an announcement, and
+  it would train whoever reviews the PR to ignore the PR. Minor and major only
+  (`x.y.0`) gives 17 over the same window, about two a month. Non-semver tags are
+  kept rather than guessed about.
+
+The excluded records are listed in the PR body under a `<details>`, so the filter
+stays auditable instead of invisible.
+
+**Skills updated (§10).** `add-member` now emits `appointments[]` and — the point —
+marking a departure is **one edit, not two**. The old flow set `role: alumni` *and*
+hand-added a bullet to `team/index.md`; forgetting the second step is what made four
+people vanish. `local-test` swaps Jekyll for Astro and gains the checks that
+actually catch things, including the warning that routing must be tested under
+`wrangler dev` rather than `astro dev`. `lab-roster` reads the collection instead of
+parsing prose, and its two prose-parsing scripts are **deleted** — keeping a script
+that *estimates* end dates from role durations around is a footgun now that the real
+dates exist. New `add-publication` skill covers overlay entries and the
+preprint→published resolution, including the manual-association bar and the
+exact-string author-comparison trap.
+
+**Root `CLAUDE.md` rewritten**, replacing the Jekyll-era version. It leads with the
+rules that are load-bearing rather than a directory listing: alumni status derived
+from `end`, the overlay-as-allowlist, `_redirects` being first-match-wins, the
+three design-system gotchas, and a "things that will waste your time" section for
+the content-layer cache location and the expected empty-collection warnings.
+
+§8 gate still passing 72/72.
+
+**Phase 5 is now the only thing left, and its gate is green.** Remaining: move DNS
+from GitHub Pages to Workers (a routing change — Cloudflare already fronts the
+domain), verify, then remove the Jekyll files in one clearly-labelled commit so
+rollback stays available until the live site is confirmed.

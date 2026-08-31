@@ -1,6 +1,6 @@
 ---
 name: lab-roster
-description: Generate comprehensive lab member rosters in both markdown and CSV formats. Analyzes member profiles, git history, and alumni information to create detailed rosters with role transitions, team assignments, and career tracking. Use when user mentions roster, team list, lab members, or updating member information.
+description: Generate a lab member roster CSV from the people content collection, with one row per appointment — role transitions, tenure, co-advisors and career destinations. Use when the user mentions roster, team list, lab members, or the annual review.
 version: 1.0.0
 allowed-tools: Read, Glob, Grep, Bash, Task, Write, Edit
 ---
@@ -21,78 +21,38 @@ Use this skill when the user requests:
 
 ## Two Generation Modes
 
-### Mode 1: Quick Generation (Python Script)
-Fast automated generation using git history analysis.
+### Reading, not inferring
 
-**When to use**: Quick updates, routine refreshes
-**Output**: `lab_roster.csv`
+```bash
+python3 .claude/skills/lab-roster/scripts/roster_from_collection.py --out lab_roster.csv
+python3 .claude/skills/lab-roster/scripts/roster_from_collection.py --current-only
+```
 
-### Mode 2: Comprehensive Generation (Subagent Workflow)
-Careful information gathering using subagents for each member.
+One row per appointment, so someone who was an undergrad and then an MS student
+gets two rows — which is what the annual review needs.
 
-**When to use**: First-time generation, complex updates, verification needed
-**Output**: `ROSTER.md` + `lab_roster.csv`
+**This used to be much harder, and the difficulty was the point.** The old version
+parsed the team page's prose bullets, inferred role transitions from git history,
+and then *estimated* end dates from typical role durations. It had to, because year,
+prior roles, transitions and destinations existed nowhere but a hand-written
+markdown list. Appointments are structured now, so every column is read. A blank
+cell means "not recorded", never "we guessed".
 
-## Instructions
+The `status` column is explicit — `current`, `departed`, or
+`departed, date unrecorded` — so a blank `end_date` is never ambiguous. That
+distinction is load-bearing: conflating "gone" with "still here" is what left four
+people invisible on the old site.
 
-### Step 1: Determine Mode
+The script reports anyone with no recorded start date rather than filling one in.
+Three people currently have none; see `docs/phase2-people-review.md`.
 
-Ask the user which mode they prefer, or choose based on context:
-- If ROSTER.md doesn't exist or is outdated → Mode 2
-- If just need CSV update → Mode 1
-- If user wants verification → Mode 2
+### Where the older data lives
 
-### Step 2a: Quick Generation (Mode 1)
+`Salk/annual-review/2025/lab_roster.csv` in Google Drive is a hand-maintained roster
+through 2025-10, and it is the source most of the structured dates came from. It is
+richer than the website ever was — `YYYY-MM` on both ends, co-advisors, one row per
+role period. If a date is missing from the collection, check there before asking.
 
-1. Run the roster generation script:
-   ```bash
-   python3 .claude/skills/lab-roster/scripts/generate_roster_csv.py
-   ```
-
-2. Validate output:
-   - Check row count matches expected members
-   - Verify currently active members
-   - Show summary statistics
-
-3. Present results to user with summary
-
-### Step 2b: Comprehensive Generation (Mode 2)
-
-1. **Check if ROSTER.md exists**
-   - If exists, read it to understand current state
-   - If not, create it with field descriptions and instructions
-
-2. **Get list of all members**
-   ```bash
-   ls _members/*.md | grep -v "friends"
-   ```
-
-3. **Launch subagents to gather information**
-   - Process members in batches of 4-5
-   - Each subagent should:
-     - Read member file: `_members/[name].md`
-     - Check git history: `git log --follow --format="%aI|%s" -- _members/[name].md`
-     - Check for role transitions in git: `git show <commit>:_members/[name].md`
-     - Check alumni list in `team/index.md`
-     - Infer team from bio keywords (see reference.md)
-     - Extract co-advisor from bio text
-     - Extract previous and next positions
-
-4. **Update ROSTER.md**
-   - Add entries in the format from templates/roster-entry.md
-   - One entry per role (create multiple entries for role transitions)
-   - Only fill "Previous" field in first entry
-   - Only fill "Next" field in last entry
-
-5. **Generate CSV from ROSTER.md**
-   ```bash
-   python3 .claude/skills/lab-roster/scripts/roster_md_to_csv.py
-   ```
-
-6. **Validate and present**
-   - Show summary statistics
-   - Highlight any missing data
-   - Ask user to review
 
 ## Field Descriptions
 
@@ -149,7 +109,7 @@ Before presenting results:
 - [ ] Start dates seem reasonable
 - [ ] Teams assigned for most members
 - [ ] No duplicate entries
-- [ ] CSV has same data as ROSTER.md (if both exist)
+- [ ] Row count matches: appointments, not people (60 across 53 people today)
 - [ ] Summary statistics make sense
 
 ## Output Format
@@ -175,7 +135,7 @@ Summary:
 If script fails:
 1. Check Python version (needs Python 3.6+)
 2. Verify git is available
-3. Check that _members/ directory exists
+3. Check that `src/content/people/` exists and contains `*.md`
 4. Look for malformed member files
 
 If subagents miss information:
@@ -185,14 +145,19 @@ If subagents miss information:
 
 ## Notes
 
-- Exclude members with role "friends"
-- Multiple role entries for same person are normal (e.g., undergrad → MS → PhD)
-- Start dates are best guesses from git history
-- Some fields may be empty - that's okay
-- ROSTER.md is human-editable - CSV regenerates from it
+- Multiple rows for one person are normal and expected (undergrad → MS → PhD)
+- `role: friend` covers affiliates rather than lab appointments; their real title
+  is in `title`. Filter them out if the roster is for headcount.
+- **Start dates are read, not guessed.** If one is blank it is genuinely unrecorded
+  — do not fill it in from git history, which records when the file was created
+  rather than when the person arrived (they differ by months in several cases).
+- The CSV is generated output. Fix the collection, then regenerate; editing the CSV
+  puts the two out of sync and the collection is what the site renders.
 
 ## See Also
 
 - [reference.md](reference.md) - Detailed documentation on member formats and inference patterns
 - [examples.md](examples.md) - Example usage scenarios
 - [templates/roster-entry.md](templates/roster-entry.md) - Entry format template
+- `src/content.config.ts` - the `people` schema, which is the authority on fields
+- `docs/phase2-people-review.md` - known gaps in the data

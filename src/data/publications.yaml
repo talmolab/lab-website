@@ -20,6 +20,12 @@
 # Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
 # API at build time; anything written here overrides them.
 
+# DISCOVERED 2026-08-31 — review before merging.
+# Quantifying Behavior Using Deep Learning
+# Biological Psychiatry · 2023-04-10
+- key: maree-2023
+  published: { doi: "10.1016/j.biopsych.2023.02.038" }
+
 - key: cheng-2026
   published: { doi: "10.1038/s41586-026-10900-1" }
 
