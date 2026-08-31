@@ -213,12 +213,20 @@ Two things that bite here, both already handled in the scripts but worth knowing
   page out much wider and crops it — which produced near-empty icons twice before this was caught.
   Icons render at 1024 and downsample. Don't "simplify" that.
 
-### Type caveat
+### Type
 
-The card text is set in **Bricolage Grotesque**, carried over from earlier identity rounds. Site
-typography is a Phase 3 decision that has not been made. If a different face is chosen, re-run
-`scripts/mkog.py` after editing the font link in `scripts/og-template.html` — the type is baked
-into the PNG.
+The card text is set in **Source Sans 3** with the URL in **JetBrains Mono**, matching the site
+(`type-system.css`). Cards were re-rendered 2026-08-30 when the type system was settled; they
+previously used Bricolage Grotesque and IBM Plex Mono, carried over from earlier identity rounds.
+
+Source Sans 3 is a text face rather than a display one, so the headline runs at **700 / -0.02em**
+where Bricolage sat at 600 / -0.025em — that is the site's own `h1` spec, so an unfurl card and a
+page heading now agree.
+
+**The type is baked into the PNG.** Changing a face means editing the font link *and* the weights
+in `scripts/og-template.html`, then re-running `scripts/mkog.py` and `scripts/sync-public.py`.
+Watch the weights specifically: `.meta` asks for 500, and if the stylesheet link does not request
+it the browser silently rounds to the nearest loaded instance.
 
 ---
 

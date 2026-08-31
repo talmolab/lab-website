@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Button } from '../components/starwind/button';
+---
+<BaseLayout title="talmolab" description="Computational tools for studying complex biological systems.">
+  <h1>Scaffold</h1>
+  <p class="lede">
+    Astro 6 + Tailwind v4 + Starwind, wired to the ratified palette and type
+    system. Content lands in Phase 2.
+  </p>
+  <p>
+    Body copy at the specified scale, to check the measure holds at
+    <code>68ch</code> and that the mono face is picking up DOIs like
+    <span class="doi">10.1038/s41592-025-02893-y</span> without ligature mangling.
+  </p>
+
+  <h2>Starwind, inheriting the palette</h2>
+  <div style="display:flex; gap:.75rem; flex-wrap:wrap; align-items:center;">
+    <Button variant="primary">Primary</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="default">Default</Button>
+  </div>
+</BaseLayout>

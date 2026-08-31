@@ -1,0 +1,104 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'talmolab',
+  description = "Talmo Pereira's lab at the Salk Institute for Biological Studies, building computational tools that leverage deep learning and computer vision to study complex biological systems.",
+} = Astro.props;
+
+// og:image must be absolute or every platform silently renders a card with no
+// image. See design/meta-tags.html.
+const ogImage = new URL('/og-card.png', Astro.site).href;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+// §5b — five items. Home is the logo only, which frees a slot. "Tools", not
+// "Software". "Join us" folds into Team.
+const nav = [
+  { href: '/research/', label: 'Research' },
+  { href: '/publications/', label: 'Publications' },
+  { href: '/tools/', label: 'Tools' },
+  { href: '/team/', label: 'Team' },
+  { href: '/blog/', label: 'Blog' },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <Font cssVariable="--font-sans-src" preload />
+    <Font cssVariable="--font-mono-src" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="talmolab" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The talmolab logo: a lowercase t drawn as a neuron with a dendritic arbor, beside an l with a pose skeleton."
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@talmop" />
+    <meta name="twitter:creator" content="@talmop" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="The talmolab logo." />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/talmolab-favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f9fb" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#101419" />
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <nav aria-label="Primary">
+        {/* Never set the word "talmolab" in type — design/type-system.css. The
+            horizontal lockup is the nav one; the stacked needs too much height. */}
+        <a class="brand" href="/" aria-label="talmolab — home">
+          <img class="brand-light" src="/talmolab-lockup-h-light.svg" alt="talmolab" width="2323" height="767" />
+          <img class="brand-dark" src="/talmolab-lockup-h-dark.svg" alt="talmolab" width="2323" height="767" />
+        </a>
+        <ul>
+          {nav.map(({ href, label }) => (
+            <li>
+              <a href={href} aria-current={Astro.url.pathname.startsWith(href) ? 'page' : undefined}>{label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p class="muted">
+        Salk Institute for Biological Studies &middot; La Jolla, CA
+      </p>
+    </footer>
+  </body>
+</html>

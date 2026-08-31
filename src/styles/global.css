@@ -1,0 +1,178 @@
+@import "./starwind.css";
+
+/* The design system is imported, not copied. design/README.md is the authoritative
+ * reference and design/scripts/ regenerates palette.css from two hex values, so
+ * importing keeps a single source of truth — a re-run of the palette scripts
+ * flows straight into the site instead of drifting from it. */
+@import "../../design/palette.css";
+@import "../../design/type-system.css";
+
+/* --- font wiring ----------------------------------------------------------
+ * Astro's Fonts API registers each @font-face under a HASHED family name
+ * ("Source Sans 3-16d643d5..."), not the literal "Source Sans 3" that
+ * design/type-system.css names. That file is right as a specification, but the
+ * literal name resolves to a system sans for every visitor — while still looking
+ * correct on any machine with Source Sans installed locally, which is how this
+ * silently ships wrong. Re-point the tokens at Astro's generated stacks, which
+ * also carry the metric-matched fallbacks that prevent layout shift on load.
+ * Keep this override here, not in design/, so design/ stays framework-agnostic. */
+@theme {
+  --font-sans: var(--font-sans-src);
+  --font-mono: var(--font-mono-src);
+}
+
+/* --- Starwind bridge ------------------------------------------------------
+ * Starwind ships a generic semantic palette (neutral greys, blue-700 primary)
+ * and switches theme on a `.dark` CLASS. Neither matches this site, so map its
+ * semantic layer onto the ratified palette before any component is installed —
+ * afterwards every added component inherits the brand for free.
+ *
+ * Most of these point at --bg/--fg/--line/--mark, which already flip across all
+ * three theme states, so Starwind's tokens flip with them and never need the
+ * .dark class to be present. --surface is the one flipping alias the palette
+ * does not define, so it is derived here.
+ *
+ * NAME COLLISION, deliberate: design/palette.css defines --color-muted as MUTED
+ * TEXT (#555b64) while Starwind means it as a muted BACKGROUND. The palette is
+ * ratified, so it wins and Starwind's --muted is re-pointed at a real surface
+ * colour. Consequence: the `text-muted` utility is correct, `bg-muted` is not —
+ * use bg-secondary, which is theme-aware. Worth renaming one of them
+ * if this trips anyone up. */
+
+:root {
+  --surface: var(--color-surface);
+  /* The palette defines a recessed tone for light (--color-sunk) but not for
+     dark, because on a near-black ground "recessed" has to go lighter, not
+     darker. --color-dark-rule is the nearest ratified value that separates
+     cleanly from --color-ground. */
+  --sunk: var(--color-sunk);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: var(--color-dark-surface);
+    --sunk: var(--color-dark-rule);
+  }
+}
+:root[data-theme="dark"] {
+  --surface: var(--color-dark-surface);
+  --sunk: var(--color-dark-rule);
+}
+
+/* Starwind's dark: variant, re-keyed to the palette's three-state logic so
+   `dark:` utilities inside its components track the same switch the tokens do. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) { @slot; }
+  }
+  &:where(:root[data-theme="dark"], :root[data-theme="dark"] *) { @slot; }
+}
+
+:root, :root[data-theme="dark"] {
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: var(--surface);
+  --card-foreground: var(--fg);
+  --popover: var(--surface);
+  --popover-foreground: var(--fg);
+
+  /* Brand blue as the FILL in both themes, not --mark. --mark (#2a83c4 in dark)
+     is specified as a foreground on the dark ground; used as a button fill under
+     paper-coloured text it measures 3.87:1 and fails AA. #2176b3 gives 4.62:1
+     against paper in both themes, and still clears the 3:1 non-text minimum
+     against each ground (4.62 light / 3.79 dark). */
+  --primary: var(--color-brand-blue);
+  --primary-foreground: var(--color-paper);
+  --primary-accent: var(--link);
+
+  --secondary: var(--sunk);
+  --secondary-foreground: var(--fg);
+  --secondary-accent: var(--fg);
+
+  --muted: var(--sunk);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--surface);
+  --accent-foreground: var(--fg);
+
+  --border: var(--line);
+  --input: var(--line);
+  --outline: var(--mark);
+
+  --radius: 0.5rem;
+}
+
+/* --- layout shell ---------------------------------------------------------
+ * Deliberately minimal. Phase 3 owns the real frontend; this exists so the
+ * scaffold reads as a page rather than as a stack of unstyled elements. */
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  padding: 0.5rem 0.875rem;
+  background: var(--color-surface);
+  color: var(--link);
+  z-index: 10;
+}
+.skip:focus { left: 0.5rem; top: 0.5rem; }
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+}
+.site-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* Clear space is 2b, where b is the blue bar — 23% of logo height
+     (design/README.md). At a 34px lockup that is ~16px. */
+  gap: clamp(1rem, 4vw, 2.5rem);
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: 1rem clamp(1rem, 4vw, 2rem);
+}
+.site-header ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.875rem, 2.5vw, 1.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  margin-inline-start: auto;
+}
+.site-header a { text-decoration: none; }
+.site-header ul a { color: var(--fg-muted); }
+.site-header ul a:hover,
+.site-header ul a[aria-current="page"] { color: var(--fg); }
+
+/* The lockup is art, never re-typeset. Horizontal cut in the nav — the stacked
+   one needs too much height before the wordmark is legible. */
+.brand { display: inline-flex; align-items: center; flex: none; }
+.brand img { height: 34px; width: auto; display: block; }
+/* Scope the swap under .brand so it outranks `.brand img { display: block }`.
+   Unscoped, `.brand-dark` (0,1,0) loses to it (0,1,1) and BOTH lockups render
+   in light mode — which dark mode hides, because its rules carry an extra
+   class and win by accident. */
+.brand .brand-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .brand .brand-light { display: none; }
+  :root:not([data-theme="light"]) .brand .brand-dark  { display: block; }
+}
+:root[data-theme="dark"] .brand .brand-light { display: none; }
+:root[data-theme="dark"] .brand .brand-dark  { display: block; }
+
+main {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem);
+}
+main > * + * { margin-top: 1rem; }
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 4rem;
+}
+.site-footer p {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: 1.5rem clamp(1rem, 4vw, 2rem);
+}
+.muted { color: var(--fg-muted); }

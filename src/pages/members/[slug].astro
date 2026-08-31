@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Placeholder route. Phase 2 replaces this with the `people` collection; it
+// exists now so the /members/<slug>.html URL shape stays under test.
+export function getStaticPaths() {
+  return [{ params: { slug: 'talmo-pereira' } }, { params: { slug: 'aaditya-prasad' } }];
+}
+const { slug } = Astro.params;
+---
+<BaseLayout title={`${slug} — talmolab`}>
+  <h1>{slug}</h1>
+  <p class="muted">Placeholder member page.</p>
+</BaseLayout>

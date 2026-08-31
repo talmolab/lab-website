@@ -11,3 +11,7 @@ scratch/
 
 # design/ holds sources; build/ is 16MB of regenerable derivatives
 design/build/
+node_modules/
+dist/
+.astro/
+.wrangler/

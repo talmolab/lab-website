@@ -1,7 +1,9 @@
-<!-- OG card template. Rendered by scripts/mkog.py via headless Chrome at exact pixel sizes. -->
+<!-- OG card template. Rendered by scripts/mkog.py via headless Chrome at exact pixel sizes.
+     Type is Source Sans 3 + JetBrains Mono, matching the site (see ../type-system.css).
+     The faces are baked into the PNG, so re-run mkog.py after changing them. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
 <style>
   :root{
     --paper:#f7f9fb; --ground:#101419;
@@ -13,7 +15,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{width:100%;height:100%}
   body{
-    font-family:"Bricolage Grotesque",system-ui,sans-serif;
+    font-family:"Source Sans 3",system-ui,sans-serif;
     background:var(--paper); color:var(--ink);
     display:flex; align-items:center;
     -webkit-font-smoothing:antialiased;
@@ -26,12 +28,12 @@
   .bar{flex:0 0 auto;width:3px;align-self:stretch;background:var(--rule);margin:var(--barm) 0}
   body.dark .bar{background:var(--dmrule)}
   .copy{display:flex;flex-direction:column;gap:var(--cgap);min-width:0}
-  .desc{font-size:var(--descs);font-weight:600;line-height:1.16;letter-spacing:-.025em;text-wrap:balance}
+  .desc{font-size:var(--descs);font-weight:700;line-height:1.14;letter-spacing:-.02em;text-wrap:balance}
   .desc em{font-style:normal;color:var(--acc)}
   body.dark .desc em{color:var(--accdm)}
   .meta{font-size:var(--metas);font-weight:500;line-height:1.4;color:var(--muted)}
   body.dark .meta{color:var(--dmmuted)}
-  .url{font-family:"IBM Plex Mono",monospace;font-size:var(--urls);font-weight:500;
+  .url{font-family:"JetBrains Mono",monospace;font-size:var(--urls);font-weight:500;
        letter-spacing:.02em;color:var(--acc)}
   body.dark .url{color:var(--accdm)}
 

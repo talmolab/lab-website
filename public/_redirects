@@ -1,0 +1,7 @@
+# Jekyll served member pages at /members/<slug>.html and everything else at a
+# trailing slash. Workers' default html_handling (auto-trailing-slash) already
+# redirects the .html form, but with a 307 — which does not move Google's index.
+# These rules pre-empt it with a real 301. _redirects is evaluated BEFORE
+# html_handling, and :slug binds correctly against the .html suffix (verified).
+/members/:slug.html  /members/:slug  301
+/team/index.html     /team/          301

@@ -437,3 +437,153 @@ full mark collapses below 32px. Illustrator's rotated-rect export bug found and 
 `scripts/normalize-svg.py --check` guards against reintroduction.
 
 Full detail and the reasoning behind each: `design/README.md`.
+
+### 2026-08-30 — Publication reconciliation verified against live APIs
+
+Phase 0 is **deliberately skipped.** The site is a ground-up rework; papers land once, in the
+Astro overlay, not twice. Do not spend effort on Jekyll-side machinery — `auto-cite`, `Gemfile`,
+`sources.yaml` — it is all being discarded.
+
+What was worth keeping is the reconciliation itself, re-verified live and ready for the Phase 2
+overlay. §4.1's four articles resolve to:
+
+| Slug | Published DOI | Venue | Date |
+|---|---|---|---|
+| patel-social-isolation | `10.1038/s41593-026-02413-x` | Nature Neuroscience | 2026-08-25 |
+| cheng-leader-follower | `10.1038/s41586-026-10900-1` | Nature | 2026-08-19 |
+| rose-disk | `10.1038/s41592-025-02893-y` | Nature Methods | 2025-12-04 |
+| mitelut-gerbils | `10.1371/journal.pbio.3003348` | PLoS Biology | 2025-09-08 |
+
+Preprints to pair with them: `10.1101/2023.11.09.566421` (patel), `10.1101/2024.05.03.592173`
+(disk), `10.1101/2025.08.27.672249` (cheng — bioRxiv, under a different title).
+MIMIC-MJX's real date is **2025-12-02**, not the Jan-1 fallback.
+
+Two findings that correct §6.1:
+
+1. **OpenAlex answered unauthenticated.** `?filter=author.id:A5006740810&per-page=100` returned
+   all 69 works, `meta.cost_usd: 0.0001`, no key. §6.1's "an API key is now required" is
+   overstated for *this* call — the cost model it describes was otherwise confirmed exactly.
+   Still worth getting the key before a build depends on it.
+2. **Crossref has no `is-preprint-of` for the Patel preprint** — the traversal §6.1 relies on
+   returns `{}`. This is the first real instance of the manual-association case, so the overlay
+   needs to support it from the start rather than treating it as an edge case. The merge rests on
+   hard evidence, not a fuzzy match: the two records share **all 24 authors** and a title
+   identical apart from hyphen-vs-en-dash. DISK's relation *was* present and resolved as
+   documented, so the traversal works — it just isn't sufficient on its own.
+
+Also confirmed: MIMIC-MJX has `doi: null` in OpenAlex and is indexed via PubMed, exactly the
+failure case §6.1 cites for why the canonical key must be a lab-assigned slug.
+
+### 2026-08-30 — Phase 1: `build.format: 'preserve'` resolved, and the 307 trap
+
+**`format: 'preserve'` works.** One build emits `/members/<slug>.html` and `/team/index.html`
+together, exactly the mixed shape the live site has. `trailingSlash` turned out to be a
+**non-factor** for output — `ignore`/`always`/`never` all emit byte-identical file layouts under
+`preserve`; it only affects dev-server matching. §9's "confirm how it interacts with
+`trailingSlash`" is answered: it doesn't.
+
+**But `preserve` alone is not sufficient, and the reason is on the serving side.** Probed against
+a real Workers runtime (`wrangler dev`), the four `assets.html_handling` modes give:
+
+| mode | `/members/x.html` | `/members/x` | `/team/` | `/` |
+|---|---|---|---|---|
+| `auto-trailing-slash` (default) | **307** → `/members/x` | 200 | 200 | 200 |
+| `none` | **200** | 404 | **404** | **404** |
+| `force-trailing-slash` | 307 → `/members/x/` | 307 | 200 | 200 |
+| `drop-trailing-slash` | 307 → `/members/x` | 200 | 307 → `/team` | 200 |
+
+Two things fall out of this that §8 did not anticipate:
+
+1. **`none` is a trap.** It is the only mode that serves `.html` at 200 — and it 404s **the
+   homepage** and every directory index. Not viable, so the extensionless URL is *forced* as the
+   canonical form. Preserving the `.html` URLs as-is is not on the table.
+2. **The default redirect is a 307, not a 301.** A temporary redirect does not move Google's
+   index or pass link equity, and §8's acceptance test demands "200 or 301-to-200". Shipping on
+   defaults would have quietly failed that on all 55 member URLs — and it would have looked fine
+   in a browser, which is exactly the silent-external-breakage §8 warns about.
+
+**Resolution: two wildcard lines in `public/_redirects`, not 55 hand-written entries.** Verified
+that `_redirects` is evaluated *before* `html_handling`, and that a `:slug` placeholder binds
+correctly against a literal `.html` suffix:
+
+```
+/members/:slug.html  /members/:slug  301
+/team/index.html     /team/          301
+```
+
+`/members/<slug>.html` → **301** → `/members/<slug>` → 200. Homepage and `/team/` stay 200.
+
+Residual: `/team` (no trailing slash) still 307s to `/team/`. Harmless — Jekyll never served that
+form, so it is not in the preservation inventory.
+
+**Confirmed against a real deployment**, not just the local runtime — `wrangler dev` and
+production agree exactly:
+
+```
+/members/talmo-pereira.html   301 -> /members/talmo-pereira   (final 200)
+/members/aaditya-prasad.html  301 -> /members/aaditya-prasad  (final 200)
+/team/                        200      /team/index.html  301 -> /team/  (final 200)
+/                             200      /nope             404
+```
+
+All 13 files in `public/` serve at 200 with byte-identical sizes, and `/_redirects` correctly
+404s rather than being exposed as an asset.
+
+**Deploy target:** Worker `talmolab-site` on account `Talmo Lab` (`6b8f5183…`), preview at
+`https://talmolab-site.talmo-lab.workers.dev`. `wrangler.jsonc` declares **no routes**, so it is
+inert with respect to talmolab.org until the Phase 5 DNS change — the existing wrangler OAuth
+token already carries `workers/workers_scripts/workers_routes (write)`, so no new credential is
+needed for the cutover either.
+
+### 2026-08-30 — Phase 1 complete: Tailwind v4 + Starwind on the ratified palette
+
+Astro 6.4.8, Tailwind 4.3.3, Starwind 2.2.0, self-hosted fonts, deployed and verified at
+`https://talmolab-site.talmo-lab.workers.dev`. `astro check` is clean (9 files, 0/0/0) and runs
+as part of `npm run build`, per §7 — with no CMS, the schemas are the only guardrail, so they
+must not be CI-only.
+
+`design/palette.css` and `design/type-system.css` are **imported, not copied**, so re-running
+`design/scripts/` flows straight into the site. Four things had to be resolved on the way, none
+of them obvious from reading the specs:
+
+1. **Astro's Fonts API registers a HASHED family name** — `"Source Sans 3-16d643d5…"`, not
+   `"Source Sans 3"`. `type-system.css` names the face literally, which is right as a
+   specification and wrong as CSS: it resolves to a system sans for every visitor *while still
+   looking correct on any machine with Source Sans installed locally*. `src/styles/global.css`
+   re-points `--font-sans`/`--font-mono` at Astro's generated stacks, which also carry the
+   metric-matched fallbacks that suppress layout shift. Verified by measurement, not by eye —
+   the rendered glyph run is 426.24px against 458.07 for Arial and 441.95 for system-ui.
+
+2. **Starwind's `--color-muted` collides with the palette's.** The palette means muted *text*
+   (`#555b64`); Starwind means a muted *background*. The palette is ratified so it wins the name,
+   which makes `bg-muted` paint dark grey under dark text — Starwind's `outline` and `ghost`
+   buttons use `hover:bg-muted`. Patched those to `hover:bg-secondary`. **This is a recurring
+   tax: every future `starwind add` needs the same substitution.** The durable fix is renaming
+   one of the two, which is a design-system decision, not a code one.
+
+3. **Starwind switches theme on a `.dark` CLASS**, the palette on `prefers-color-scheme` +
+   `data-theme`. Its `dark:` variant is redefined in the bridge to the palette's three-state
+   logic, and its semantic tokens point at `--bg`/`--fg`/`--line`, which already flip — so
+   components track the theme without a `.dark` class existing anywhere.
+
+4. **Two contrast bugs, both introduced by the mapping, both caught by measuring in-browser.**
+   `--secondary` pointed at the light-only `--color-sunk`, giving `#edf0f4` under `#e5e8ec` in
+   dark mode — invisible. And `--primary` pointed at `--mark`, whose dark value `#2a83c4` is
+   specified as a *foreground on ground*; used as a button *fill* under paper text it measures
+   **3.87:1 and fails AA**. Primary now uses brand blue `#2176b3` as the fill in both themes:
+   4.62:1 label contrast either way, and it still clears the 3:1 non-text minimum against each
+   ground (4.62 light / 3.79 dark). Measured button contrast now runs 4.62–15.04 across both
+   themes.
+
+The palette needed one addition it did not define: a **recessed tone for dark**. On a near-black
+ground "recessed" has to go lighter, not darker, so `--sunk` resolves to `--color-dark-rule` in
+dark and `--color-sunk` in light. Derived in the bridge, not in `design/`.
+
+**Settled:** the OG cards were baked in Bricolage Grotesque + IBM Plex Mono, and
+`design/README.md` still described site typography as undecided. Both fixed — the four cards are
+re-rendered in **Source Sans 3 + JetBrains Mono**, `public/og-card.png` re-synced, and the
+README's "Type caveat" is now a "Type" section stating what is actually true. The headline sits
+at **700 / -0.02em** rather than Bricolage's 600 / -0.025em, because Source Sans is a text face
+and needs the extra weight to hold at display size — those are the site's own `h1` numbers, so
+card and page heading now agree. Dropping IBM Plex Mono also removes the last trace of a family
+§13 rejected on Greek coverage (2%).
