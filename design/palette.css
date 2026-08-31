@@ -1,0 +1,90 @@
+/* talmolab palette — final, ratified by lab vote 2026-08-30
+ *
+ * Two logo values, and everything else derived from them. Every pair below was
+ * verified at WCAG AA or better before being written down (70/70 token pairs).
+ *
+ *   Ink     #1f2328   the `t`, the dendritic arbor, "talmo"
+ *   Accent  #2176b3   the `l` bar, the pose skeleton, the soma dot, "lab"
+ *
+ * Chosen from ten pairings rendered on the finished mark. The deciding property:
+ * the accent works UNMODIFIED as interface colour (4.62:1 on paper), so the
+ * colour in the logo is the colour on the site. Lighter accents that were tested
+ * — chartreuse, amber — need a UI sibling 15–20 lightness points away, at which
+ * point the logo's colour never actually appears in the interface.
+ *
+ * Recorded cost: this is the least distinctive of the ten. Blue on near-black is
+ * the field default. Practicality was chosen over distinctiveness, deliberately.
+ */
+
+@theme {
+  /* --- anchors: from the logo, never adjusted ------------------------------ */
+  --color-brand-ink:    #1f2328;   /* OKLCH 23.5% 0.008 250° */
+  --color-brand-blue:   #2176b3;   /* OKLCH 54.7% 0.123 250° */
+
+  /* --- light -------------------------------------------------------------- */
+  --color-paper:        #f7f9fb;
+  --color-surface:      #feffff;
+  --color-sunk:         #edf0f4;
+  --color-rule:         #dadee3;
+  --color-text:         #1f2328;   /* 14.97:1 on paper */
+  --color-muted:        #555b64;   /*  6.49:1 */
+  --color-link:         #1776b6;   /*  4.62:1 — AA */
+
+  /* --- dark --------------------------------------------------------------- */
+  --color-ground:       #101419;
+  --color-dark-surface: #171c22;
+  --color-dark-rule:    #272c31;
+  --color-dark-text:    #e5e8ec;   /* 15.04:1 on ground */
+  --color-dark-muted:   #a7abb1;   /*  8.01:1 */
+  --color-dark-faint:   #99a1a9;   /*  7.06:1 */
+  --color-dark-link:    #58a6df;   /*  6.98:1 */
+  --color-dark-accent:  #2a83c4;   /*  4.53:1 — AA */
+
+  /* --- code syntax -------------------------------------------------------- */
+  --color-code-key:     #2176b3;
+  --color-code-str:     #1a7f5a;
+  --color-code-key-dark:#6ab0e8;   /*  7.91:1 on ground */
+  --color-code-str-dark:#5cc79a;   /*  8.88:1 */
+
+  /* --- reserve ------------------------------------------------------------ */
+  /* Charts genuinely need a second series colour; site chrome does not. Encode
+     categorical state (tool lifecycle, publication type) with weight, rule and
+     position instead of a second hue — it survives greyscale and colour
+     blindness, and scales past three categories. */
+}
+
+/* THE TWO BLUES.  #2176b3 is the brand blue and appears in the logo in both
+ * themes. #2a83c4 is the dark-mode *interface* accent, used for link text and
+ * buttons on the dark ground where the brand blue only reaches 3.79:1. The logo
+ * does not switch; only UI text does. */
+
+:root {
+  color-scheme: light;
+  --bg: var(--color-paper);      --fg: var(--color-text);
+  --fg-muted: var(--color-muted); --line: var(--color-rule);
+  --link: var(--color-link);      --mark: var(--color-brand-blue);
+  --code-key: var(--color-code-key); --code-str: var(--color-code-str);
+}
+
+/* Three states, not two: an explicit choice stamps data-theme; the default
+   "system" setting stamps nothing, where only prefers-color-scheme separates
+   them. Guard the media query so an explicit light choice beats a dark OS. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: var(--color-ground);          --fg: var(--color-dark-text);
+    --fg-muted: var(--color-dark-muted); --line: var(--color-dark-rule);
+    --link: var(--color-dark-link);      --mark: var(--color-dark-accent);
+    --code-key: var(--color-code-key-dark); --code-str: var(--color-code-str-dark);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: var(--color-ground);          --fg: var(--color-dark-text);
+  --fg-muted: var(--color-dark-muted); --line: var(--color-dark-rule);
+  --link: var(--color-dark-link);      --mark: var(--color-dark-accent);
+  --code-key: var(--color-code-key-dark); --code-str: var(--color-code-str-dark);
+}
+
+body { background: var(--bg); color: var(--fg); }
+a    { color: var(--link); }
