@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { team, byRole, roleHistory, years, label, latest } from '../../lib/people';
 import { ROLE_LABEL } from '../../content.config';
+import JoinSection from '../../components/JoinSection.astro';
 
 const { current, alumni } = await team();
 const groups = byRole(current);
@@ -72,6 +73,7 @@ const groups = byRole(current);
       </tbody>
     </table>
   </div>
+  <JoinSection />
 </BaseLayout>
 
 <style>

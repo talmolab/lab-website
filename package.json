@@ -11,6 +11,8 @@
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
     "@starwind-ui/astro": "^1.2.0",
     "@tabler/icons": "^3.46.0",
     "@tailwindcss/forms": "^0.5.11",

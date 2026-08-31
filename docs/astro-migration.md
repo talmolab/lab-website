@@ -727,3 +727,52 @@ published year would churn the identifier at exactly the moment the record matte
    separate entries pending a human call. Worth noting my first comparison was
    exact-string and reported **0 overlap** — bioRxiv uses initials, PLoS uses full
    names — which would have been the opposite error.
+
+### 2026-08-30 — Tools page, remaining nav, and the §8 gate PASSING
+
+Repo list confirmed by Talmo (§12 q1): sleap, sleap-app, sleap-io, sleap-nn, dreem,
+sleap-roots, lablink, stac-mjx, track-mjx, vibes, luc3d. **Grouping was a pure
+judgement call** — GitHub reports none of them archived and all pushed within weeks,
+so there is no signal to derive it from. Seven are `maintained`, four `research`.
+Blurbs come from each repo's README rather than being invented.
+
+**Graceful degradation is tested, not assumed** (§6.3). With an invalid token the
+build logs a warning per repo, renders all 11 from `repos.yaml` alone with blurbs
+intact and enrichment fields empty, and exits 0.
+
+Remaining nav built: `/research/` ports the existing three areas verbatim — that is
+Talmo's writing, so porting it is not the "placeholder areas" §12 q2 forbids.
+`/blog/` ships with the two collections, the merged stream and RSS, empty for now.
+`/join/` folded into `/team/#join` per §5b.
+
+**§8 ACCEPTANCE GATE: PASSING — 72/72.** `test/live-urls.txt` snapshots the live
+sitemap (69 entries) plus three paths it omits; `scripts/check-urls.sh <base>` asserts
+each returns 200 or redirects to 200. This is the Phase 5 blocker and it is green
+against the deployed Worker, well ahead of cutover.
+
+It earned its keep immediately by catching a real violation: **`/sitemap.xml` was
+404ing.** `@astrojs/sitemap` emits `sitemap-index.xml`, and §8 requires the old name
+keep resolving — so it is bridged with a 301, and `robots.txt` points at the index.
+
+Three things the live sitemap revealed that §3 and §4.5 missed:
+
+1. **`/CLAUDE.html` is a published, indexed page.** Jekyll renders `CLAUDE.md` at the
+   site root, so internal assistant instructions have been public. Astro does not
+   publish it; the indexed URL 301s to `/`.
+2. **`/contact/` is unmodified Greene template placeholder content** — "Department of
+   Metaphor", `scrooge@mcduck.com`, `(555) 867-5309`, and a Google Maps pin in Porters
+   Lake, Nova Scotia. Live right now. Not migrated; 301s to `/team/#join`. §4.5 listed
+   the lorem-ipsum `tools.yaml` and the Twitter embed but not this.
+3. **The three template example posts are in the sitemap**, so they are in Google's
+   index. Not migrated (§4.5) but 301'd to `/blog/` rather than dropped.
+
+Also resolved: **`/images/**` is no longer a Phase 5 blocker.** `public/f/` and
+`public/images/papers/` now carry the recruitment PDF and `maree-2024.pdf` — the
+latter being the actual target of a cited work, not a thumbnail, so a 404 there makes
+a published citation unreachable.
+
+Two sitemap details worth keeping: it must list the **non-redirecting** shape for
+each route, which under `build.format: 'preserve'` means a trailing slash for
+directory routes but extensionless-no-slash for the flat member pages (a `serialize`
+hook handles this; verified all 58 return 200 directly, following no redirects). And
+the live Jekyll sitemap emits **`http://`** URLs, not `https://`.

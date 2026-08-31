@@ -1,6 +1,7 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { publications as publicationsLoader } from './loaders/openalex';
+import { repos as reposLoader } from './loaders/github';
 
 /** "2024" or "2024-06". Deliberately allows year-only: for most alumni the month
  *  genuinely is not known, and padding it to "-01" would invent a fact. */
@@ -142,4 +143,77 @@ const publications = defineCollection({
   }),
 });
 
-export const collections = { people, publications };
+const repos = defineCollection({
+  loader: reposLoader(),
+  schema: z.object({
+    repo: z.string(),
+    owner: z.string(),
+    name: z.string(),
+    /** Position in repos.yaml. Display order is editorial, never derived from
+     *  stars or recency (§6.3). */
+    order: z.number(),
+    group: z.enum(['maintained', 'research', 'archived']),
+    blurb: z.string().optional(),
+    image: z.string().optional(),
+    links: z.array(z.object({ label: z.string(), url: z.string() })).default([]),
+    // Enrichment from the GitHub API — all optional so a failed call degrades
+    // to rendering from repos.yaml alone rather than breaking the build.
+    description: z.string().optional(),
+    language: z.string().optional(),
+    license: z.string().optional(),
+    topics: z.array(z.string()).default([]),
+    stars: z.number().optional(),
+    forks: z.number().optional(),
+    pushedAt: z.string().optional(),
+    homepage: z.string().optional(),
+    archivedOnGitHub: z.boolean().optional(),
+  }),
+});
+
+/** §6.3b: the Research page is prose-first. These are authored, not derived, and
+ *  the schema is deliberately minimal — associations to publications, repos and
+ *  projects are all optional and will be revised once real content exists.
+ *  Resist adding required fields here. */
+const areas = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/areas' }),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      image: image().optional(),
+      /** Editorial order. Not alphabetical, not by output volume. */
+      order: z.number().default(99),
+    }),
+});
+
+/** §6.4: two collections, one merged reverse-chron stream with type badges.
+ *  `posts` are long-form and get their own URL and RSS entry. */
+const posts = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      date: z.coerce.date(),
+      /** Slugs of people in the `people` collection. reference() so a typo fails
+       *  the build instead of shipping a dead link (§6.2). */
+      authors: z.array(reference('people')).default([]),
+      description: z.string().optional(),
+      image: image().optional(),
+      tags: z.array(z.string()).default([]),
+      draft: z.boolean().default(false),
+    }),
+});
+
+/** `news` items are 1-3 sentences plus a link. No dedicated page — they render
+ *  inline in the stream. Paper out, person joined, release shipped, talk given. */
+const news = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/news' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    url: z.url().optional(),
+    /** Set by the Phase 4 Action, which opens a PR rather than publishing (4b). */
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { people, publications, repos, areas, posts, news };

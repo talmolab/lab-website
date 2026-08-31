@@ -16,3 +16,28 @@
 # html_handling, and :slug binds correctly against the .html suffix (verified).
 /members/:slug.html  /members/:slug  301
 /team/index.html     /team/          301
+
+# --- Jekyll-era paths that must not 404 (§8, from the live sitemap) ----------
+# The three template example posts. Lorem ipsum with invented authors, so they
+# are not migrated (§4.5) — but they are in the live sitemap and therefore in
+# Google's index, so they redirect rather than disappear.
+/2019/01/07/example-post-1.html  /blog/  301
+/2019/12/14/example-post-2.html  /blog/  301
+/2020/07/02/example-post-3.html  /blog/  301
+
+# CLAUDE.md is rendered and indexed as a public page by Jekyll — internal notes
+# on a public site. Astro does not publish it; redirect the indexed URL home.
+/CLAUDE.html  /  301
+
+# §5b: "Join us" folds into the Team page rather than competing with Publications.
+/join/  /team/#join  301
+
+# The live /contact/ page is unmodified Greene template placeholder content —
+# "Department of Metaphor", scrooge@mcduck.com, a phone number and a Google Maps
+# pin in Nova Scotia. It is not migrated; the real contact route is the Team page.
+/contact/  /team/#join  301
+
+# @astrojs/sitemap emits sitemap-index.xml. The live site serves /sitemap.xml and
+# §8 requires it keep resolving, so bridge the old name. Search engines follow a
+# 301 on a sitemap without complaint.
+/sitemap.xml  /sitemap-index.xml  301

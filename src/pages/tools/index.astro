@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const all = (await getCollection('repos')).sort((a, b) => a.data.order - b.data.order);
+
+// Lifecycle states, in the order they should be read. The copy is the point:
+// a group heading here is a support expectation, not a popularity tier.
+const GROUPS = [
+  {
+    key: 'maintained' as const,
+    title: 'Maintained',
+    note: 'Actively developed and supported. Issues and pull requests get looked at.',
+  },
+  {
+    key: 'research' as const,
+    title: 'Research code',
+    note: 'Real and usable, but built to answer a research question rather than to be a product. Expect rough edges and few guarantees.',
+  },
+  {
+    key: 'archived' as const,
+    title: 'Archived',
+    note: 'No longer maintained, kept available because published work depends on it.',
+  },
+];
+
+const groups = GROUPS.map((g) => ({ ...g, items: all.filter((r) => r.data.group === g.key) })).filter(
+  (g) => g.items.length > 0,
+);
+
+const fmt = (d?: string) =>
+  d ? new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' }) : undefined;
+---
+<BaseLayout title="Tools — talmolab" description="Open-source software from the Talmo Lab.">
+  <h1>Tools</h1>
+  <p class="lede">
+    Software from the lab. Everything here is open source and on
+    <a href="https://github.com/talmolab">GitHub</a>.
+  </p>
+
+  {groups.map((g) => (
+    <section class="group">
+      <h2>{g.title}</h2>
+      <p class="group-note muted">{g.note}</p>
+      <ul class="repos">
+        {g.items.map(({ data: r }) => (
+          <li>
+            <div class="repo-head">
+              <a class="repo-name" href={`https://github.com/${r.repo}`}>{r.name}</a>
+              {r.archivedOnGitHub && <span class="flag">archived on GitHub</span>}
+            </div>
+            {/* Lab blurb overrides the GitHub description; fall back to it if absent. */}
+            <p class="repo-blurb">{r.blurb ?? r.description}</p>
+            <div class="repo-meta">
+              {r.language && <span>{r.language}</span>}
+              {r.license && r.license !== 'NOASSERTION' && <span>{r.license}</span>}
+              {r.pushedAt && <span>updated {fmt(r.pushedAt)}</span>}
+            </div>
+            {r.links.length > 0 && (
+              <div class="repo-links">
+                {r.links.map((l) => <a href={l.url}>{l.label}</a>)}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>
+
+<style>
+  .group { margin-top: 2.75rem; }
+  .group-note { max-width: 60ch; margin-top: 0.25rem; font-size: 0.9375rem; }
+  .repos { list-style: none; padding: 0; margin: 1.25rem 0 0; display: grid; gap: 1.5rem; }
+  .repos > li { padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
+  .repos > li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .repo-head { display: flex; align-items: baseline; gap: 0.625rem; flex-wrap: wrap; }
+  .repo-name { font-family: var(--font-mono); font-weight: 600; font-size: 1.0625rem; }
+  .flag {
+    font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--fg-muted); border: 1px solid var(--line); border-radius: 0.25rem; padding: 0.1rem 0.4rem;
+  }
+  .repo-blurb { margin-top: 0.4rem; max-width: 68ch; }
+  /* Categorical state via weight and rule, not a second hue — design/palette.css
+     deliberately reserves the palette to one accent. */
+  .repo-meta { margin-top: 0.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;
+    font-size: 0.8125rem; color: var(--fg-muted); }
+  .repo-meta span:not(:last-child)::after { content: ' ·'; }
+  .repo-links { margin-top: 0.5rem; display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.875rem; }
+</style>

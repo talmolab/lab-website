@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://talmolab.org',
@@ -12,6 +13,26 @@ export default defineConfig({
     // Workers deploy, together with the two 301 rules in public/_redirects.
     format: 'preserve',
   },
+
+  // §8: /sitemap.xml returns 200 on the live site and must keep doing so. The
+  // acceptance test caught its absence.
+  integrations: [
+    sitemap({
+      // build.format: 'preserve' produces two URL shapes, and the sitemap must
+      // list the non-redirecting one for each. Directory routes serve at a
+      // trailing slash (/team/), so /team would 307. Member pages are the only
+      // flat .html routes by design — that is the whole point of §8 — and their
+      // canonical form is extensionless with no slash.
+      serialize(item) {
+        const u = new URL(item.url);
+        if (!u.pathname.startsWith('/members/') && !u.pathname.endsWith('/')) {
+          u.pathname += '/';
+          item.url = u.href;
+        }
+        return item;
+      },
+    }),
+  ],
 
   vite: {
     plugins: [tailwindcss()],

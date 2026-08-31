@@ -1,0 +1,83 @@
+# URL fixture for the §8 cutover gate. Snapshotted from the LIVE Jekyll site's
+# sitemap.xml on 2026-08-30 (69 entries), plus paths the sitemap omits.
+#
+# Every path here must return 200, or 301/302 to something that returns 200.
+# Run scripts/check-urls.sh <base-url> against the Workers preview. Cutover does
+# not proceed until it passes clean.
+#
+# Note: the live sitemap emits http:// URLs, not https://.
+/
+/2019/01/07/example-post-1.html
+/2019/12/14/example-post-2.html
+/2020/07/02/example-post-3.html
+/CLAUDE.html
+/blog/
+/contact/
+/f/RAPTR_HPI_Recruitment.pdf
+/images/papers/maree-2024.pdf
+/join/
+/members/aaditya-prasad.html
+/members/adam-lee.html
+/members/advaith-ravishankar.html
+/members/amick-licup.html
+/members/amitha-attapu.html
+/members/andrew-park.html
+/members/arlo-sheridan.html
+/members/arnav-dagar.html
+/members/arthur-mayo.html
+/members/ava-barbano.html
+/members/benfica-xavier.html
+/members/carlos-robles.html
+/members/chaitanya-kapoor.html
+/members/david-samy.html
+/members/dexter-tsin.html
+/members/divya-seshari-murali.html
+/members/drake-thompson.html
+/members/elise-davis.html
+/members/elizabeth-berrigan.html
+/members/eric-leonardis.html
+/members/fabian-plum.html
+/members/frederico-kiffer.html
+/members/gregory-quach.html
+/members/hutton-saunders.html
+/members/jason-foat.html
+/members/joshua-park.html
+/members/kaela-evans.html
+/members/kaii-bijlani.html
+/members/ketan-mittal.html
+/members/kevin-bian.html
+/members/keya-loding.html
+/members/liezl-maree.html
+/members/lin-wang.html
+/members/marcus-intal.html
+/members/mariela-mendoza.html
+/members/max-weinberg.html
+/members/mustafa-shaikh.html
+/members/nancy-guo.html
+/members/nathaniel-nono.html
+/members/neeraj-venna.html
+/members/nick-andrews.html
+/members/papa-manu.html
+/members/ramiz-hajj.html
+/members/rusham-bhatt.html
+/members/scott-yang.html
+/members/sean-afshar.html
+/members/shrivaths-shyam.html
+/members/talmo-pereira.html
+/members/theo-couris.html
+/members/tom-han.html
+/members/van-nguyen.html
+/members/vincent-tu.html
+/members/will-knickrehm.html
+/members/yipeng-li.html
+/members/zaher-abbara.html
+/publications/
+/research/
+/team/
+/tools/
+
+# --- not in the sitemap, added per §8 step 3 -------------------------------
+# Referenced by external sites and printed material rather than linked from pages.
+/images/papers/prasad-2022.jpg
+/images/sleap_movie.gif
+/sitemap.xml

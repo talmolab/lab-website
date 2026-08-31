@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import groupPhoto from '../assets/pages/2024-08-06.lab-group2.jpg';
+---
+{/* §5b: "Join us" folds in here rather than competing with Publications for a nav
+    slot. /join/ and /contact/ both 301 to this anchor. Prose is carried over from
+    the Jekyll join page verbatim — it is the lab's own writing, not placeholder. */}
+<section id="join" class="join">
+  <h2>Join the team</h2>
+
+  <Image src={groupPhoto} alt="The Talmo Lab group, 2024" width={1400} class="group-photo" />
+  <p class="caption muted">The group, ca. 2024. Photo credit: Chris Keeney</p>
+
+  <p>
+    Interested in our work? Reach out to <a href="mailto:talmo@salk.edu">talmo@salk.edu</a>
+    with your CV to discuss potential opportunities at any level.
+  </p>
+
+  <h3>Philosophy</h3>
+  <p>
+    A core belief in our lab is that being happy is essential to doing good science. We
+    believe that your success is everyone's success, and therefore place an extremely
+    high value on <strong>mentorship</strong>, <strong>work-life balance</strong> and
+    <strong>open communication</strong>.
+  </p>
+  <p>
+    Lab members should expect to be able to <strong>ask for help whenever they need
+    it</strong>, and be eager to pay it forward during their tenure here and beyond.
+  </p>
+  <p>
+    Our group's culture is intended to reflect the reality that <strong>not everyone is
+    afforded the same opportunities</strong> before they arrive here, but that that does
+    not mean they are not as qualified or worthy of the chance to prove themselves. It is
+    only by acknowledging the structural disparities that are inherent in academia that we
+    can <strong>effect real change</strong> — and do amazing science along the way!
+  </p>
+
+  <h3>Location</h3>
+  <p>
+    Come work in sunny San Diego! The lab is located in the
+    <a href="https://salk.edu">Salk Institute for Biological Studies</a>, a non-profit
+    research institute right next to the University of California San Diego. Surfing
+    before or after work is recommended, but not required.
+  </p>
+
+  <h3>Open positions</h3>
+  <p>
+    We do not currently have open positions. If you are interested in any of the roles
+    below, feel free to reach out to chat about potential upcoming opportunities —
+    <strong>we strongly recommend including your CV and GitHub</strong>.
+  </p>
+
+  <h4>Software engineers</h4>
+  <p>
+    We are always on the lookout for scientific programmers. If you have a background in
+    DevOps, MLOps, web dev or other software engineering skillsets and an interest in deep
+    learning and computer vision, we'd like to chat. Prior experience in machine learning
+    research is not required — just show us your code. We offer very competitive
+    compensation and are happy to provide training to prepare our engineers for a
+    continuing career in research or engineering, in academia or industry.
+  </p>
+
+  <h4>Postdoctoral fellows</h4>
+  <p>
+    Finishing your PhD soon in neuroscience, computer science, physics, or another
+    computational field? We regularly recruit postdocs to work directly with us or jointly
+    with one of our collaborators.
+  </p>
+
+  <h4>Graduate students</h4>
+  <p>
+    If you are interested in pursuing a MS or PhD while working in the lab, you will need
+    to apply to one of the graduate programs at UCSD. We are open to accepting students
+    from any program, but we recommend
+    <a href="https://neurograd.ucsd.edu/index.html">Neuroscience</a>,
+    <a href="https://cogsci.ucsd.edu/graduates/phd-program/index.html">Cognitive Science</a>,
+    <a href="https://datascience.ucsd.edu/academics/graduate/admissions/">Data Science</a>, or
+    <a href="https://cse.ucsd.edu/graduate/degree-programs">Computer Science and Engineering</a>.
+    If you have questions, aren't sure which program to apply to, or just want to chat
+    about graduate school options, feel free to reach out.
+  </p>
+
+  <h4>High school and undergraduate internships</h4>
+  <p>
+    Interested in doing research with us during the school year or for a summer? We are
+    always looking for talented undergraduates to take on ambitious independent research
+    projects. You will be treated like a graduate student, but we will provide all the
+    support and mentoring you need to meet our mutual expectations and succeed in
+    transitioning to the next stage of your career.
+  </p>
+  <p>
+    <strong>UCSD students</strong>: to work at Salk you will need to enroll in a research
+    for academic credit course such as
+    <a href="https://biology.ucsd.edu/education/undergrad/research/research-acad-cred/">BISP 199</a>,
+    <a href="https://cogsci.ucsd.edu/undergraduates/student-resources/research.html">COGS 199</a> or
+    <a href="https://cse.ucsd.edu/undergraduate/cse199-independent-study-undergraduates">CSE 199</a>.
+    We especially recommend that students considering a longer stay apply for the
+    <a href="https://ugresearch.ucsd.edu/research-programs/trels/index.html">Triton Research &amp; Experiential Learning Scholars (TRELS)</a>
+    program, which provides funding to conduct and present your research.
+  </p>
+</section>
+
+<style>
+  .join { margin-top: 4.5rem; padding-top: 2.5rem; border-top: 1px solid var(--line); }
+  .join p { margin-top: 0.85rem; }
+  .join h3 { margin-top: 2rem; }
+  .join h4 { margin-top: 1.5rem; font-weight: 600; }
+  .group-photo { width: 100%; height: auto; border-radius: 0.5rem; margin-top: 1rem; }
+  .caption { font-size: 0.875rem; margin-top: 0.4rem; }
+</style>
