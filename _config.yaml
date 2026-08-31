@@ -71,3 +71,26 @@ plugins:
 
 # jekyll theme
 theme: null
+
+# files and folders kept out of the built site
+# NOTE: setting `exclude` REPLACES Jekyll's defaults rather than extending them,
+# so the default entries are re-listed here. Removing them would start
+# publishing Gemfile, vendor/ and friends.
+exclude:
+  # Jekyll 3.x defaults
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  # brand sources and their build output — see design/README.md.
+  # public/ is the Astro convention and is not served by Jekyll; it is committed
+  # ready for the migration, not for this build.
+  - design/
+  - public/
+  - scratch/

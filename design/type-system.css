@@ -1,0 +1,79 @@
+/* talmolab type system — decided 2026-08-30
+ *
+ *   SANS   Source Sans 3     everything: headings, prose, interface, metadata
+ *   MONO   JetBrains Mono    code, repo names, DOIs, accessions, array shapes
+ *
+ * Two families, no serif. The earlier serif-led proposal was wrong about this
+ * site: it optimised for the Research page's three paragraphs while the bulk of
+ * the site — publications, tools, team grid, alumni table — is scanned, not
+ * read, and a serif actively fights the mono DOIs sitting beside it.
+ *
+ * ---------------------------------------------------------------------------
+ * Coverage was a gate, not a preference. Measured from the actual TTFs against
+ * content this site really contains (Vietnamese author names, Greek in titles,
+ * math in abstracts):
+ *
+ *                    glyphs   Latin-ext   Vietnamese   Greek   Math   Sup/sub
+ *   Source Sans 3      1615      100%        100%      100%    92%     100%
+ *   JetBrains Mono      976      100%        100%      100%    92%      88%
+ *
+ * Rejected on coverage — each would break a word mid-name:
+ *   Plus Jakarta Sans   Greek 8%
+ *   Figtree             Greek 0%, Vietnamese 12%, math 46%
+ *   IBM Plex Serif/Mono Greek 2%   (kills the Plex-superfamily option)
+ *   Public Sans         Greek 2%
+ *   Newsreader          Greek 0%, sup/sub 21%
+ *
+ * Inter also passes (2849 glyphs, best coverage on offer) and is the safe
+ * fallback if Source Sans ever proves limiting — but it is the default face of
+ * every dev tool, and beside an already-conservative palette the site reads
+ * entirely stock.
+ * ---------------------------------------------------------------------------
+ */
+
+@theme {
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, -apple-system,
+               "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+               "Cascadia Mono", monospace;
+}
+
+/* Self-host via the Astro Fonts API, not Google's CDN: no third-party origin,
+   no CSP exception, automatic subsetting and preload.
+   Subset to Latin + Latin-ext + Vietnamese + Greek. Drop Cyrillic. */
+
+:root { font-family: var(--font-sans); }
+
+/* --- scale --------------------------------------------------------------- */
+/* Source Sans runs slightly narrow, so it takes a touch more size than Inter
+   would at the same optical weight. */
+body            { font-size: 16.75px; line-height: 1.62; }
+h1 { font-size: clamp(2.125rem, 5vw, 3.125rem); line-height: 1.10; font-weight: 700; }
+h2 { font-size: 1.625rem;  line-height: 1.20; font-weight: 700; }
+h3 { font-size: 1.0625rem; line-height: 1.30; font-weight: 600; }
+h1, h2      { letter-spacing: -0.02em; text-wrap: balance; }
+h3          { letter-spacing: -0.01em; }
+p           { max-width: 68ch; }
+.lede       { font-size: 1.14em; }
+
+.eyebrow, .label {
+  font-size: 0.6875rem; font-weight: 600;
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+
+/* --- mono ---------------------------------------------------------------- */
+code, pre, kbd, samp, .repo-name, .doi, .accession, .shape {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;   /* ligatures mangle DOIs and array shapes */
+}
+pre { font-size: 0.8125rem; line-height: 1.62; overflow-x: auto; }
+:not(pre) > code { font-size: 0.875em; }
+
+/* --- numerals ------------------------------------------------------------ */
+table, .meta, .stat, .year, time { font-variant-numeric: tabular-nums; }
+p, .prose                        { font-variant-numeric: proportional-nums; }
+
+/* --- the one rule about the logo ----------------------------------------- */
+/* Never set the word "talmolab" in type. Use the SVG lockup — the horizontal
+   one (talmolab-lockup-h-*.svg) in the nav; the stacked one needs too much
+   height before the wordmark is legible. See font-pairing.png. */

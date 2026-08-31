@@ -1,0 +1,80 @@
+<!--
+  Link-unfurl reference for talmolab.org — Slack, iMessage, Twitter/X, LinkedIn,
+  Discord, Bluesky, Facebook.
+
+  Copy into the Astro base layout <head>. Values below assume the images are served
+  from public/, which sync-public.py fills. Filenames match public/ exactly.
+
+  THE ONE RULE THAT BREAKS UNFURLS: og:image must be an ABSOLUTE URL, including the
+  scheme and host. Relative paths silently produce a card with no image on every
+  platform. In Astro, build it from Astro.site:
+      const og = new URL('/og-card.png', Astro.site).href;
+-->
+
+<!-- ── Core ─────────────────────────────────────────────────────────────── -->
+<title>talmolab — Computational tools for studying complex biological systems</title>
+<meta name="description" content="Talmo Pereira's lab at the Salk Institute for Biological Studies, building computational tools that leverage deep learning and computer vision to study complex biological systems.">
+<link rel="canonical" href="https://talmolab.org/">
+
+<!-- ── OpenGraph (Slack, iMessage, LinkedIn, Discord, Facebook) ─────────── -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="talmolab">
+<meta property="og:title"       content="talmolab">
+<meta property="og:description" content="Computational tools for studying complex biological systems. Talmo Pereira's lab at the Salk Institute.">
+<meta property="og:url"         content="https://talmolab.org/">
+<meta property="og:image"       content="https://talmolab.org/og-card.png">
+<meta property="og:image:type"  content="image/png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt"   content="The talmolab logo: a lowercase t drawn as a neuron with a dendritic arbor, beside an l with a pose skeleton.">
+
+<!-- ── Twitter / X ──────────────────────────────────────────────────────── -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@talmop">
+<meta name="twitter:creator"     content="@talmop">
+<meta name="twitter:title"       content="talmolab">
+<meta name="twitter:description" content="Computational tools for studying complex biological systems. Talmo Pereira's lab at the Salk Institute.">
+<meta name="twitter:image"       content="https://talmolab.org/og-card.png">
+<meta name="twitter:image:alt"   content="The talmolab logo.">
+
+<!-- ── Icons ────────────────────────────────────────────────────────────── -->
+<link rel="icon"             href="/favicon.ico" sizes="32x32">
+<link rel="icon"             href="/talmolab-favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest"         href="/site.webmanifest">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f9fb">
+<meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#101419">
+
+<!--
+  ── site.webmanifest ────────────────────────────────────────────────────────
+  {
+    "name": "talmolab",
+    "short_name": "talmolab",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f7f9fb",
+    "theme_color": "#2176b3",
+    "icons": [
+      { "src": "/icon-192.png",     "sizes": "192x192", "type": "image/png" },
+      { "src": "/icon-512.png",     "sizes": "512x512", "type": "image/png" },
+      { "src": "/maskable-512.png", "sizes": "512x512", "type": "image/png",
+        "purpose": "maskable" }
+    ]
+  }
+
+  ── Notes ───────────────────────────────────────────────────────────────────
+  · The LIGHT card is the default. Unfurl cards sit on the platform's own surface
+    and are opaque either way, so one card is enough — the dark variant is there
+    for decks, dark-themed embeds, or if you decide it reads better in Slack.
+  · Per-page cards: publications and posts want their own og:title / og:description.
+    Only generate a per-page IMAGE if you want the extra machinery; the default card
+    is fine sitewide and never goes stale.
+  · Slack and LinkedIn cache aggressively. After changing a card, re-scrape:
+      Slack     — post the link in a private channel; it re-fetches after ~30 min,
+                  or use the Block Kit builder to force it
+      LinkedIn  — https://www.linkedin.com/post-inspector/
+      Facebook  — https://developers.facebook.com/tools/debug/
+    Twitter/X and iMessage refresh on their own within a day or so.
+  · og:image:alt is read by screen readers on some platforms. Keep it describing the
+    image, not repeating the title.
+-->

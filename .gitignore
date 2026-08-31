@@ -7,3 +7,7 @@ debug.log
 __pycache__/
 .DS_Store
 .playwright-mcp/
+scratch/
+
+# design/ holds sources; build/ is 16MB of regenerable derivatives
+design/build/
