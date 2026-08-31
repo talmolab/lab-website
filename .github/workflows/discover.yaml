@@ -1,0 +1,86 @@
+name: Discover
+
+# Decision 3b/4b: discovery NEVER commits to main and never publishes. It opens a
+# PR with staged changes and a report; a human merges. News items additionally
+# carry draft: true, so even merging does not put them on the site.
+on:
+  schedule:
+    # Mondays, 07:00 UTC. Weekly is enough — journal records take days to appear.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+    inputs:
+      since:
+        description: "Only consider releases on or after this date (YYYY-MM-DD)"
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  # A run in progress should finish rather than be replaced mid-PR.
+  group: discover
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Discover publications
+        env:
+          # Not required — filter and singleton calls both answer unauthenticated
+          # (verified 2026-08-30) — but a key raises the daily budget.
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+        run: node scripts/discover-publications.mjs --write --report /tmp/pubs.md
+
+      - name: Discover news
+        env:
+          # The Actions-provided token is enough: 5,000 req/hr against the 11 repos.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/discover-news.mjs --write --report /tmp/news.md \
+            ${{ inputs.since && format('--since {0}', inputs.since) || '' }}
+
+      - name: Assemble PR body
+        run: |
+          {
+            echo "Opened automatically by \`.github/workflows/discover.yaml\`."
+            echo
+            echo "**Nothing here is published by merging.** Publication additions are staged"
+            echo "in the overlay for review, and news items carry \`draft: true\`."
+            echo
+            cat /tmp/pubs.md
+            echo
+            cat /tmp/news.md
+          } > /tmp/body.md
+
+      - name: Open or update the PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet && git diff --cached --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo "No changes staged; nothing to open."
+            exit 0
+          fi
+          BRANCH="discover/$(date -u +%Y-%m-%d)"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "Discovered publications and draft news items"
+          git push --force-with-lease origin "$BRANCH"
+          # Reuse the day's PR if a re-run happens, rather than stacking duplicates.
+          if gh pr view "$BRANCH" >/dev/null 2>&1; then
+            gh pr edit "$BRANCH" --body-file /tmp/body.md
+          else
+            gh pr create --base main --head "$BRANCH" \
+              --title "Discovered publications and draft news ($(date -u +%Y-%m-%d))" \
+              --body-file /tmp/body.md
+          fi

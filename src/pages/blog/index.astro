@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// One merged reverse-chron stream (§6.4). Drafts never render: the Phase 4
+// Action opens PRs with draft: true, and a human merges.
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).map((p) => ({
+  kind: 'post' as const,
+  date: p.data.date,
+  title: p.data.title,
+  href: `/blog/${p.id}/`,
+  description: p.data.description,
+}));
+const news = (await getCollection('news', ({ data }) => !data.draft)).map((n) => ({
+  kind: 'news' as const,
+  date: n.data.date,
+  title: n.data.title,
+  href: n.data.url,
+  description: undefined,
+}));
+
+const stream = [...posts, ...news].sort((a, b) => b.date.getTime() - a.date.getTime());
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+<BaseLayout title="Blog — talmolab" description="Posts and news from the Talmo Lab.">
+  <h1>Blog</h1>
+
+  {stream.length === 0 ? (
+    <p class="lede muted">
+      Nothing here yet. This replaces the old blog, which held three template
+      example posts and an embedded Twitter timeline belonging to another lab.
+      <a href="/feed.xml">The feed</a> is live and empty rather than absent.
+    </p>
+  ) : (
+    <ul class="stream">
+      {stream.map((item) => (
+        <li>
+          <span class={`badge badge-${item.kind}`}>{item.kind}</span>
+          <time datetime={item.date.toISOString()}>{fmt(item.date)}</time>
+          <div class="stream-title">
+            {item.href ? <a href={item.href}>{item.title}</a> : item.title}
+          </div>
+          {item.description && <p class="muted">{item.description}</p>}
+        </li>
+      ))}
+    </ul>
+  )}
+</BaseLayout>
+
+<style>
+  .stream { list-style: none; padding: 0; margin: 1.5rem 0 0; }
+  .stream > li { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .badge {
+    font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid var(--line); border-radius: 0.25rem; padding: 0.1rem 0.4rem; margin-right: 0.5rem;
+  }
+  .badge-post { color: var(--link); border-color: currentColor; }
+  .badge-news { color: var(--fg-muted); }
+  time { color: var(--fg-muted); font-size: 0.875rem; }
+  .stream-title { font-weight: 600; margin-top: 0.35rem; }
+</style>

@@ -1,0 +1,109 @@
+# Tools — the curated list. §6.3: no usage statistics, and no stats page.
+#
+# ARRAY ORDER IS DISPLAY ORDER. Do not sort by stars or last-pushed; the ordering
+# is an editorial judgement about what someone landing here should see first.
+#
+# group   maintained | research | archived — lifecycle states that set support
+#         expectations, not popularity tiers. GitHub gives no signal here: none of
+#         these repos is flagged archived and all were pushed within weeks, so the
+#         grouping is a human call and nothing else.
+# blurb   Lab-written, arbitrary length, overrides the GitHub description.
+#         Prefer adding a sentence here to adding a schema field.
+# links   Freeform. Docs, paper, project page — whatever is worth having.
+#
+# The loader fills in language, license, topics, last-pushed and stars from the
+# GitHub API. If that call fails the page still renders from this file alone.
+
+# ── maintained ───────────────────────────────────────────────────────────────
+- repo: talmolab/sleap
+  group: maintained
+  blurb: >-
+    A deep learning framework for multi-animal pose tracking. SLEAP is the lab's
+    flagship tool and the basis of most of what follows: label a few frames, train
+    a model, and track the poses of multiple interacting animals through video.
+  links:
+    - { label: Project site, url: https://sleap.ai }
+    - { label: Paper, url: https://doi.org/10.1038/s41592-022-01426-1 }
+
+- repo: talmolab/sleap-nn
+  group: maintained
+  blurb: >-
+    The neural network backend for training and inference, split out of SLEAP so
+    the models can be developed and used independently of the labelling GUI.
+  links:
+    - { label: Docs, url: https://nn.sleap.ai/ }
+
+- repo: talmolab/sleap-io
+  group: maintained
+  blurb: >-
+    Standalone utilities for reading, writing and converting pose tracking data.
+    Useful on its own if you need to move between formats without installing SLEAP.
+  links:
+    - { label: Docs, url: http://io.sleap.ai }
+
+- repo: talmolab/sleap-app
+  group: maintained
+  blurb: >-
+    A web-based labelling GUI for SLEAP, running in the browser rather than as a
+    desktop install.
+
+- repo: talmolab/dreem
+  group: maintained
+  blurb: >-
+    DREEM Relates Every Entity's Motion — global tracking that links detections
+    into identities across a whole video rather than frame to frame.
+  links:
+    - { label: Docs, url: https://dreem.sleap.ai }
+
+- repo: talmolab/sleap-roots
+  group: maintained
+  blurb: >-
+    Analysis tools for SLEAP-based plant root phenotyping, built with the Busch lab
+    and the Harnessing Plants Initiative.
+  links:
+    - { label: Paper, url: https://doi.org/10.34133/plantphenomics.0175 }
+
+- repo: talmolab/lablink
+  group: maintained
+  blurb: >-
+    A cloud-based virtual teaching lab reachable from a browser, used to give
+    workshop and course participants a working GPU environment without asking them
+    to install anything.
+  links:
+    - { label: Docs, url: https://talmolab.github.io/lablink/ }
+
+# ── research ─────────────────────────────────────────────────────────────────
+- repo: talmolab/track-mjx
+  group: research
+  blurb: >-
+    Training control policies through motion imitation with deep reinforcement
+    learning. Part of MIMIC-MJX, alongside STAC-MJX, and covers the rodent, fruit
+    fly, mouse arm, stick insect and worm models.
+  links:
+    - { label: MIMIC-MJX, url: https://mimic-mjx.talmolab.org/ }
+    - { label: Dataset, url: https://huggingface.co/datasets/talmolab/MIMIC-MJX }
+
+- repo: talmolab/stac-mjx
+  group: research
+  blurb: >-
+    STAC implemented on MJX for GPU-accelerated inverse kinematics — fitting a
+    physical body model to markerless motion tracking data. The other half of
+    MIMIC-MJX.
+
+- repo: talmolab/luc3d
+  group: research
+  blurb: >-
+    Label Unification and Correspondence in 3D — a multi-view pose annotation GUI
+    that runs as static files in the browser, with DLT triangulation and
+    reprojection built in.
+  links:
+    - { label: Docs, url: https://talmolab.github.io/luc3d-docs }
+
+- repo: talmolab/vibes
+  group: research
+  blurb: >-
+    Self-contained HTML tools and applets, including real-time webcam pose tracking
+    and interactive keypoint subspace analysis. Small, single-purpose, and
+    deliberately disposable.
+  links:
+    - { label: vibes.tlab.sh, url: http://vibes.tlab.sh/ }

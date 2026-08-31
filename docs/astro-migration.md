@@ -437,3 +437,488 @@ full mark collapses below 32px. Illustrator's rotated-rect export bug found and 
 `scripts/normalize-svg.py --check` guards against reintroduction.
 
 Full detail and the reasoning behind each: `design/README.md`.
+
+### 2026-08-30 — Publication reconciliation verified against live APIs
+
+Phase 0 is **deliberately skipped.** The site is a ground-up rework; papers land once, in the
+Astro overlay, not twice. Do not spend effort on Jekyll-side machinery — `auto-cite`, `Gemfile`,
+`sources.yaml` — it is all being discarded.
+
+What was worth keeping is the reconciliation itself, re-verified live and ready for the Phase 2
+overlay. §4.1's four articles resolve to:
+
+| Slug | Published DOI | Venue | Date |
+|---|---|---|---|
+| patel-social-isolation | `10.1038/s41593-026-02413-x` | Nature Neuroscience | 2026-08-25 |
+| cheng-leader-follower | `10.1038/s41586-026-10900-1` | Nature | 2026-08-19 |
+| rose-disk | `10.1038/s41592-025-02893-y` | Nature Methods | 2025-12-04 |
+| mitelut-gerbils | `10.1371/journal.pbio.3003348` | PLoS Biology | 2025-09-08 |
+
+Preprints to pair with them: `10.1101/2023.11.09.566421` (patel), `10.1101/2024.05.03.592173`
+(disk), `10.1101/2025.08.27.672249` (cheng — bioRxiv, under a different title).
+MIMIC-MJX's real date is **2025-12-02**, not the Jan-1 fallback.
+
+Two findings that correct §6.1:
+
+1. **OpenAlex answered unauthenticated.** `?filter=author.id:A5006740810&per-page=100` returned
+   all 69 works, `meta.cost_usd: 0.0001`, no key. §6.1's "an API key is now required" is
+   overstated for *this* call — the cost model it describes was otherwise confirmed exactly.
+   Still worth getting the key before a build depends on it.
+2. **Crossref has no `is-preprint-of` for the Patel preprint** — the traversal §6.1 relies on
+   returns `{}`. This is the first real instance of the manual-association case, so the overlay
+   needs to support it from the start rather than treating it as an edge case. The merge rests on
+   hard evidence, not a fuzzy match: the two records share **all 24 authors** and a title
+   identical apart from hyphen-vs-en-dash. DISK's relation *was* present and resolved as
+   documented, so the traversal works — it just isn't sufficient on its own.
+
+Also confirmed: MIMIC-MJX has `doi: null` in OpenAlex and is indexed via PubMed, exactly the
+failure case §6.1 cites for why the canonical key must be a lab-assigned slug.
+
+### 2026-08-30 — Phase 1: `build.format: 'preserve'` resolved, and the 307 trap
+
+**`format: 'preserve'` works.** One build emits `/members/<slug>.html` and `/team/index.html`
+together, exactly the mixed shape the live site has. `trailingSlash` turned out to be a
+**non-factor** for output — `ignore`/`always`/`never` all emit byte-identical file layouts under
+`preserve`; it only affects dev-server matching. §9's "confirm how it interacts with
+`trailingSlash`" is answered: it doesn't.
+
+**But `preserve` alone is not sufficient, and the reason is on the serving side.** Probed against
+a real Workers runtime (`wrangler dev`), the four `assets.html_handling` modes give:
+
+| mode | `/members/x.html` | `/members/x` | `/team/` | `/` |
+|---|---|---|---|---|
+| `auto-trailing-slash` (default) | **307** → `/members/x` | 200 | 200 | 200 |
+| `none` | **200** | 404 | **404** | **404** |
+| `force-trailing-slash` | 307 → `/members/x/` | 307 | 200 | 200 |
+| `drop-trailing-slash` | 307 → `/members/x` | 200 | 307 → `/team` | 200 |
+
+Two things fall out of this that §8 did not anticipate:
+
+1. **`none` is a trap.** It is the only mode that serves `.html` at 200 — and it 404s **the
+   homepage** and every directory index. Not viable, so the extensionless URL is *forced* as the
+   canonical form. Preserving the `.html` URLs as-is is not on the table.
+2. **The default redirect is a 307, not a 301.** A temporary redirect does not move Google's
+   index or pass link equity, and §8's acceptance test demands "200 or 301-to-200". Shipping on
+   defaults would have quietly failed that on all 55 member URLs — and it would have looked fine
+   in a browser, which is exactly the silent-external-breakage §8 warns about.
+
+**Resolution: two wildcard lines in `public/_redirects`, not 55 hand-written entries.** Verified
+that `_redirects` is evaluated *before* `html_handling`, and that a `:slug` placeholder binds
+correctly against a literal `.html` suffix:
+
+```
+/members/:slug.html  /members/:slug  301
+/team/index.html     /team/          301
+```
+
+`/members/<slug>.html` → **301** → `/members/<slug>` → 200. Homepage and `/team/` stay 200.
+
+Residual: `/team` (no trailing slash) still 307s to `/team/`. Harmless — Jekyll never served that
+form, so it is not in the preservation inventory.
+
+**Confirmed against a real deployment**, not just the local runtime — `wrangler dev` and
+production agree exactly:
+
+```
+/members/talmo-pereira.html   301 -> /members/talmo-pereira   (final 200)
+/members/aaditya-prasad.html  301 -> /members/aaditya-prasad  (final 200)
+/team/                        200      /team/index.html  301 -> /team/  (final 200)
+/                             200      /nope             404
+```
+
+All 13 files in `public/` serve at 200 with byte-identical sizes, and `/_redirects` correctly
+404s rather than being exposed as an asset.
+
+**Deploy target:** Worker `talmolab-site` on account `Talmo Lab` (`6b8f5183…`), preview at
+`https://talmolab-site.talmo-lab.workers.dev`. `wrangler.jsonc` declares **no routes**, so it is
+inert with respect to talmolab.org until the Phase 5 DNS change — the existing wrangler OAuth
+token already carries `workers/workers_scripts/workers_routes (write)`, so no new credential is
+needed for the cutover either.
+
+### 2026-08-30 — Phase 1 complete: Tailwind v4 + Starwind on the ratified palette
+
+Astro 6.4.8, Tailwind 4.3.3, Starwind 2.2.0, self-hosted fonts, deployed and verified at
+`https://talmolab-site.talmo-lab.workers.dev`. `astro check` is clean (9 files, 0/0/0) and runs
+as part of `npm run build`, per §7 — with no CMS, the schemas are the only guardrail, so they
+must not be CI-only.
+
+`design/palette.css` and `design/type-system.css` are **imported, not copied**, so re-running
+`design/scripts/` flows straight into the site. Four things had to be resolved on the way, none
+of them obvious from reading the specs:
+
+1. **Astro's Fonts API registers a HASHED family name** — `"Source Sans 3-16d643d5…"`, not
+   `"Source Sans 3"`. `type-system.css` names the face literally, which is right as a
+   specification and wrong as CSS: it resolves to a system sans for every visitor *while still
+   looking correct on any machine with Source Sans installed locally*. `src/styles/global.css`
+   re-points `--font-sans`/`--font-mono` at Astro's generated stacks, which also carry the
+   metric-matched fallbacks that suppress layout shift. Verified by measurement, not by eye —
+   the rendered glyph run is 426.24px against 458.07 for Arial and 441.95 for system-ui.
+
+2. **Starwind's `--color-muted` collides with the palette's.** The palette means muted *text*
+   (`#555b64`); Starwind means a muted *background*. The palette is ratified so it wins the name,
+   which makes `bg-muted` paint dark grey under dark text — Starwind's `outline` and `ghost`
+   buttons use `hover:bg-muted`. Patched those to `hover:bg-secondary`. **This is a recurring
+   tax: every future `starwind add` needs the same substitution.** The durable fix is renaming
+   one of the two, which is a design-system decision, not a code one.
+
+3. **Starwind switches theme on a `.dark` CLASS**, the palette on `prefers-color-scheme` +
+   `data-theme`. Its `dark:` variant is redefined in the bridge to the palette's three-state
+   logic, and its semantic tokens point at `--bg`/`--fg`/`--line`, which already flip — so
+   components track the theme without a `.dark` class existing anywhere.
+
+4. **Two contrast bugs, both introduced by the mapping, both caught by measuring in-browser.**
+   `--secondary` pointed at the light-only `--color-sunk`, giving `#edf0f4` under `#e5e8ec` in
+   dark mode — invisible. And `--primary` pointed at `--mark`, whose dark value `#2a83c4` is
+   specified as a *foreground on ground*; used as a button *fill* under paper text it measures
+   **3.87:1 and fails AA**. Primary now uses brand blue `#2176b3` as the fill in both themes:
+   4.62:1 label contrast either way, and it still clears the 3:1 non-text minimum against each
+   ground (4.62 light / 3.79 dark). Measured button contrast now runs 4.62–15.04 across both
+   themes.
+
+The palette needed one addition it did not define: a **recessed tone for dark**. On a near-black
+ground "recessed" has to go lighter, not darker, so `--sunk` resolves to `--color-dark-rule` in
+dark and `--color-sunk` in light. Derived in the bridge, not in `design/`.
+
+**Settled:** the OG cards were baked in Bricolage Grotesque + IBM Plex Mono, and
+`design/README.md` still described site typography as undecided. Both fixed — the four cards are
+re-rendered in **Source Sans 3 + JetBrains Mono**, `public/og-card.png` re-synced, and the
+README's "Type caveat" is now a "Type" section stating what is actually true. The headline sits
+at **700 / -0.02em** rather than Bricolage's 600 / -0.025em, because Source Sans is a text face
+and needs the extra weight to hold at display size — those are the site's own `h1` numbers, so
+card and page heading now agree. Dropping IBM Plex Mono also removes the last trace of a family
+§13 rejected on Greek coverage (2%).
+
+### 2026-08-30 — Phase 2a: people collection extracted
+
+56 people, 55 member pages, all 55 existing `/members/<slug>.html` URLs still
+resolving. `docs/phase2-people-review.md` carries what needs Talmo's judgement;
+§12 open question 4 is surfaced there rather than decided.
+
+The extraction refused to guess. Where the prose does not say, the field is absent
+and reported — the `lab-roster` skill's habit of *estimating* end dates from role
+duration is exactly wrong for a structured collection, because an estimate written
+into the data is indistinguishable from a fact a week later.
+
+Sources actually used, in order of confidence: the bio's own words ("joined the lab
+in March 2022" — present in **37 of 55**), then the alumni bullet's year, then git
+history as evidence only. Two semantics were established empirically:
+
+- **The alumni bullet year is the DEPARTURE year**, not arrival. Advaith Ravishankar
+  is listed under 2025 and joined 2022-03. So the list never recorded tenure at all;
+  the collection now does, and the table shows `2022–2025` where the old list showed
+  `2025`.
+- **`description` is a more reliable role source than `role`**, which is just
+  `alumni` for everyone who left.
+
+Four bugs on the live site fell out of the reconciliation:
+
+1. **Four people are invisible today** — Gregory Quach, Neeraj Venna, Ramiz Hajj,
+   Vincent Tu. `role: alumni` filters them off the team page, and nobody added them
+   to the hand-written list, so they appear nowhere while their pages sit unlinked.
+   This is the single strongest argument for the structural model, and it drove a
+   schema decision: **alumni-ness is derived from `end`, never stored.** A separate
+   flag is what fell out of sync. `end: "unknown"` exists so "departed, date not
+   recorded" stays distinct from "still here" — omitting `end` would recreate the
+   exact bug.
+2. **Ten member files reference portraits that do not exist**, rendering broken
+   images today. The new team page falls back to initials.
+3. **Seven role conflicts** between the list and the member files (Liezl Maree is
+   "Software Engineer" in one and "Scientific Programmer" in the other).
+4. **Pranav Sankar would have silently vanished.** He has no member file, so he is
+   not in `_members/` at all and a naive migration drops him — while the live site
+   does list him, as plain text. Added explicitly with `page: false`, which is also
+   the mechanism §6.2b needs for dropping thin pages later.
+
+Two display cases look identical in the source prose and must not look identical
+in the table, so they are distinguished structurally rather than by guessing:
+Will Knickrehm's `2023, 2024` is two separate summers, Aaditya Prasad's is one
+tenure with a role change. A run is contiguous when an appointment has no `end` or
+the next has no `start` — which is exactly how an unrecorded handover is encoded.
+They render `2023, 2024` and `2021–2024` respectively.
+
+Role ordering is now derived from a rank enum (§6.2), fixing the live site's
+manual ordering that puts staff scientists below undergraduate interns.
+
+Portraits moved to `src/assets/people/` for the Image pipeline — Astro is cutting
+them hard (577kB → 4kB webp). **Still open for Phase 5:** the other ~22 files under
+`images/`, including `/images/papers/maree-2024.pdf`, which §8 flags as the actual
+target of a cited work rather than a thumbnail. Astro serves none of `/images/**`
+today, so that must be resolved before cutover.
+
+### 2026-08-30 — Phase 2b: roster CSV merged, title model settled
+
+Talmo's review closed most of the Phase 2a gaps. 53 people, 52 member pages.
+
+**A second data source exists and is far better than the website prose:**
+`Salk/annual-review/2025/lab_roster.csv` (as of 2025-10). It has `YYYY-MM` on both
+ends, co-advisors, and **one row per role period**, so role transitions are recorded
+facts rather than inferences. 47 of 53 matched. It resolved every open date
+question: Aaditya Prasad's unrecoverable handover is 2022-11; Scott Yang turns out
+to be undergrad → MS → PhD, a three-stage career the site never showed; Amick Licup
+converted undergrad → RA in 2025-06. `end: "unknown"` is now used by nobody.
+
+**Worth knowing for Phase 4:** this CSV is a better input than `_members/` prose for
+anything date-shaped, and it is refreshed annually for the Salk review. It stops at
+2025-10, so this year's people are missing entirely — Talmo asked to add them after
+the migration rather than now, so nothing was invented to fill the gap.
+
+**Job titles are three fields, not one.** Talmo's reasoning: Salk HR historically
+gave people job titles that did not reflect what they did, so the website
+deliberately used better ones. Reconciling them would destroy information, so the
+schema holds all three — `role` (category, drives sort/group/filter, never shown
+raw), `title` (what the site displays), `salkTitle` (the official one). The seven
+"role conflicts" from Phase 2a were never conflicts; they were this distinction with
+nowhere to live. 13 people carry a `title`; `salkTitle` is deliberately empty
+everywhere, a slot for a later standardization pass rather than something to guess.
+
+**Three people removed outright** — Gregory Quach, Neeraj Venna, Ramiz Hajj. Their
+`/members/<slug>.html` URLs resolve on the live site, so they 301 to `/team/`
+instead of 404ing. This exposed an ordering rule worth recording: **`_redirects` is
+first-match-wins**, so a specific rule must sit ABOVE the `/members/:slug.html`
+wildcard. Underneath it, the wildcard swallows the request and rewrites to
+`/members/<slug>`, which no longer exists — a 301 straight into a 404. Verified.
+
+**Everyone who had a full member page keeps it** (§12 q4 answered). `page: false`
+remains in the schema, used only by Pranav Sankar, who never had one.
+
+One process note: the first merge attempt did regex surgery on frontmatter text and
+silently dropped the closing `---`, which made every record fail validation as
+"name: Required" — a confusing error, because the field is plainly there. Frontmatter
+is parsed and re-emitted through a real YAML parser now.
+
+### 2026-08-30 — Phase 2c: publications loader and overlay
+
+`src/loaders/openalex.ts` + `src/data/publications.yaml` + a publications page and
+the three export endpoints (§6.1). All 28 entries the site showed are preserved,
+plus the two genuinely new journal articles. Build-time caching works: a second
+build resolves 0 records.
+
+**The overlay is an allowlist, and that is not a stylistic choice.** OpenAlex holds
+69 works for this author; publishing them unfiltered would add ~40 entries that are
+not publications — **twelve** Figshare `MOESM` supplementary-material stubs, three
+`Author response:` peer-review records, a publisher erratum, Research Square
+duplicates of papers already listed, and conference abstracts. "Auto-discovered with
+a curated overlay" therefore has to mean *discovery feeds a PR*, never *discovery
+publishes*. Decision 3b was right and this is the concrete reason.
+
+**Keys are derived from the EARLIEST version's year**, so `rose-2024` stays
+`rose-2024` after the paper appears in Nature Methods in 2025. Keying on the
+published year would churn the identifier at exactly the moment the record matters.
+
+**API notes, all verified:**
+- OpenAlex singleton lookup by DOI resolves **arXiv DOIs**, which Crossref 404s
+  (they are registered with DataCite). So OpenAlex is the primary resolver and
+  Crossref the fallback — the reverse of what seemed natural.
+- Both filter and singleton calls answer **unauthenticated**. `OPENALEX_API_KEY` is
+  supported and raises the budget, but is not required to build.
+
+**Two open items for Talmo:**
+
+1. **MIMIC-MJX has two OpenAlex records that disagree on date.** The arXiv record
+   (`10.48550/arxiv.2511.20532`) says **2025-11-25**; the PubMed-indexed record,
+   which has `doi: null`, says **2025-12-02** — the date §4.3 recorded as correct.
+   The site currently shows the arXiv date because that is the DOI being cited.
+   This is the "one work, two records" hazard §6.1 predicted, now concrete.
+2. **Possible preprint match, NOT acted on.** bioRxiv `10.1101/2023.11.10.566632`
+   ("A behavioral roadmap for the development of agency in the rodent") looks like
+   the preprint of the PLoS Biology gerbil paper. Crossref carries **no** relation.
+   All 9 authors match on surname + initials **in the same order**, first and last
+   author included. §6.1 forbids acting on a title/author match, so both remain
+   separate entries pending a human call. Worth noting my first comparison was
+   exact-string and reported **0 overlap** — bioRxiv uses initials, PLoS uses full
+   names — which would have been the opposite error.
+
+### 2026-08-30 — Tools page, remaining nav, and the §8 gate PASSING
+
+Repo list confirmed by Talmo (§12 q1): sleap, sleap-app, sleap-io, sleap-nn, dreem,
+sleap-roots, lablink, stac-mjx, track-mjx, vibes, luc3d. **Grouping was a pure
+judgement call** — GitHub reports none of them archived and all pushed within weeks,
+so there is no signal to derive it from. Seven are `maintained`, four `research`.
+Blurbs come from each repo's README rather than being invented.
+
+**Graceful degradation is tested, not assumed** (§6.3). With an invalid token the
+build logs a warning per repo, renders all 11 from `repos.yaml` alone with blurbs
+intact and enrichment fields empty, and exits 0.
+
+Remaining nav built: `/research/` ports the existing three areas verbatim — that is
+Talmo's writing, so porting it is not the "placeholder areas" §12 q2 forbids.
+`/blog/` ships with the two collections, the merged stream and RSS, empty for now.
+`/join/` folded into `/team/#join` per §5b.
+
+**§8 ACCEPTANCE GATE: PASSING — 72/72.** `test/live-urls.txt` snapshots the live
+sitemap (69 entries) plus three paths it omits; `scripts/check-urls.sh <base>` asserts
+each returns 200 or redirects to 200. This is the Phase 5 blocker and it is green
+against the deployed Worker, well ahead of cutover.
+
+It earned its keep immediately by catching a real violation: **`/sitemap.xml` was
+404ing.** `@astrojs/sitemap` emits `sitemap-index.xml`, and §8 requires the old name
+keep resolving — so it is bridged with a 301, and `robots.txt` points at the index.
+
+Three things the live sitemap revealed that §3 and §4.5 missed:
+
+1. **`/CLAUDE.html` is a published, indexed page.** Jekyll renders `CLAUDE.md` at the
+   site root, so internal assistant instructions have been public. Astro does not
+   publish it; the indexed URL 301s to `/`.
+2. **`/contact/` is unmodified Greene template placeholder content** — "Department of
+   Metaphor", `scrooge@mcduck.com`, `(555) 867-5309`, and a Google Maps pin in Porters
+   Lake, Nova Scotia. Live right now. Not migrated; 301s to `/team/#join`. §4.5 listed
+   the lorem-ipsum `tools.yaml` and the Twitter embed but not this.
+3. **The three template example posts are in the sitemap**, so they are in Google's
+   index. Not migrated (§4.5) but 301'd to `/blog/` rather than dropped.
+
+Also resolved: **`/images/**` is no longer a Phase 5 blocker.** `public/f/` and
+`public/images/papers/` now carry the recruitment PDF and `maree-2024.pdf` — the
+latter being the actual target of a cited work, not a thumbnail, so a 404 there makes
+a published citation unreachable.
+
+Two sitemap details worth keeping: it must list the **non-redirecting** shape for
+each route, which under `build.format: 'preserve'` means a trailing slash for
+directory routes but extensionless-no-slash for the flat member pages (a `serialize`
+hook handles this; verified all 58 return 200 directly, following no redirects). And
+the live Jekyll sitemap emits **`http://`** URLs, not `https://`.
+
+### 2026-08-30 — Phase 3: home page, View Transitions, Pagefind
+
+The home page is now a real front door rather than the two group photos the Jekyll
+one had. It leads with the positioning line and then the **four most recent
+publications** — deliberately, because §1's whole complaint was that staleness was
+invisible. Putting recent work on the front page makes it obvious rather than three
+clicks deep.
+
+**View Transitions.** `ClientRouter` in the base layout, plus a portrait → member
+page morph via a matched `transition:name` on both ends (verified: both documents
+emit `view-transition-name: portrait-<slug>`). The brand lockup carries
+`transition:persist` so it does not re-animate on every navigation. A
+`prefers-reduced-motion` block reduces all of it to a plain cut.
+
+**The zero-JS baseline holds and is measured**, not asserted: every page ships
+exactly one external script (ClientRouter, a few KB), and only `/search/` ships a
+second. That is precisely the §5 shape.
+
+**Pagefind: the bundled UIs were abandoned, and not on taste.** pagefind 1.5.2's
+build output recommends the Component UI for new integrations, so that was tried
+first — and it renders **permanent `aria-hidden` skeleton placeholders**. The failure
+is entirely in that layer: driving the API directly in the same page returns 2 hits
+for "imputation" and `result.data()` resolves with url, title and a 256-character
+excerpt. Ruled out along the way: it is not a ClientRouter interaction (a hard load
+behaves identically), and it is not asset delivery (fragments arrive byte-identical
+at 425 bytes with the gzip magic intact, which matters because Pagefind gunzips them
+itself and a CDN re-encoding them would break exactly this way).
+
+So `/search/` is ~40 lines over Pagefind's JS API: a `<search>` landmark, a labelled
+input, an `aria-live` status region, debounced input, a request token so a slow
+earlier keystroke cannot overwrite a newer result set, and `?q=` support so results
+are linkable. It ships none of the 175 KB bundle and takes the palette directly
+instead of fighting vendor CSS.
+
+Two smaller things worth recording:
+
+- **Matched terms come back wrapped in `<mark>`**, and results are injected with
+  `innerHTML`, so Astro's scoped styles never reach them — the rule has to be global.
+  Left alone, the browser default paints a saturated yellow, the one colour on the
+  site that belongs to nothing in the palette. Weight is used instead.
+- **The content-layer cache lives in `node_modules/.astro/data-store.json`**, not
+  `.astro/`. Deleting the latter and rebuilding silently reuses stale loader output —
+  which is how a venue-normalisation change appeared to do nothing.
+
+Venue names are normalised in the loader: OpenAlex returns "arXiv (Cornell
+University)" and "bioRxiv (Cold Spring Harbor Laboratory)", which nobody cites that
+way. The trailing parenthetical is stripped and the overlay can still override.
+
+§8 gate still passing 72/72 after all of it.
+
+### 2026-08-31 — Phase 4: automation, skills, CLAUDE.md
+
+**Discovery scripts + workflows.** `scripts/discover-publications.mjs` and
+`scripts/discover-news.mjs`, driven weekly by `.github/workflows/discover.yaml`,
+which opens a **PR** and never commits to `main` or publishes. News items also carry
+`draft: true`, so even merging does not put them on the site — two gates, because a
+release tag is not necessarily something the lab wants to announce.
+
+**It found a fifth missing publication.** §4.1 listed four; discovery turned up
+**Maree et al. 2023, "Quantifying Behavior Using Deep Learning", Biological
+Psychiatry** (`10.1016/j.biopsych.2023.02.038`) — Liezl Maree first author, Talmo
+last, genuinely absent from the site. Staged in the overlay as `maree-2023`.
+
+Two filter calibrations, both from real output rather than guesswork:
+
+- **The articles bucket was too permissive.** OpenAlex types conference abstracts as
+  `article`, so the APS Bulletin entries and a NAPPN abstract came through as
+  journal papers. Filtered by venue and title with the reason recorded. Also,
+  nothing without a DOI can be staged (the overlay keys off one), so those are
+  surfaced separately rather than dropped — a real paper occasionally lands there.
+- **Every GitHub release is not news.** Taking all of them produced **45 items in
+  eight months**, roughly one every five days: a changelog, not an announcement, and
+  it would train whoever reviews the PR to ignore the PR. Minor and major only
+  (`x.y.0`) gives 17 over the same window, about two a month. Non-semver tags are
+  kept rather than guessed about.
+
+The excluded records are listed in the PR body under a `<details>`, so the filter
+stays auditable instead of invisible.
+
+**Skills updated (§10).** `add-member` now emits `appointments[]` and — the point —
+marking a departure is **one edit, not two**. The old flow set `role: alumni` *and*
+hand-added a bullet to `team/index.md`; forgetting the second step is what made four
+people vanish. `local-test` swaps Jekyll for Astro and gains the checks that
+actually catch things, including the warning that routing must be tested under
+`wrangler dev` rather than `astro dev`. `lab-roster` reads the collection instead of
+parsing prose, and its two prose-parsing scripts are **deleted** — keeping a script
+that *estimates* end dates from role durations around is a footgun now that the real
+dates exist. New `add-publication` skill covers overlay entries and the
+preprint→published resolution, including the manual-association bar and the
+exact-string author-comparison trap.
+
+**Root `CLAUDE.md` rewritten**, replacing the Jekyll-era version. It leads with the
+rules that are load-bearing rather than a directory listing: alumni status derived
+from `end`, the overlay-as-allowlist, `_redirects` being first-match-wins, the
+three design-system gotchas, and a "things that will waste your time" section for
+the content-layer cache location and the expected empty-collection warnings.
+
+§8 gate still passing 72/72.
+
+**Phase 5 is now the only thing left, and its gate is green.** Remaining: move DNS
+from GitHub Pages to Workers (a routing change — Cloudflare already fronts the
+domain), verify, then remove the Jekyll files in one clearly-labelled commit so
+rollback stays available until the live site is confirmed.
+
+### 2026-08-31 — CI deploy working end to end
+
+`.github/workflows/deploy.yaml` now builds, deploys and runs the §8 gate on its own:
+**build → deploy → 72/72 passing**, unattended.
+
+**Credential: an account-owned API token**, created under Manage account → Account
+API tokens rather than My Profile. Not tied to a user, so it survives Talmo rotating
+his own credentials — matching the existing `sleap-share deploy` token. One trap
+found in the docs: Cloudflare's own **Workers Builds** CI does not accept
+account-owned tokens yet, but that is irrelevant here because we use
+`wrangler deploy` from GitHub Actions rather than Workers Builds.
+
+**Scoped down from the template, deliberately.** "Edit Cloudflare Workers" grants 10
+account permissions — Pages, R2, KV, Containers, CF Agents, Workers CI,
+Observability and Tail on top of what a static site needs. This account also hosts
+`sleap-share-prod` and `airc-landing`, so a leaked CI token with R2 and Pages write
+is a materially worse incident than one that can only deploy this Worker. Trimmed to:
+
+| Scope | Permission |
+|---|---|
+| Entire account | Workers Scripts · Write |
+| Entire account | Account Settings · Read |
+| `talmolab.org` only | Workers Routes · Write |
+
+Workers Routes was also narrowed from *all zones* to `talmolab.org`. **The deploy
+succeeded on exactly these two account permissions**, which confirms the trim rather
+than assuming it.
+
+**The consequence, recorded because it will bite silently later:** adding a KV, R2,
+D1 or Secrets Store binding will fail at deploy with an authorization error until
+that permission is added back to this token. Nothing about the site says so; only
+this note does.
+
+Incidental confirmation that it is genuinely account-owned: `wrangler deployments
+list` shows `Author: undefined` for the CI deployment, because the token has no
+associated user.
+
+Secrets set: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. `OPENALEX_API_KEY`
+remains unset and unnecessary.
+
+**Phase 5 now has nothing blocking it but the DNS change itself.**

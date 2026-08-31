@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const pubs = (await getCollection('publications')).sort((a, b) =>
+  (b.data.date ?? '').localeCompare(a.data.date ?? ''),
+);
+
+const byYear = new Map<string, typeof pubs>();
+for (const p of pubs) {
+  const y = (p.data.date ?? '????').slice(0, 4);
+  byYear.set(y, [...(byYear.get(y) ?? []), p]);
+}
+const fmt = (d?: string) =>
+  d ? new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }) : '';
+---
+<BaseLayout title="Publications — talmolab" description="Publications from the Talmo Lab at the Salk Institute.">
+  <h1>Publications</h1>
+  <p class="lede">{pubs.length} publications.</p>
+
+  {[...byYear.entries()].map(([year, items]) => (
+    <section>
+      <h2 id={year}>{year}</h2>
+      <ul class="pubs">
+        {items.map(({ data: p }) => (
+          <li>
+            <div class="pub-title">
+              {p.url ? <a href={p.url}>{p.title}</a> : p.title}
+            </div>
+            <div class="pub-authors">{p.authors.join(', ')}</div>
+            <div class="pub-meta">
+              {p.venue && <span class="venue">{p.venue}</span>}
+              {p.date && <> · <time datetime={p.date}>{fmt(p.date)}</time></>}
+              {p.doi && <> · <a class="doi" href={`https://doi.org/${p.doi}`}>{p.doi}</a></>}
+            </div>
+            {/* The preprint is a secondary link, never its own entry. */}
+            {p.preprint?.doi && (
+              <div class="pub-preprint muted">
+                Preprint: <a class="doi" href={p.preprint.url ?? `https://doi.org/${p.preprint.doi}`}>{p.preprint.doi}</a>
+                {p.preprint.venue && <> ({p.preprint.venue})</>}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>
+
+<style>
+  .pubs { list-style: none; padding: 0; margin: 0.75rem 0 0; }
+  .pubs > li { padding: 0.9rem 0; border-bottom: 1px solid var(--line); }
+  .pub-title { font-weight: 600; line-height: 1.3; }
+  .pub-authors { color: var(--fg-muted); font-size: 0.9375rem; margin-top: 0.2rem; }
+  .pub-meta, .pub-preprint { font-size: 0.875rem; margin-top: 0.25rem; }
+  .venue { font-weight: 600; }
+  h2 { margin-top: 2.5rem; }
+</style>

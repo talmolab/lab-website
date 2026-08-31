@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const areas = (await getCollection('areas')).sort((a, b) => a.data.order - b.data.order);
+const rendered = await Promise.all(
+  areas.map(async (a) => ({ ...a, Content: (await render(a)).Content })),
+);
+---
+<BaseLayout title="Research — talmolab" description="Research areas of the Talmo Lab at the Salk Institute.">
+  <h1>Research</h1>
+  <p class="lede">
+    Our lab leverages <strong>deep learning</strong> and <strong>computer vision</strong> to
+    study complex biological systems by <strong>building novel computational tools</strong>.
+    Our core research areas of interest include:
+  </p>
+
+  {rendered.map(({ data, Content }) => (
+    <section class="area">
+      {data.image && <Image src={data.image} alt="" width={520} class="area-img" />}
+      <div class="area-copy">
+        <h2>{data.name}</h2>
+        <Content />
+      </div>
+    </section>
+  ))}
+
+  <p class="more">
+    See <a href="/publications/">Publications</a> for a list of recent published works
+    from the lab.
+  </p>
+</BaseLayout>
+
+<style>
+  .area {
+    display: grid; gap: 1.5rem 2rem; align-items: center;
+    grid-template-columns: minmax(0, 1fr); margin-top: 3rem;
+  }
+  @media (min-width: 46rem) {
+    .area { grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); }
+    /* Alternate sides so three stacked features do not read as a list. */
+    .area:nth-child(even) .area-img { order: 2; }
+  }
+  .area-img { width: 100%; height: auto; border-radius: 0.5rem; background: var(--sunk); }
+  .area-copy h2 { margin-bottom: 0.5rem; }
+  .more { margin-top: 3.5rem; }
+</style>

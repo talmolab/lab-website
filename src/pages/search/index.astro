@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+{/* §5: the zero-JS baseline has two exceptions — ClientRouter, and this page.
+    Pagefind's index is static files generated from dist/, so there is still no
+    server and no API.
+
+    This is a hand-rolled UI over Pagefind's JS API rather than either of the
+    bundled UIs. Not a style preference: pagefind 1.5.2's Component UI renders
+    permanent `aria-hidden` skeleton placeholders here — the index returns hits
+    and `result.data()` resolves correctly when called directly, but the
+    components never swap the skeletons for content. The API is ~40 lines to
+    drive, ships none of the 175 KB bundle, and takes the palette directly
+    instead of fighting vendor CSS. */}
+<BaseLayout title="Search — talmolab" description="Search the Talmo Lab site.">
+  <h1>Search</h1>
+
+  <search>
+    <label class="visually-hidden" for="q">Search this site</label>
+    <input
+      id="q"
+      type="search"
+      autocomplete="off"
+      autofocus
+      placeholder="Publications, people, tools…"
+    />
+  </search>
+
+  {/* Announced to screen readers when the count changes, not on every keystroke. */}
+  <p id="status" class="muted" role="status" aria-live="polite"></p>
+  <ol id="results" class="results"></ol>
+
+  <noscript>
+    <p class="lede">
+      Search needs JavaScript. Everything is browsable without it:
+      <a href="/publications/">publications</a>, <a href="/team/">team</a>,
+      <a href="/tools/">tools</a> and <a href="/research/">research</a>.
+    </p>
+  </noscript>
+</BaseLayout>
+
+{/* is:inline keeps this out of the Vite bundle: /pagefind/pagefind.js is written
+    at the END of the build, so Rollup cannot resolve it — and does not need to. */}
+<script is:inline type="module">
+  const input = document.getElementById('q');
+  const status = document.getElementById('status');
+  const list = document.getElementById('results');
+
+  let pagefind;
+  let token = 0;
+
+  const escape = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+  async function load() {
+    if (!pagefind) {
+      pagefind = await import('/pagefind/pagefind.js');
+      await pagefind.init();
+    }
+    return pagefind;
+  }
+
+  async function run(query) {
+    const mine = ++token;
+    if (!query.trim()) {
+      list.innerHTML = '';
+      status.textContent = '';
+      return;
+    }
+    status.textContent = 'Searching…';
+    try {
+      const pf = await load();
+      const search = await pf.search(query);
+      // A slower earlier keystroke must not overwrite a newer result set.
+      if (mine !== token) return;
+
+      const top = await Promise.all(search.results.slice(0, 20).map((r) => r.data()));
+      if (mine !== token) return;
+
+      status.textContent =
+        search.results.length === 0
+          ? `No results for “${query}”`
+          : `${search.results.length} result${search.results.length === 1 ? '' : 's'} for “${query}”`;
+
+      list.innerHTML = top
+        .map(
+          (d) => `<li>
+  <a href="${escape(d.url)}">${escape(d.meta?.title ?? d.url)}</a>
+  <p class="excerpt">${d.excerpt ?? ''}</p>
+</li>`,
+        )
+        .join('');
+    } catch (err) {
+      status.textContent = 'Search is unavailable right now.';
+      console.error(err);
+    }
+  }
+
+  let timer;
+  input?.addEventListener('input', (e) => {
+    clearTimeout(timer);
+    // Debounced: the index is local, but re-rendering on every keystroke is waste.
+    timer = setTimeout(() => run(e.target.value), 140);
+  });
+
+  // Support /search/?q=… so results are linkable.
+  const initial = new URLSearchParams(location.search).get('q');
+  if (initial) {
+    input.value = initial;
+    run(initial);
+  }
+</script>
+
+<style>
+  search { display: block; margin-top: 1.5rem; max-width: 34rem; }
+  #q {
+    width: 100%; height: 2.75rem; padding: 0 0.875rem;
+    font: inherit; color: var(--fg);
+    background: var(--surface);
+    border: 1px solid var(--line); border-radius: 0.5rem;
+  }
+  #q:focus-visible { outline: 2px solid var(--mark); outline-offset: 1px; border-color: var(--mark); }
+  #status { margin-top: 0.75rem; font-size: 0.9375rem; }
+
+  .results { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+  .results > li { padding: 0.9rem 0; border-bottom: 1px solid var(--line); }
+  .results a { font-weight: 600; }
+  .excerpt { margin-top: 0.25rem; color: var(--fg-muted); font-size: 0.9375rem; }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+</style>

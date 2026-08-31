@@ -1,13 +1,25 @@
 ---
 name: local-test
-description: Test local Jekyll build and visualize pages using Playwright MCP. Starts the development server, navigates through key pages, captures screenshots, and validates rendering. Use when testing local changes before deployment.
+description: Test the local Astro build and visualise pages in a browser. Runs the schema check, starts a dev or preview server, walks the key pages, captures screenshots, and validates rendering. Use when testing local changes before deployment.
 version: 1.0.0
 allowed-tools: Bash, BashOutput, KillShell, mcp__playwright__browser_navigate, mcp__playwright__browser_snapshot, mcp__playwright__browser_take_screenshot, mcp__playwright__browser_click, TodoWrite
 ---
 
-# Local Testing with Playwright MCP
+# Local Testing
 
-This skill helps you test the Jekyll site locally and visualize pages using Playwright MCP browser automation.
+Test the Astro site locally and look at it in a browser.
+
+Two servers, and the difference matters:
+
+| Command | Serves | Use it for |
+|---|---|---|
+| `npm run dev` | Astro dev server, HMR, no Pagefind index | content and layout work |
+| `npm run preview` | `wrangler dev` over `dist/` | anything about **routing** |
+
+Routing must be checked under `wrangler dev`, not `astro dev`. The `.html` → 301
+member redirects, the trailing-slash behaviour and `public/_redirects` are all
+applied by the Workers runtime and simply do not exist in the dev server. A URL can
+look fine in `astro dev` and 404 in production.
 
 ## When to Use This Skill
 
@@ -23,18 +35,23 @@ Use this skill when:
 
 ## Prerequisites
 
-Ensure Playwright MCP is installed:
-```bash
-claude mcp add playwright npx '@playwright/mcp@latest'
-```
+Node 24+. No Ruby, no bundler — the Jekyll toolchain is gone.
+
+Browser automation: prefer the built-in Browser tools
+(`mcp__Claude_Browser__navigate`, `read_page`, `computer`, `javascript_tool`).
+Playwright MCP also works if it is configured; the flow below is the same either
+way. When the Browser pane is hidden, prefer `read_page` / `get_page_text` over
+screenshots — a hidden pane returns blank images.
 
 ## Workflow
 
-### Step 1: Start Jekyll Server
+### Step 1: Start the Dev Server
 
 1. **Launch the server in background**:
    ```bash
-   bundle exec jekyll serve --force_polling --livereload
+   npm run dev            # content work
+   # or
+   npm run preview        # routing work — needs `npm run build` first
    ```
 
    Use `run_in_background: true` to keep the server running while testing.
@@ -46,7 +63,8 @@ claude mcp add playwright npx '@playwright/mcp@latest'
 
 3. **Check server output**:
    - Use `BashOutput` to verify server started successfully
-   - Confirm it's running at `http://127.0.0.1:4000/`
+   - `astro dev` serves `http://localhost:4321/`
+   - `wrangler dev` serves `http://localhost:8787/`
    - Look for "Server running..." message
 
 ### Step 2: Navigate to Homepage
@@ -54,7 +72,7 @@ claude mcp add playwright npx '@playwright/mcp@latest'
 1. **Open homepage with Playwright**:
    ```
    mcp__playwright__browser_navigate
-   url: http://127.0.0.1:4000/
+   url: http://localhost:4321/
    ```
 
 2. **Verify page loaded**:
@@ -77,7 +95,7 @@ Navigate and capture screenshots of important pages:
 #### Team Page
 ```
 mcp__playwright__browser_navigate
-url: http://127.0.0.1:4000/team/
+url: http://localhost:4321/team/
 ```
 - Verify all member portraits load
 - Check alumni section formatting
@@ -86,7 +104,7 @@ url: http://127.0.0.1:4000/team/
 #### Research Page
 ```
 mcp__playwright__browser_navigate
-url: http://127.0.0.1:4000/research/
+url: http://localhost:4321/research/
 ```
 - Verify research areas display correctly
 - Check images and formatting
@@ -95,7 +113,7 @@ url: http://127.0.0.1:4000/research/
 #### Publications Page
 ```
 mcp__playwright__browser_navigate
-url: http://127.0.0.1:4000/publications/
+url: http://localhost:4321/publications/
 ```
 - Verify citations render properly
 - Check publication cards/entries
@@ -104,7 +122,7 @@ url: http://127.0.0.1:4000/publications/
 #### Individual Member Profile
 ```
 mcp__playwright__browser_navigate
-url: http://127.0.0.1:4000/members/talmo-pereira.html
+url: http://localhost:8787/members/talmo-pereira.html   # 301 -> extensionless; only correct under wrangler
 ```
 - Verify profile image displays
 - Check bio formatting
@@ -160,7 +178,7 @@ Present screenshots to user:
 
 ### Step 7: Cleanup
 
-1. **Kill the Jekyll server**:
+1. **Stop the server**:
    ```
    KillShell
    shell_id: [server shell ID]
@@ -168,7 +186,7 @@ Present screenshots to user:
 
 2. **Confirm cleanup**:
    - Verify server stopped
-   - Note that screenshots are saved in `.playwright-mcp/` (gitignored)
+   - Screenshots from Playwright MCP land in `.playwright-mcp/` (gitignored)
 
 ## Common Testing Scenarios
 
@@ -229,20 +247,20 @@ All screenshots are saved to `.playwright-mcp/` directory:
 ### Server Won't Start
 
 **Error: "Address already in use"**
-- Check if Jekyll is already running: `lsof -i :4000`
+- Check whether a server is already bound: `lsof -i :4321` (astro) or `lsof -i :8787` (wrangler)
 - Kill existing process: `kill -9 [PID]`
 - Restart server
 
 **Error: "Permission denied"**
 - Don't run `./start.sh` directly (may not be executable)
-- Use: `bundle exec jekyll serve --force_polling --livereload`
+- Use: `npm run dev`, or `npm run preview` for routing
 
 ### Playwright Can't Connect
 
 **Error: "Navigation failed"**
 - Ensure server is fully started (wait 8-10 seconds)
 - Check server logs with `BashOutput`
-- Verify URL is `http://127.0.0.1:4000/` (not localhost)
+- Verify URL is `http://localhost:4321/` (not localhost)
 
 **Error: "Browser not installed"**
 - Run: `mcp__playwright__browser_install`
@@ -261,7 +279,8 @@ All screenshots are saved to `.playwright-mcp/` directory:
 
 **Content missing**
 - Verify frontmatter is valid YAML
-- Check Jekyll build output for warnings
+- Check the build output for warnings. Two are expected until the blog has
+  content: `The collection "posts"/"news" does not exist or is empty`.
 - Look for Liquid template errors in server logs
 
 ## Best Practices
@@ -308,7 +327,7 @@ All screenshots are saved to `.playwright-mcp/` directory:
 Consider testing before commits:
 ```bash
 # In .git/hooks/pre-commit
-bundle exec jekyll build --quiet
+npm run build
 ```
 
 ### Continuous Testing
@@ -321,7 +340,53 @@ For ongoing development:
 
 ## See Also
 
-- [Jekyll Documentation](https://jekyllrb.com/docs/)
+- [Astro Documentation](https://docs.astro.build/)
+- [Workers static assets routing](https://developers.cloudflare.com/workers/static-assets/routing/)
 - [Playwright MCP Documentation](https://github.com/anthropics/mcp-playwright)
 - CLAUDE.md - Project-specific development guidelines
 - `.github/workflows/` - CI/CD configuration
+
+
+---
+
+## Checks worth running before you commit
+
+### 1. The schema check — not optional
+
+```bash
+npm run check
+```
+
+There is no CMS, so the Zod schemas are the only thing validating content input
+(§7). This catches an unknown role, a malformed `YYYY-MM`, a bad `reference()`
+slug, and a portrait path that points outside `src/`. `npm run build` runs it too.
+
+### 2. The URL preservation gate
+
+```bash
+npm run build && npm run preview          # in one shell
+./scripts/check-urls.sh http://localhost:8787   # in another
+```
+
+Asserts every URL the live Jekyll site serves still resolves — 72 paths snapshotted
+in `test/live-urls.txt`. **This gates cutover.** The URLs that break silently are
+external ones: CVs, the SLEAP docs, other lab sites, Google's index of the `.html`
+member pages. Nobody reports those.
+
+### 3. Stale content cache
+
+If a loader change appears to do nothing, the content layer is serving cache:
+
+```bash
+rm -f node_modules/.astro/data-store.json
+```
+
+It is in `node_modules/.astro/`, **not** `.astro/`. Deleting the latter looks like
+it should work and does not.
+
+### 4. Both themes
+
+The palette has three states — explicit light, explicit dark, and system. Check
+light and dark; `prefers-color-scheme` alone separates the default case. Contrast
+regressions hide in the theme you did not look at: a token that is correct as
+foreground can fail as a fill.

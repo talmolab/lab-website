@@ -27,7 +27,12 @@ Ask the user for essential details:
 
 **Required**:
 - Full name
-- Role (pi, postdoc, staff, phd, ms, ra, programmer, undergrad, highschool)
+- Role category — one of:
+  `pi`, `staff-scientist`, `postdoc`, `scientific-programmer`, `software-engineer`,
+  `bioinformatics-analyst`, `phd-student`, `phd-rotation`, `ms-student`,
+  `research-assistant`, `undergrad-intern`, `undergrad-summer-intern`,
+  `highschool-intern`, `highschool-summer-intern`, `friend`
+- Start date (`YYYY-MM`, or `YYYY` if the month genuinely is not known)
 
 **Optional** (we'll research if not provided):
 - Email address
@@ -105,63 +110,90 @@ Using the gathered information and role-appropriate template:
 3. **Generate image filename**:
    - Format: `firstname-lastname.jpg`
    - Ensure no spaces or special characters
-   - Copy to `images/` directory with correct name
+   - Copy to `src/assets/people/<slug>.<ext>` (NOT `images/` — Astro's image
+     pipeline needs it under `src/` to optimise and hash it)
 
 ### Step 5: Generate Member File
 
-1. **Create filename**: `_members/firstname-lastname.md`
+1. **Create filename**: `src/content/people/firstname-lastname.md`
 
-2. **Build frontmatter**:
+2. **Frontmatter**:
    ```yaml
    ---
-   name: [Full Name]
-   image: images/[firstname-lastname].jpg
-   role: [role]
-   description: [Role display text from roles.yaml]
+   name: "Full Name"
+   image: ../../assets/people/firstname-lastname.jpg
+   appointments:
+     - role: [role category from the list above]
+       start: "YYYY-MM"
+       coAdvisor: "Name"        # only if jointly supervised
    links:
-     email: [email if provided]
-     github: [username if found/provided]
-     linkedin: [profile if found/provided]
-     home-page: [url if provided]
+     email: "name@salk.edu"
+     github: "username"
    ---
    ```
 
-   - Only include links that are available
-   - Remove empty link fields
+   Notes that matter:
+   - **Omit `end`** for a current member. Presence of `end` is the ONLY thing that
+     makes someone an alumnus — there is no `role: alumni` any more, because a
+     separate flag is exactly what fell out of sync and left four people invisible
+     on the old site.
+   - Add `title: "..."` inside the appointment only when the lab's preferred
+     wording differs from the category label (e.g. category
+     `scientific-programmer`, title `Bioinformatics Analyst`). `salkTitle` exists
+     for the official HR title where that differs again.
+   - `image` is optional; omit it and the team page falls back to initials.
 
-3. **Add bio text** (from Step 3)
+3. **Validate**: run `npx astro check`. The Zod schema rejects an unknown role, a
+   malformed date, or a missing `name` — and since there is no CMS, that check is
+   the only guardrail on content input.
 
-4. **Write file** to `_members/firstname-lastname.md`
+4. **Write file** to `src/content/people/firstname-lastname.md`
 
-### Step 6: Handle Alumni (if applicable)
+### Step 6: Handle a Departure (if applicable)
 
-If the role is `alumni` OR user indicates this person is leaving:
+Marking someone as an alumnus is now **one edit, not two**. The old flow set
+`role: alumni` AND hand-added a bullet to `team/index.md`; when the second step was
+forgotten, the person vanished from the site entirely — filtered off the team page
+and absent from the list. That happened to four people. Nothing to forget now:
 
-1. **Ask for alumni details**:
-   - Year they left/are leaving
-   - Their role while in the lab (if different from current)
-   - "Next" position (where they're going)
+1. **Ask for**:
+   - End date (`YYYY-MM`, or `YYYY`)
+   - What they are doing next, if known
 
-2. **Update team/index.md**:
-   - Read current alumni section
-   - Add entry in chronological order (most recent first):
-     ```markdown
-     - YEAR: [**Name**](/members/firstname-lastname.html) (Role Description). **Next:** [Next position]
-     ```
-   - Maintain proper formatting
+2. **Add `end` to their last appointment**:
+   ```yaml
+   appointments:
+     - role: research-assistant
+       start: "2024-10"
+       end: "2026-03"
+   next:
+     org: "Stanford"
+     what: "PhD in Neuroscience"     # optional
+     url: "https://…"                # optional, for a company
+   ```
+
+3. **That is all.** The alumni table on `/team/` is generated from appointment
+   history — years, roles and destination all derive from the fields above.
+   Do NOT hand-edit any list.
+
+4. If the departure date genuinely is not known, use `end: "unknown"`. It renders
+   as `2024–?`. Do not omit `end` to avoid the question: an absent `end` means
+   "still here", which is the bug this whole model removes.
 
 ### Step 7: Validate
 
 Run validation checks:
 
-- [ ] Member file exists at `_members/firstname-lastname.md`
-- [ ] YAML frontmatter is valid
-- [ ] Role is valid (check against roles.yaml)
-- [ ] Image file exists (or noted as placeholder)
+- [ ] File exists at `src/content/people/firstname-lastname.md`
+- [ ] `npx astro check` passes — this validates the schema, so it replaces
+      eyeballing the YAML and checking the role by hand
+- [ ] Image is under `src/assets/people/` (or omitted deliberately)
 - [ ] Bio is appropriate length for role
 - [ ] Bio uses third-person voice
-- [ ] Links are properly formatted
-- [ ] If alumni: team/index.md is updated
+- [ ] A departing member has `end` on their last appointment — and nothing else
+- [ ] `npm run build` succeeds (the people collection is referenced by
+      `reference()` from posts, so a bad slug fails the build rather than
+      shipping a dead link)
 
 ### Step 8: Present Summary
 
@@ -169,9 +201,9 @@ Show the user what was created:
 
 ```
 ✓ Created member profile for [Name]
-✓ File: _members/firstname-lastname.md
-✓ Role: [role display text]
-✓ Image: images/firstname-lastname.jpg [or "Placeholder - add later"]
+✓ File: src/content/people/firstname-lastname.md
+✓ Role: [category] [+ display title, if different]
+✓ Image: src/assets/people/firstname-lastname.jpg [or "none - falls back to initials"]
 ✓ Links: [list of included links]
 [✓ Updated alumni list] [if applicable]
 
@@ -292,20 +324,21 @@ convert input.jpg -resize 500x500^ -quality 85 output.jpg
 
 When adding someone who has already left:
 
-1. Set `role: alumni` in frontmatter
-2. Include their actual role in bio text
-3. Update `team/index.md` alumni section with:
-   - Year they left
-   - Role description in parentheses
-   - "Next:" annotation if known
+1. Give the appointment both `start` and `end`
+2. Add `next:` if their destination is known
+3. Nothing else — the alumni table derives from this
+
+If they were only ever a brief visitor and never had a page, set `page: false`.
+They still appear in the alumni table, as plain text rather than a link.
 
 ### Handling Co-Advisors
 
 When member has co-advisor:
 
-1. Mention in bio: "co-advised by [Name]"
-2. Include hyperlink if possible: `[Name](url)`
-3. Note in summary when presenting to user
+1. Set `coAdvisor: "Name"` on the appointment — it is structured, so it renders
+   on the member page without depending on the bio wording
+2. Optionally also mention it in the bio with a hyperlink
+3. Co-advisors are per-appointment: someone can change advisor on promotion
 
 ### Joint Appointments
 
@@ -319,11 +352,24 @@ When member has joint affiliation:
 
 When student moves from undergrad → MS → PhD:
 
-1. Create new member file? **No** - keep same file
-2. Update `role:` field in frontmatter
-3. Update bio to reflect new status
-4. Update `description:` field
-5. Consider adding a note about the transition in bio
+1. Create a new file? **No** — keep the same file.
+2. **Close the old appointment and append a new one.** Do not overwrite the role;
+   the transition is the information:
+   ```yaml
+   appointments:
+     - role: undergrad-intern
+       start: "2021-11"
+       end: "2022-11"
+     - role: ms-student
+       start: "2022-11"
+   ```
+3. Update the bio to reflect the new status.
+
+This is what makes the alumni table able to say `2021–2024` with
+`Undergraduate Research Intern, Master's Student`, and to tell that apart from a
+repeat intern who did two separate summers (`2023, 2024`). A run is treated as
+contiguous when an appointment has no `end` or the next has no `start`, so if you
+genuinely do not know the handover date, leave both blank rather than inventing one.
 
 ### Summer Interns
 
@@ -349,7 +395,8 @@ Short-term members (2-3 months):
 - Worst case: use placeholder and note in summary
 
 **If unsure about role**:
-- Present role options from roles.yaml
+- Present role options from the `ROLE_ORDER` enum in `src/content.config.ts`
+  (the old `_data/roles.yaml` is gone)
 - Use AskUserQuestion to clarify
 
 **If duplicate member exists**:
@@ -369,7 +416,8 @@ Before finalizing, verify:
 - [ ] Education background included
 - [ ] All links are properly formatted
 - [ ] YAML frontmatter is valid (test with parser)
-- [ ] If alumni: team/index.md updated correctly
+- [ ] A departure is expressed ONLY as `end` on the last appointment —
+      no list anywhere needs editing
 - [ ] No trailing whitespace or formatting issues
 
 ## See Also

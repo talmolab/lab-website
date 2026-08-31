@@ -1,0 +1,23 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    // The publications loader runs at build time and uses node:fs and process.env.
+    "types": ["node"]
+  },
+  "include": [".astro/types.d.ts", "src/**/*", "astro.config.mjs"],
+  "exclude": [
+    "dist",
+    "node_modules",
+    // Jekyll leftovers — removed wholesale in Phase 5. Excluded so `astro check`
+    // reports on the Astro site rather than on template JS that is on its way out.
+    "js",
+    "css",
+    "auto-cite",
+    "_site",
+    "vendor"
+  ]
+}

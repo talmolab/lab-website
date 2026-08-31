@@ -1,213 +1,195 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code working in this repository.
 
-## Overview
+## What this is
 
-This is a Jekyll-based academic lab website (Jekyll 3.10.0) based on the [greenelab/lab-website-template](https://github.com/greenelab/lab-website-template). The site features a custom member management system, automated publication citations, and two custom Claude skills for common workflows.
+The website for [Talmo Pereira's lab](https://talmolab.org) at the Salk Institute.
+An **Astro 6** static site deployed to **Cloudflare Workers**.
 
-**Live site**: https://talmolab.org
+> **Mid-migration.** `main` still contains the Jekyll site that serves
+> talmolab.org today; the Astro site lives alongside it and deploys to
+> `talmolab-site.talmo-lab.workers.dev`. Jekyll files are removed in one clearly
+> labelled commit *after* DNS cutover, so rollback stays available.
+> **`docs/astro-migration.md` is the authoritative plan** — §1–12 are the original
+> plan, §13 is the running decision log, and §13 is newer where they disagree.
 
-## Development Commands
+## Commands
 
-### Local Preview
 ```bash
-./start.sh
-# or
-bundle exec jekyll serve --force_polling --livereload
+npm run dev        # astro dev on :4321 — content and layout work
+npm run build      # astro check && astro build && pagefind --site dist
+npm run preview    # wrangler dev on :8787 over dist/ — routing work
+npm run check      # astro check on its own
+npm run deploy     # build, then wrangler deploy
 ```
 
-### Citation Management
-Auto-cite runs automatically via GitHub Actions when `_data/sources.yaml` is pushed. To run manually:
+**Routing must be tested under `npm run preview`, not `npm run dev`.** The `.html`
+member redirects, trailing-slash behaviour and `public/_redirects` are applied by
+the Workers runtime and do not exist in the dev server. A URL can look right in
+`astro dev` and 404 in production.
+
 ```bash
-./cite.sh
-# or
-python ./auto-cite/auto-cite.py
+./scripts/check-urls.sh <base-url>            # §8 cutover gate — must pass clean
+node scripts/discover-publications.mjs        # new papers, preprint upgrades
+node scripts/discover-news.mjs                # new releases -> draft news
 ```
 
-### Playwright Testing (Optional MCP)
-```bash
-claude mcp add playwright npx '@playwright/mcp@latest'
-```
+## Design system — do not improvise
 
-## Jekyll Architecture
+`design/` holds the brand sources and is authoritative; `design/README.md` is the
+reference. The palette and type system are **ratified** (palette by lab vote,
+2026-08-30) and regenerable from two hex values via `design/scripts/`.
 
-### Collections & Layouts
-- **Members collection** (`_members/`): Primary collection (not blog posts)
-- **Auto-layouts**: `member` for `_members/`, `post` for `_posts/`, `default` for everything else
-- **Base URL**: Empty (root domain deployment)
+- **Ink `#1f2328`, SLEAP Blue `#2176b3`.** Every derived token was verified at
+  WCAG AA. The site inherits SLEAP's blue deliberately.
+- **Source Sans 3 + JetBrains Mono. No serif.** Coverage was a gate, not a
+  preference: candidates were eliminated on Greek and Vietnamese support, measured
+  against real content (author names, Greek in titles).
+- `src/styles/global.css` **imports** `design/palette.css` and
+  `design/type-system.css` rather than copying them, so regenerating the palette
+  flows straight into the site.
+- **Never set the word "talmolab" in type.** Use the SVG lockup —
+  `talmolab-lockup-h-*.svg` in the nav; the stacked cut needs too much height.
+- The palette deliberately has **one accent**. Encode categorical state with
+  weight, rule and position, not a second hue — it survives greyscale and colour
+  blindness and scales past three categories.
 
-### Key Configuration (_config.yml)
-- Jekyll 3.10.0 with members collection enabled
-- Auto-cite transforms `_data/sources.yaml` → `_data/citations.yaml`
-- Plugins: jekyll-redirect-from, jekyll-sitemap
+Three gotchas that have already bitten:
 
-## Team/Member System
+1. **Astro's Fonts API registers a hashed family name** (`Source Sans 3-16d64…`).
+   `type-system.css` names the face literally, which is right as a spec and wrong
+   as CSS — it resolves to a system font for visitors while looking correct on any
+   machine with the face installed. `global.css` re-points the tokens; leave that
+   alone.
+2. **Starwind's `--color-muted` means a background; ours means text.** Ours wins the
+   name, so `bg-muted` paints dark grey under dark text. Use `bg-secondary`.
+   **Every `starwind add` needs this substitution** — check new components.
+3. **A token correct as a foreground can fail as a fill.** `--mark` (`#2a83c4` in
+   dark) is specified as link text on the dark ground; as a button fill under paper
+   text it measures 3.87:1 and fails AA. Measure both themes in-browser.
 
-This is the most complex part requiring coordination across multiple files:
+## Content model
 
-### Three-Component Architecture
+Everything is a content collection defined in `src/content.config.ts`, validated by
+Zod 4 (**not** Zod 3 — check syntax accordingly). There is no CMS, so **`astro
+check` is the only guardrail on content input**. It runs as part of `npm run build`.
 
-1. **Member Files** (`_members/firstname-lastname.md`):
-   - YAML frontmatter with: `name`, `image`, `role` (required)
-   - Optional: `description`, `links` (email, github, linkedin, home-page, twitter)
-   - Markdown bio (third person, role-specific length)
-   - Creates individual pages at `/members/firstname-lastname.html`
+| Collection | Source | Notes |
+|---|---|---|
+| `people` | `src/content/people/*.md` | Appointments timeline; everything derives |
+| `publications` | `src/data/publications.yaml` + OpenAlex | Overlay is an allowlist |
+| `repos` | `src/data/repos.yaml` + GitHub API | Array order is display order |
+| `areas` | `src/content/areas/*.md` | Prose-first; authored, not derived |
+| `posts` / `news` | `src/content/{posts,news}/` | Merged stream; empty today |
 
-2. **Roles Data** (`_data/roles.yaml`):
-   - Maps role codes to display text and Font Awesome icons
-   - Valid roles: `pi`, `postdoc`, `staff`, `phd`, `ms`, `ra`, `programmer`, `undergrad`, `highschool`, `alumni`, `friends`
+### people — the load-bearing rule
 
-3. **Team Page** (`team/index.md`):
-   - Uses `{% include list.html %}` with `filters="role: pi"` syntax
-   - Displays active members grouped by role
-   - **Alumni section** (lines 92-125): Manually maintained list, **not** auto-generated
+**Alumni status is derived from `end`, never stored.** There is no `role: alumni`.
 
-### Member Workflow Patterns
+The old site had one, plus a hand-written alumni list on the team page. They fell
+out of sync, and four people ended up filtered off the team page *and* absent from
+the list — with live pages nothing linked to. Do not reintroduce a status flag.
 
-**Adding new member**:
-- Create `_members/firstname-lastname.md` (lowercase, hyphenated)
-- Add image as `images/firstname-lastname.jpg` (matches slug)
-- Use **add-member skill** for guided workflow with web research
+- No `end` → current. `end: "unknown"` → departed, date unrecorded.
+  **Never omit `end` for someone who left**; that is the bug above.
+- A role change **appends** an appointment. Overwriting one destroys the history
+  that lets the alumni table say `2021–2024, Undergraduate Research Intern,
+  Master's Student`.
+- Two fully-bounded appointments mean two separate stints; an open boundary means
+  one continuous tenure. That is how a repeat summer intern (`2023, 2024`) is told
+  apart from a promotion (`2021–2024`) — identical in prose, distinct structurally.
+- **Three fields for job titles, deliberately.** `role` is the category and drives
+  sort, group and filter, never displayed raw. `title` is what the site shows.
+  `salkTitle` is the official HR title. Salk HR titles historically did not reflect
+  what people did, so the website used better ones; reconciling them would destroy
+  information.
+- Sort order comes from the `ROLE_ORDER` rank. Never hand-order.
+- Portraits go in `src/assets/people/` (not `public/`, not `images/`) so Astro
+  optimises them — roughly 500 KB → 5 KB webp.
 
-**Role transitions** (e.g., undergrad → MS → PhD):
-- Keep same member file
-- Update `role:` field in frontmatter
-- Roster tracking (via lab-roster skill) creates separate entries per role period
+### publications — the overlay is an allowlist
 
-**Marking as alumni**:
-1. Change `role:` to `alumni` in member file
-2. Manually add entry to `team/index.md` alumni section:
-   ```markdown
-   - YEAR: [**Name**](/members/slug.html) (Role Description). **Next:** Position
-   ```
-3. Member page stays live (linked from alumni list)
+OpenAlex holds 69 works for this author and ~40 are **not publications**: twelve
+Figshare `MOESM` stubs, three `Author response:` records, an erratum, Research
+Square duplicates, conference abstracts. Nothing shows without an overlay entry.
 
-### Team Assignment
+- Keys are lab-assigned, **permanent**, and derived from the *earliest* version's
+  year, so `rose-2024` survives publication in 2025. Not DOIs: MIMIC-MJX has
+  `doi: null` in OpenAlex while the overlay tracks its arXiv DOI.
+- Preprint and published are **one entity**, not two rows. Show published, link the
+  preprint secondarily.
+- Resolve preprints via Crossref `is-preprint-of`, **forward only**. Backward from
+  the article lands on Research Square DOIs rather than the bioRxiv one on file.
+- No Crossref relation → manual association, and **never fuzzy-match on title or
+  author**. A false merge is worse than a missing link. Record the reasoning as a
+  comment on the entry.
+- OpenAlex resolves arXiv DOIs; Crossref 404s them (DataCite). OpenAlex is primary.
+- Both filter and singleton calls answer **unauthenticated**. `OPENALEX_API_KEY`
+  raises the budget but is not required.
 
-Three teams (inferred from bio keywords by lab-roster skill):
-- `software_engineering`: SLEAP, DREEM, cloud, infrastructure, pose estimation
-- `phenoinformatics`: behavioral phenotyping, ALS, Alzheimer's, disease models
-- `virtual_biology`: VNL, virtual animals, embodied simulations, neuromechanical
+## URL preservation — a hard requirement
 
-## Publication/Citation System
+**Every URL talmolab.org serves today must keep resolving.** This is in-place
+migration: no grace period, no staging domain.
 
-**Two-stage automated process**:
+- `test/live-urls.txt` snapshots the live sitemap plus paths it omits.
+  `scripts/check-urls.sh <base>` asserts each returns 200 or redirects to 200.
+  **This gates cutover** and currently passes 72/72.
+- `build.format: 'preserve'` emits `/members/<slug>.html` and `/team/index.html`
+  from one build. `trailingSlash` does not affect output.
+- **No `html_handling` mode serves both shapes at 200.** `none` is the only one
+  keeping `.html` — and it 404s the homepage. So extensionless is the forced
+  canonical, and two wildcard rules in `public/_redirects` supply real 301s where
+  the default would give a 307 (which does not move Google's index).
+- **`_redirects` is first-match-wins.** A specific rule must sit *above* the
+  `/members/:slug.html` wildcard, or the wildcard swallows it and rewrites to a
+  path that no longer exists — a 301 into a 404.
+- Renaming a content file changes a live URL. Add a redirect.
 
-1. **Manual editing**: Add entries to `_data/sources.yaml`
-   - DOI-based: `id: doi:10.1038/...` (metadata auto-fetched)
-   - Manual: Full YAML with title, authors, publisher, date, link, image
+## Automation
 
-2. **Auto-cite**: GitHub Action runs on push
-   - Fetches metadata from DOIs
-   - Generates `_data/citations.yaml`
-   - Commits result back to repo
+`.github/workflows/discover.yaml` runs weekly, opens a **PR**, and never commits to
+`main` or publishes (decisions 3b, 4b). News items also carry `draft: true`, so even
+merging does not put them on the site. Patch releases are filtered out — taking
+every release produced 45 items in eight months, which is a changelog, not news.
 
-**Local run**: Use `./cite.sh` when testing citation changes before push
+`.github/workflows/deploy.yaml` builds and deploys on push. The Worker declares
+**no routes**, so it cannot affect talmolab.org before the DNS change.
 
-## Custom Claude Skills
+## Skills
 
-Located in `.claude/skills/`, these auto-activate on relevant requests:
+`.claude/skills/` — these are the primary editing interface, since there is no CMS.
 
-### lab-roster
-**Purpose**: Generate comprehensive CSV roster with role transitions, dates, team assignments, career tracking
+- **`add-member`** — add or update a person; handles departures and transitions
+- **`add-publication`** — overlay entries and preprint→published resolution
+- **`lab-roster`** — roster CSV from the collection, one row per appointment
+- **`local-test`** — dev/preview servers, the checks worth running
 
-**Two modes**:
-- **Quick**: `generate_roster_csv.py` analyzes git history, outputs CSV directly
-- **Comprehensive**: Uses subagents to gather info, creates `ROSTER.md` + CSV
+## Things that will waste your time
 
-**Tracks**: start_date, end_date, team, co_advisor, previous_position, next_position
+- **The content-layer cache is `node_modules/.astro/data-store.json`**, not
+  `.astro/`. Deleting the latter looks right and silently reuses stale loader
+  output.
+- `The collection "posts"/"news" does not exist or is empty` is **expected** until
+  the blog has content. Not a misconfiguration.
+- Pagefind's bundled UIs are not used. Its Component UI renders permanent
+  `aria-hidden` skeletons here while the API works fine, so `/search/` is ~40 lines
+  over the API directly. Verified it is not a ClientRouter interaction and not asset
+  delivery before concluding that.
+- Pagefind results are injected with `innerHTML`, so Astro's scoped styles never
+  reach the `<mark>` highlights. That rule has to be global.
+- `output: 'static'` throughout. If something seems to need SSR, stop and
+  reconsider — the whole site is deployable as flat files and that is worth
+  defending.
 
-**Auto-activates on**: "roster", "generate roster", "team list", "lab members"
+## Known-stale things on the live Jekyll site
 
-**Output**: `lab_roster.csv` with one row per role (multiple rows for members who transitioned)
+Not migrated, and worth knowing if you look at the old site:
 
-### add-member
-**Purpose**: Interactive guide for adding new members with web research, bio drafting, image optimization
-
-**Workflow**:
-1. Gather info (name, role, email, links)
-2. Web research (LinkedIn, GitHub, institutional pages)
-3. Draft bio using role-appropriate template
-4. Optimize image (target: 100-250KB, square, 400-600px)
-5. Generate member file
-6. Update alumni list if applicable
-
-**Auto-activates on**: "add new member", "add [name] to team", "mark [name] as alumni"
-
-**Bio guidelines**:
-- Third person throughout
-- Length by role: PI (250-300 words), students/staff (100-150), undergrads (80-100), summer interns (50-80)
-- Include: education, join date, research focus, co-advisor (if applicable)
-
-**Image handling**: Uses `optimize-image.sh` (sips on macOS, ImageMagick on Linux)
-
-## Directory Structure
-
-### Content Directories
-- `_members/`: Member markdown files (55 files)
-- `_data/`: YAML data (roles, sources, citations, links, tools)
-- `_includes/`: 33 Liquid components (list.html, portrait.html, etc.)
-- `_layouts/`: 3 page templates (default, member, post)
-- `images/`: Profile photos (`firstname-lastname.jpg` naming)
-- `team/`: Team page with manual alumni section
-- `research/`: Research areas
-- `join/`: Recruitment information
-
-### Key Files
-- `_config.yml`: Jekyll configuration
-- `Gemfile`: Ruby dependencies
-- `start.sh`: Local preview launcher
-- `cite.sh`: Manual citation update
-- `.claude/skills/`: Custom automation skills
-
-## Naming Conventions
-
-**Critical patterns** (many things break if these aren't followed):
-- Member files: `_members/firstname-lastname.md` (lowercase, hyphenated)
-- Member images: `images/firstname-lastname.jpg` (must match file slug)
-- Member URLs: `/members/firstname-lastname.html` (auto-generated by Jekyll)
-- Role codes: Must match exact keys from `_data/roles.yaml`
-
-## Liquid Templating Patterns
-
-### List Include with Filters
-```liquid
-{% include list.html data="members" component="portrait" filters="role: phd" %}
-```
-- `data`: Collection name
-- `component`: Component to render each item (portrait.html, card.html, etc.)
-- `filters`: Space-separated filters (e.g., `"role: phd"`, `"group: featured"`)
-
-### Component Rendering
-Most includes expect: name, image, role/type, description, link/links
-
-## Git & Deployment
-
-**GitHub Actions**:
-- Auto-cite runs on push to `_data/sources.yaml` or `_data/orcid.yaml`
-- Commits citation updates back to repo
-
-**Local permissions** (`.claude/settings.local.json`):
-- Pre-approved: git log commands, WebFetch to support.claude.com, github.com
-
-## Important Non-Obvious Patterns
-
-1. **Alumni list is manual**: Changing role to `alumni` doesn't auto-update `team/index.md` alumni section (lines 92-125)
-
-2. **Member pages persist after alumni**: Alumni members keep their individual pages; they're just filtered from the active team display
-
-3. **Role transitions tracked separately**: Same person with multiple roles over time should have multiple roster entries (one per role period)
-
-4. **Images must be square-ish**: Portrait component displays square crops; non-square images may look distorted
-
-5. **Third person bios**: All member bios must be third person ("Jane is a PhD student...") except optionally PI intro
-
-6. **Auto-cite commits**: The citation workflow commits directly to your repo; don't be surprised by auto-commits from GitHub Actions
-
-## Template Documentation
-
-For more detailed info on the underlying template system:
-- [Basic Editing](https://github.com/greenelab/lab-website-template/wiki/Basic-Editing)
-- [Components](https://github.com/greenelab/lab-website-template/wiki/Components)
-- [Advanced Editing](https://github.com/greenelab/lab-website-template/wiki/Advanced-Editing)
+- **`/contact/` is unmodified Greene template filler** — "Department of Metaphor",
+  `scrooge@mcduck.com`, a Google Maps pin in Nova Scotia. 301s to `/team/#join`.
+- **`/CLAUDE.html` is published and indexed** — Jekyll renders this file at the site
+  root. Astro does not; the indexed URL 301s to `/`.
+- `_data/tools.yaml` is lorem ipsum, the blog embeds another lab's Twitter timeline,
+  and the three example posts are template filler.

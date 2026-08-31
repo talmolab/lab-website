@@ -1,6 +1,8 @@
-# Complete Member File Template
+# Member File Template
 
-This template shows the full structure of a member file.
+Files live in `src/content/people/<firstname-lastname>.md` and are validated by the
+`people` collection schema in `src/content.config.ts`. Run `npx astro check` after
+editing — with no CMS, that schema is the only guardrail on content input (§7).
 
 ---
 
@@ -8,355 +10,199 @@ This template shows the full structure of a member file.
 
 ```markdown
 ---
-name: Full Name
-image: images/firstname-lastname.jpg
-role: role_code
-description: Role Display Text
+name: "Full Name"
+image: ../../assets/people/firstname-lastname.jpg
+appointments:
+  - role: research-assistant
+    start: "2025-01"
 links:
-  email: name@salk.edu
-  github: username
-  linkedin: profile-id
-  home-page: https://example.com
+  email: "name@salk.edu"
+  github: "username"
 ---
 
-[Bio text here in markdown format]
+[Bio text in markdown, third person]
 ```
 
 ---
 
 ## Field Reference
 
-### name (required)
-Full legal or preferred name as it should appear on the website.
+### `name` (required)
+Full preferred name as it should appear. Quote it.
 
-**Examples**:
-- `Jane Doe`
-- `John Smith`
-- `Yaxin (Nancy) Guo`
+### `image` (optional)
+Path **relative to the content file**, pointing into `src/assets/people/`:
+`../../assets/people/<slug>.jpg`
 
-### image (required)
-Relative path to profile image from site root.
+It must be under `src/` — that is what lets Astro optimise and hash it (portraits
+drop from ~500 KB to ~5 KB webp). A path into `public/` or `images/` will fail the
+build. Omit the field entirely if there is no photo; the team page falls back to
+the person's initials.
 
-**Format**: `images/filename.jpg`
+### `page` (optional, default `true`)
+Set `page: false` for someone who should appear in the alumni table but not get
+their own `/members/<slug>.html` page. Used for brief visitors with no real bio.
 
-**Examples**:
-- `images/jane-doe.jpg`
-- `images/john-smith.png`
-- `images/placeholder.svg` (if no photo yet)
+### `appointments` (required, at least one)
+An ordered list, oldest first. **This is the whole model** — current-vs-alumni,
+role history, tenure and sort order all derive from it.
 
-### role (required)
-Short code for role category.
+| Field | Notes |
+|---|---|
+| `role` | Category. One of the `ROLE_ORDER` values below. Never displayed raw. |
+| `title` | What the site shows, when the lab's wording beats the category label. |
+| `salkTitle` | The official Salk HR title, where it differs from both. |
+| `start` | `YYYY-MM`, or `YYYY` if the month is genuinely unknown. |
+| `end` | Omit if still here. `"unknown"` if departed on an unrecorded date. |
+| `coAdvisor` | For jointly supervised appointments. Per-appointment. |
+| `note` | Free text that qualifies without naming: `"TRELS Scholar"`, `"remote"`. |
 
-**Valid values**:
-- `pi` - Principal Investigator
-- `postdoc` - Postdoctoral Researcher
-- `staff` - Staff Scientist
-- `phd` - PhD Student
-- `ms` - MS Student
-- `undergrad` - Undergraduate Student
-- `highschool` - High School Student
-- `programmer` - Programmer
-- `ra` - Research Assistant
-- `friends` - Friends of the Lab
-- `alumni` - Alumni
+**`role` values**, most to least senior — position in this list *is* the sort rank,
+so the team page never needs hand-ordering:
 
-### description (optional)
-Short text describing the role. Usually matches the role display text from `_data/roles.yaml`.
-
-**Examples**:
-- `PhD Student`
-- `Scientific Programmer`
-- `Research Assistant`
-- `Undergraduate Summer Research Intern`
-
-### links (optional)
-Dictionary of social and professional links.
-
-**Supported keys**:
-- `email` - Email address
-- `github` - GitHub username (not full URL)
-- `linkedin` - LinkedIn profile ID (not full URL)
-- `twitter` - Twitter handle (not full URL)
-- `home-page` - Personal website (full URL)
-- `orcid` - ORCID identifier
-
-**Example**:
-```yaml
-links:
-  email: jane.doe@salk.edu
-  github: janedoe
-  linkedin: jane-doe-scientist
-  home-page: https://janedoe.com
 ```
+pi                        staff-scientist           postdoc
+scientific-programmer     software-engineer         bioinformatics-analyst
+phd-student               phd-rotation              ms-student
+research-assistant        undergrad-intern          undergrad-summer-intern
+highschool-intern         highschool-summer-intern  friend
+```
+
+### `next` (optional)
+Where they went. Renders in the alumni table.
+
+```yaml
+next:
+  org: "MIT"
+  what: "PhD in Brain and Cognitive Sciences"   # optional
+  url: "https://e11.bio/"                        # optional, for a company
+```
+
+### `links` (optional)
+`email`, `github`, `linkedin`, `twitter`, `orcid`, `scholar`, `home-page`.
+Handles and usernames, not full URLs — except `home-page`.
+
+---
+
+## The three rules that are easy to get wrong
+
+**1. `end` is the only thing that marks an alumnus.** There is no `role: alumni`.
+The old site had one, plus a hand-written list on the team page, and the two fell
+out of sync — four people ended up filtered off the team page *and* missing from
+the list, with live pages nothing linked to. Omitting `end` means "still here".
+If they left and you do not know when, write `end: "unknown"`.
+
+**2. A role change appends an appointment; it does not overwrite one.**
+
+```yaml
+# right — the transition is the information
+appointments:
+  - { role: undergrad-intern, start: "2021-11", end: "2022-11" }
+  - { role: ms-student,       start: "2022-11", end: "2024-10" }
+
+# wrong — silently destroys their history
+appointments:
+  - { role: ms-student, start: "2021-11", end: "2024-10" }
+```
+
+**3. Two bounded appointments mean two separate stints; an open boundary means one
+continuous tenure.** This is how the table tells a repeat summer intern from a
+promotion, and both look identical in prose:
+
+```yaml
+# Will Knickrehm — two separate summers -> renders "2023, 2024"
+- { role: highschool-summer-intern, start: "2023-06", end: "2023-08" }
+- { role: highschool-summer-intern, start: "2024-06", end: "2024-08" }
+
+# Aaditya Prasad — one tenure, role changed -> renders "2021–2024"
+- { role: undergrad-intern, start: "2021-11" }        # no end
+- { role: ms-student,       end: "2024-10" }          # no start
+```
+
+If you do not know a handover date, leave the boundary open rather than inventing
+one. An invented date is indistinguishable from a real one a week later.
 
 ---
 
 ## Complete Examples
 
-### PhD Student
+### Current research assistant
 
 ```markdown
 ---
-name: Jane Doe
-image: images/jane-doe.jpg
-role: phd
-description: PhD Student
+name: "Amick Licup"
+image: ../../assets/people/amick-licup.jpg
+appointments:
+  - role: undergrad-intern
+    start: "2025-01"
+    end: "2025-06"
+  - role: research-assistant
+    start: "2025-06"
 links:
-  email: jane.doe@salk.edu
-  github: janedoe
-  linkedin: jane-doe
+  github: "alicup29"
+  linkedin: "amick-licup"
 ---
 
-Jane is a PhD student who joined the lab in September 2024. She received her BS in Neuroscience from MIT. Her research focuses on developing computational methods for behavioral analysis in mouse models. She is interested in applying machine learning to understand complex social behaviors.
+Amick is a research assistant who joined the lab in January 2025. He received his
+B.S. in Computer Science with a specialization in Bioinformatics from UC San Diego.
+He is working on developing cloud-based infrastructure for SLEAP.
 ```
 
-### Programmer
+### Current member with a display title and a co-advisor
 
 ```markdown
 ---
-name: John Smith
-image: images/john-smith.jpg
-role: programmer
-description: Scientific Programmer
-links:
-  email: john.smith@salk.edu
-  github: jsmith
+name: "Elizabeth Berrigan"
+image: ../../assets/people/elizabeth-berrigan.jpg
+appointments:
+  - role: scientific-programmer
+    title: "Bioinformatics Analyst"
+    start: "2024-01"
+    coAdvisor: "Wolfgang Busch"
 ---
 
-John is a scientific programmer who joined the lab in January 2025. He received his MS in Computer Science from Stanford University. He is working on cloud deployment and infrastructure for SLEAP. Prior to joining, he worked as a software engineer at Google for three years, focusing on distributed systems and machine learning infrastructure.
+Elizabeth is a bioinformatics analyst who joined the lab in January 2024…
 ```
 
-### Undergraduate
+### Alumnus with a destination
 
 ```markdown
 ---
-name: Alex Chen
-image: images/alex-chen.jpg
-role: undergrad
-description: Undergraduate Student
-links:
-  email: alex.chen@ucsd.edu
-  github: achen
+name: "Sean Afshar"
+image: ../../assets/people/sean-afshar.jpg
+appointments:
+  - role: research-assistant
+    start: "2022-01"
+    end: "2023-09"
+next:
+  org: "Princeton"
+  what: "PhD in Neuroscience"
 ---
 
-Alex is a third-year undergraduate at UC San Diego, majoring in Data Science. He joined the lab in February 2024 and is working on improving pose estimation algorithms for multi-animal tracking. He was a 2023 UCSD URS Eureka! Summer Fellow.
+Sean was a research assistant in the lab from 2022 to 2023…
 ```
 
-### Research Assistant
+### Alumnus with no page of their own
 
 ```markdown
 ---
-name: Maria Garcia
-image: images/maria-garcia.jpg
-role: ra
-description: Research Assistant
-links:
-  email: maria.garcia@salk.edu
+name: "Pranav Sankar"
+page: false
+appointments:
+  - role: highschool-intern
+    start: "2021"
+    end: "2021"
+next:
+  org: "UCLA"
+  what: "for undergrad"
 ---
-
-Maria is a research assistant who joined the lab in July 2024. She received her BS in Cognitive Science with a minor in Computer Science from UCSD. She is working on behavioral phenotyping and data analysis for neurodegenerative disease models.
-```
-
-### Alumni (Summer Intern)
-
-```markdown
----
-name: David Park
-image: images/placeholder.svg
-role: alumni
-description: Undergraduate Summer Research Intern
----
-
-David was an undergraduate summer research intern in 2025. He is studying Computer Science at Columbia University. He worked on virtual animal simulations and neuromechanical modeling, mentored by Jason Foat.
-```
-
-### Alumni (Longer Tenure)
-
-```markdown
----
-name: Sarah Lee
-image: images/sarah-lee.jpg
-role: alumni
-description: Research Assistant
-links:
-  email: sarah.lee@princeton.edu
-  github: slee
----
-
-Sarah was a research assistant in the lab from 2022 to 2024. She received her BS in Biology from UC Berkeley and her MS in Neuroscience from UCSD. Her work focused on behavioral analysis in disease models. She is now pursuing a PhD in Neuroscience at Princeton.
 ```
 
 ---
 
 ## Filename Convention
 
-**Format**: `firstname-lastname.md`
-
-**Rules**:
-- All lowercase
-- Use hyphens for spaces (kebab-case)
-- No special characters
-- Match the name reasonably close
-- Should be URL-friendly
-
-**Examples**:
-- Jane Doe → `jane-doe.md`
-- John Smith III → `john-smith.md`
-- María García → `maria-garcia.md`
-- Yaxin (Nancy) Guo → `nancy-guo.md` or `yaxin-guo.md`
-
----
-
-## Bio Text Guidelines
-
-See the specific bio templates for detailed guidance:
-- [bio-student.md](bio-student.md) - PhD, MS, Undergraduate
-- [bio-staff.md](bio-staff.md) - Programmer, Staff, RA
-- [bio-alumni.md](bio-alumni.md) - Former members
-
-**General rules**:
-- Third person voice
-- Professional, academic tone
-- Include: education, join date, research focus
-- Length: 80-250 words depending on role and tenure
-- Use markdown for formatting if needed (links, bold, etc.)
-
----
-
-## Creating a New Member File
-
-### Checklist
-
-Before creating:
-- [ ] Have full name
-- [ ] Know their role
-- [ ] Have or can get profile image
-- [ ] Know when they joined
-- [ ] Know their education background
-- [ ] Know what they're working on
-- [ ] Have contact info (email minimum)
-
-### Steps
-
-1. **Create file**: `_members/firstname-lastname.md`
-2. **Add frontmatter** with required fields (name, image, role)
-3. **Add optional fields** (description, links)
-4. **Write bio** following role-appropriate template
-5. **Validate** YAML frontmatter
-6. **Add/optimize image** to `images/` directory
-7. **Test** by building site locally (optional)
-8. **Commit** changes
-
-### Validation
-
-Before committing:
-- [ ] YAML frontmatter is valid
-- [ ] Role is one of the valid codes
-- [ ] Image path is correct
-- [ ] Image file exists (or is placeholder)
-- [ ] Bio is third person
-- [ ] Bio has appropriate length
-- [ ] Join date mentioned
-- [ ] Education included
-- [ ] Links are properly formatted
-
----
-
-## Common Mistakes to Avoid
-
-### YAML Formatting Errors
-
-**Colons in values need quotes**:
-```yaml
-❌ description: Co-advised by: Jane Smith
-✓ description: "Co-advised by: Jane Smith"
-```
-
-**Indentation must be consistent**:
-```yaml
-❌ links:
-email: test@salk.edu
-  github: user
-
-✓ links:
-  email: test@salk.edu
-  github: user
-```
-
-**No tabs, only spaces**:
-```yaml
-❌ links:
-→   email: test@salk.edu
-
-✓ links:
-    email: test@salk.edu
-```
-
-### Content Errors
-
-**First person instead of third**:
-```markdown
-❌ I am a PhD student working on behavior.
-✓ Jane is a PhD student working on behavior.
-```
-
-**Missing key information**:
-```markdown
-❌ Jane works on behavior.
-✓ Jane is a PhD student who joined the lab in September 2024. She received her BS from MIT and is working on behavioral analysis.
-```
-
-**Too much detail**:
-```markdown
-❌ Jane graduated summa cum laude with a 3.95 GPA from MIT where she took courses in neuroscience, computer science, statistics, and machine learning. She then...
-
-✓ Jane received her BS in Neuroscience from MIT. She is working on...
-```
-
-### Link Formatting Errors
-
-**Using full URLs for social**:
-```yaml
-❌ github: https://github.com/janedoe
-✓ github: janedoe
-
-❌ linkedin: https://linkedin.com/in/jane-doe
-✓ linkedin: jane-doe
-```
-
-**Incorrect email format**:
-```yaml
-❌ email: mailto:jane@salk.edu
-✓ email: jane@salk.edu
-```
-
----
-
-## File Location and Jekyll Processing
-
-### How It Works
-
-1. File placed in `_members/` directory
-2. Jekyll reads file and parses frontmatter
-3. Bio content processed as Markdown
-4. Member added to `site.members` collection
-5. Individual page generated at `/members/firstname-lastname.html`
-6. Member appears on team page filtered by role
-
-### Display Locations
-
-**Team page** (`/team`):
-- Displays all active members grouped by role
-- Shows portrait with image, name, role icon
-- Links to individual member page
-
-**Individual page** (`/members/firstname-lastname.html`):
-- Full profile with large image
-- Complete bio
-- All links as buttons
-- Related content (if configured)
-
-**Alumni section** (team/index.md):
-- Listed in markdown
-- Only shown if `role: alumni`
-- Must be manually added to list
+`firstname-lastname.md`, lowercase kebab-case, matching the image basename. The
+filename becomes the URL: `/members/firstname-lastname.html` (which 301s to the
+extensionless canonical form). **Renaming a file changes a live URL** — add a
+redirect to `public/_redirects` if you do.

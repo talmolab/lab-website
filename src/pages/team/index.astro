@@ -1,0 +1,106 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { team, byRole, roleHistory, years, label, latest } from '../../lib/people';
+import { ROLE_LABEL } from '../../content.config';
+import JoinSection from '../../components/JoinSection.astro';
+
+const { current, alumni } = await team();
+const groups = byRole(current);
+---
+<BaseLayout title="Team — talmolab" description="The people of the Talmo Lab at the Salk Institute.">
+  <h1>Team</h1>
+
+  {groups.map(([role, members]) => (
+    <section class="role-group">
+      <h2>{ROLE_LABEL[role as keyof typeof ROLE_LABEL]}</h2>
+      <ul class="portraits">
+        {members.map((p) => (
+          <li>
+            <a href={`/members/${p.id}.html`}>
+              {p.data.image ? (
+                <Image src={p.data.image} alt="" width={220} height={220} class="portrait" transition:name={`portrait-${p.id}`} />
+              ) : (
+                <span class="portrait portrait-empty" aria-hidden="true">
+                  {p.data.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}
+                </span>
+              )}
+              <span class="pname">{p.data.name}</span>
+            </a>
+            {latest(p).note && <span class="pnote">{latest(p).note}</span>}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  <h2 id="alumni">Alumni</h2>
+  <p class="muted">
+    {alumni.length} people, generated from appointment history rather than
+    hand-maintained. A span is a known tenure; <code>–?</code> marks a departure
+    whose date was never recorded.
+  </p>
+  <div class="table-scroll">
+    <table class="alumni">
+      <thead>
+        <tr><th scope="col">Years</th><th scope="col">Name</th><th scope="col">Role</th><th scope="col">Next</th></tr>
+      </thead>
+      <tbody>
+        {alumni.map((p) => (
+          <tr>
+            <td class="year">{years(p)}</td>
+            <td>
+              {/* §6.2b: link if a page exists, plain text if not. */}
+              {p.data.page
+                ? <a href={`/members/${p.id}.html`}>{p.data.name}</a>
+                : p.data.name}
+            </td>
+            <td>{roleHistory(p).join(', ')}</td>
+            <td>
+              {p.data.next ? (
+                <>
+                  {p.data.next.url
+                    ? <a href={p.data.next.url}>{p.data.next.org}</a>
+                    : p.data.next.org}
+                  {p.data.next.what && <span class="muted"> — {p.data.next.what}</span>}
+                </>
+              ) : (
+                <span class="muted">—</span>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <JoinSection />
+</BaseLayout>
+
+<style>
+  .role-group { margin-top: 2.5rem; }
+  .portraits {
+    list-style: none; padding: 0; margin: 1rem 0 0;
+    display: grid; gap: 1.5rem 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  }
+  .portraits a { text-decoration: none; color: inherit; display: block; }
+  .portrait {
+    width: 100%; aspect-ratio: 1; object-fit: cover;
+    border-radius: 0.5rem; background: var(--sunk); display: block;
+  }
+  .portrait-empty {
+    display: grid; place-items: center;
+    color: var(--fg-muted); font-weight: 600; font-size: 1.5rem;
+  }
+  .pname { display: block; margin-top: 0.5rem; font-weight: 600; line-height: 1.25; }
+  .pnote { color: var(--fg-muted); font-size: 0.875rem; }
+
+  .table-scroll { overflow-x: auto; }
+  table.alumni { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  table.alumni th, table.alumni td {
+    text-align: left; padding: 0.5rem 0.75rem 0.5rem 0;
+    border-bottom: 1px solid var(--line); vertical-align: baseline;
+  }
+  table.alumni th { font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--fg-muted); }
+  td.year { white-space: nowrap; color: var(--fg-muted); }
+</style>

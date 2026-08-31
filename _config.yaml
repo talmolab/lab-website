@@ -95,3 +95,19 @@ exclude:
   - public/
   - scratch/
   - docs/
+  # Astro site. Excluded so that if this branch reaches main before the DNS
+  # cutover, the live Jekyll build ignores it instead of publishing it. Without
+  # this, src/content/people/*.md have frontmatter and Jekyll would render them
+  # as pages at the wrong URLs on the live site.
+  - src/
+  - dist/
+  - .astro/
+  - .wrangler/
+  - scripts/
+  - test/
+  - astro.config.mjs
+  - wrangler.jsonc
+  - package.json
+  - package-lock.json
+  - starwind.config.json
+  - tsconfig.json

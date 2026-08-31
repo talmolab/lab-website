@@ -1,0 +1,11 @@
+---
+name: "Keya Loding"
+image: ../../assets/people/keya-loding.jpg
+appointments:
+  - role: undergrad-intern
+    start: "2024-06"
+    end: "2025-03"
+---
+
+Keya is an undergraduate pursuing his B.S. in Biological Sciences and B.A. in Computer Science
+at the University of Chicago. He joined the lab in summer 2024 as a software engineering intern.
