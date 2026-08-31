@@ -94,3 +94,4 @@ exclude:
   - design/
   - public/
   - scratch/
+  - docs/
