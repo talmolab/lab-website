@@ -880,3 +880,45 @@ the content-layer cache location and the expected empty-collection warnings.
 from GitHub Pages to Workers (a routing change — Cloudflare already fronts the
 domain), verify, then remove the Jekyll files in one clearly-labelled commit so
 rollback stays available until the live site is confirmed.
+
+### 2026-08-31 — CI deploy working end to end
+
+`.github/workflows/deploy.yaml` now builds, deploys and runs the §8 gate on its own:
+**build → deploy → 72/72 passing**, unattended.
+
+**Credential: an account-owned API token**, created under Manage account → Account
+API tokens rather than My Profile. Not tied to a user, so it survives Talmo rotating
+his own credentials — matching the existing `sleap-share deploy` token. One trap
+found in the docs: Cloudflare's own **Workers Builds** CI does not accept
+account-owned tokens yet, but that is irrelevant here because we use
+`wrangler deploy` from GitHub Actions rather than Workers Builds.
+
+**Scoped down from the template, deliberately.** "Edit Cloudflare Workers" grants 10
+account permissions — Pages, R2, KV, Containers, CF Agents, Workers CI,
+Observability and Tail on top of what a static site needs. This account also hosts
+`sleap-share-prod` and `airc-landing`, so a leaked CI token with R2 and Pages write
+is a materially worse incident than one that can only deploy this Worker. Trimmed to:
+
+| Scope | Permission |
+|---|---|
+| Entire account | Workers Scripts · Write |
+| Entire account | Account Settings · Read |
+| `talmolab.org` only | Workers Routes · Write |
+
+Workers Routes was also narrowed from *all zones* to `talmolab.org`. **The deploy
+succeeded on exactly these two account permissions**, which confirms the trim rather
+than assuming it.
+
+**The consequence, recorded because it will bite silently later:** adding a KV, R2,
+D1 or Secrets Store binding will fail at deploy with an authorization error until
+that permission is added back to this token. Nothing about the site says so; only
+this note does.
+
+Incidental confirmation that it is genuinely account-owned: `wrangler deployments
+list` shows `Author: undefined` for the CI deployment, because the token has no
+associated user.
+
+Secrets set: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`. `OPENALEX_API_KEY`
+remains unset and unnecessary.
+
+**Phase 5 now has nothing blocking it but the DNS change itself.**
