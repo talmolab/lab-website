@@ -4,7 +4,7 @@ image: ../../assets/people/carlos-robles.jpeg
 appointments:
   - role: research-assistant
     start: "2024-10"
-    end: "2025"
+    end: "2025-10"
 next:
   org: "Mt. Sinai School of Medicine"
   what: "MD"

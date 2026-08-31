@@ -2,8 +2,9 @@
 name: "Max Weinberg"
 image: ../../assets/people/max-weinberg.jpg
 appointments:
-  - role: phd-rotation
-    end: "2024"
+  - role: phd-student
+    start: "2024-10"
+    end: "2024-12"
 ---
 
 Max is a PhD Student in the Neuroscience Graduate Program at UCSD. He rotated in the lab

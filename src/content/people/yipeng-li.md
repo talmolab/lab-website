@@ -3,6 +3,7 @@ name: "Yipeng Li"
 appointments:
   - role: research-assistant
     start: "2025-09"
+    coAdvisor: "Kuo-Fen Lee"
 links:
   github: "LeoMeow123"
 ---

@@ -4,6 +4,7 @@ image: ../../assets/people/elizabeth-berrigan.jpg
 appointments:
   - role: scientific-programmer
     start: "2024-01"
+    coAdvisor: "Wolfgang Busch"
 links:
   github: "eberrigan"
 ---

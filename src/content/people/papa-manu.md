@@ -2,8 +2,8 @@
 name: "Papa Manu"
 appointments:
   - role: undergrad-summer-intern
-    start: "2025"
-    end: "2025"
+    start: "2025-06"
+    end: "2025-08"
 links:
   linkedin: "papa-manu-41a5b827b"
 ---

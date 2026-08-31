@@ -4,7 +4,8 @@ image: ../../assets/people/arlo-sheridan.jpg
 appointments:
   - role: scientific-programmer
     start: "2022-03"
-    end: "2023"
+    end: "2023-08"
+    coAdvisor: "Uri Manor"
 next:
   org: "E11 Bio"
   url: "https://e11.bio/"

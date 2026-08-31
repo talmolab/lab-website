@@ -2,8 +2,11 @@
 name: "Amick Licup"
 image: ../../assets/people/amick-licup.jpg
 appointments:
-  - role: research-assistant
+  - role: undergrad-intern
     start: "2025-01"
+    end: "2025-06"
+  - role: research-assistant
+    start: "2025-06"
 links:
   github: "alicup29"
   linkedin: "amick-licup"

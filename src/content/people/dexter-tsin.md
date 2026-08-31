@@ -3,7 +3,9 @@ name: "Dexter Tsin"
 image: ../../assets/people/dexter-tsin.png
 appointments:
   - role: undergrad-intern
-    end: "2022"
+    start: "2021-12"
+    end: "2022-08"
+    coAdvisor: "Kay Tye"
 next:
   org: "Princeton"
   what: "PhD in Neuroscience"

@@ -4,7 +4,7 @@ image: ../../assets/people/chaitanya-kapoor.png
 appointments:
   - role: undergrad-intern
     start: "2023-05"
-    end: "2024"
+    end: "2024-06"
 next:
   org: "UCSD"
   what: "RA with Meenakshi Khosla"

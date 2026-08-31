@@ -3,7 +3,9 @@ name: "Eric Leonardis"
 image: ../../assets/people/eric-leonardis.jpg
 appointments:
   - role: postdoc
+    title: "Postdoctoral Fellow"
     start: "2022-08"
+    coAdvisor: "Tom Albright"
 links:
   "home-page": "https://ericleonardis.github.io/"
   github: "ericleonardis"

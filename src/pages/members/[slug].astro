@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { roleHistory, years, isCurrent } from '../../lib/people';
+import { roleHistory, years, isCurrent, latest } from '../../lib/people';
 
 export async function getStaticPaths() {
   const people = await getCollection('people');
@@ -16,6 +16,8 @@ export async function getStaticPaths() {
 const { person } = Astro.props;
 const { Content } = await render(person);
 const roles = roleHistory(person);
+// Co-advisors differ per appointment; show the distinct set.
+const coAdvisors = [...new Set(person.data.appointments.map((a) => a.coAdvisor).filter(Boolean))];
 ---
 <BaseLayout title={`${person.data.name} — talmolab`}>
   <article class="member">
@@ -27,7 +29,8 @@ const roles = roleHistory(person);
         <h1>{person.data.name}</h1>
         <p class="roles">{roles.join(', ')}</p>
         <p class="muted">
-          {years(person)}{!isCurrent(person) && person.data.next && (
+          {years(person)}
+          {coAdvisors.length > 0 && <> · Co-advised by {coAdvisors.join(' and ')}</>}{!isCurrent(person) && person.data.next && (
             <> · Now at {person.data.next.url
               ? <a href={person.data.next.url}>{person.data.next.org}</a>
               : person.data.next.org}</>

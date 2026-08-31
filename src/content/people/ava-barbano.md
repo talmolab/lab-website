@@ -2,8 +2,9 @@
 name: "Ava Barbano"
 appointments:
   - role: undergrad-summer-intern
-    start: "2024"
-    end: "2024"
+    title: "Undergraduate Research Intern"
+    start: "2024-06"
+    end: "2024-09"
 ---
 
 Ava is an undergraduate pursuing her B.S. in Computational and Neural Systems at Caltech.

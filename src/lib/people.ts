@@ -14,7 +14,10 @@ export const isCurrent = (p: Person): boolean => latest(p).end === undefined;
 
 export const rank = (p: Person): number => ROLE_ORDER.indexOf(latest(p).role);
 
-export const label = (a: Appointment): string => ROLE_LABEL[a.role];
+/** What to show for an appointment. `title` is the lab's own wording, which is
+ *  often more accurate than either the category or the Salk HR title — those are
+ *  kept as separate fields rather than reconciled into one. */
+export const label = (a: Appointment): string => a.title ?? ROLE_LABEL[a.role];
 
 /** Every distinct role held, oldest first, deduped — "Undergraduate Research
  *  Intern, Master's Student" for someone who converted. */

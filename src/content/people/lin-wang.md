@@ -3,6 +3,7 @@ name: "Lin Wang"
 image: ../../assets/people/lin-wang.png
 appointments:
   - role: friend
+    title: "Bioinformatics Analyst"
     start: "2022-09"
     note: "Bioinformatics Analyst"
 links:

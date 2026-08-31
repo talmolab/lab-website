@@ -1,94 +1,68 @@
-# Phase 2 — people collection: what needs your judgement
+# Phase 2 — people collection: status
 
-Generated from the one-time extraction of `team/index.md` + `_members/*.md`.
-Everything below was **left as found rather than guessed**, because a wrong date
-written into the collection becomes indistinguishable from a real one.
+53 people, 52 member pages, every `/members/<slug>.html` URL still resolving
+(the three removed ones 301 to `/team/`).
 
-The collection itself is built and validating: 56 people, 55 member pages, all 55
-existing `/members/<slug>.html` URLs still resolve.
+## Resolved
 
-## 1. Four people are invisible on the live site right now
+**Dropped entirely, per your call:** Gregory Quach, Neeraj Venna, Ramiz Hajj.
+Their files and portraits are gone. Their URLs 301 to `/team/` rather than
+404ing — those pages resolve on the live site today, and §8 treats that as a
+hard requirement even for pages that are deliberately removed. Note this is
+the one place where the removal is *not* silent: an old inbound link lands on
+the team page rather than a dead end.
 
-Their files say `role: alumni`, which filters them **out** of the team page, and
-nobody added them to the hand-written alumni list — so they appear nowhere, though
-their pages still exist and are linked from nothing.
+**Vincent Tu was kept** — you named three, not four. The roster CSV gave him
+real dates (2022-02 → 2024-10), so the `end: "unknown"` case is now empty.
 
-| Person | Joined (from their bio) | Left |
-|---|---|---|
-| Gregory Quach | 2024-06 | **unknown** |
-| Neeraj Venna | 2024-09 | **unknown** |
-| Ramiz Hajj | — | **unknown** |
-| Vincent Tu | — | **unknown** |
+**The 2025 annual-review roster CSV closed almost every gap.** 47 of 53 people
+matched, and it carries what the website prose never did: `YYYY-MM` precision on
+both ends, co-advisors, and one row per role period — so the role transitions are
+recorded facts rather than inferences. Specifically:
 
-They are now in the alumni table with `end: "unknown"`, rendering as `2024–?`.
-**Please supply the departure years.** This class of bug is why `end` is the only
-thing that marks someone as alumni now — there is no `role: alumni` flag to fall
-out of sync with a separate list.
+- **Aaditya Prasad's handover is no longer unknown**: undergrad 2021-11 → 2022-11,
+  MS 2022-11 → 2024-10, co-advised by Uri Manor throughout.
+- **Scott Yang** turns out to be a three-stage career the site never showed —
+  undergrad, MS, then PhD student from 2025-05.
+- **Amick Licup** converted undergrad → research assistant in 2025-06.
+- Every alumni tenure is now a real span, e.g. Advaith Ravishankar `2022-05 → 2025-05`.
 
-## 2. Role conflicts — the list and the member file disagree
+**Everyone who had a full member page keeps it**, per your call. `page: false`
+stays in the schema and is used only by Pranav Sankar, who never had one.
 
-I used the alumni list, since it is the curated public record. Confirm or correct:
+**Job titles are now three separate fields** rather than a conflict to resolve:
 
-| Person | Alumni list | Member file |
-|---|---|---|
-| Amitha Attapu | software-engineer | Bioinformatics Analyst |
-| Arnav Dagar | highschool-summer-intern | High School Research Intern |
-| Arthur Mayo III | undergrad-summer-intern | Undergraduate Research Intern |
-| Ava Barbano | undergrad-summer-intern | Undergraduate Research Intern |
-| Jason Foat | software-engineer | Scientific Programmer |
-| Liezl Maree | software-engineer | Scientific Programmer |
-| Will Knickrehm | highschool-summer-intern | High School Research Intern |
+| Field | Meaning |
+|---|---|
+| `role` | category — drives sorting, grouping, filtering; never displayed raw |
+| `title` | what the site shows, when the lab's wording is better than the category |
+| `salkTitle` | the official Salk HR title, when it differs from both |
 
-The last four are only summer-vs-not wording. The first three are real title
-questions: Software Engineer vs Scientific Programmer vs Bioinformatics Analyst.
+13 people carry a `title` today, all back-filled from their member-file wording
+(Amitha Attapu and Benfica Xavier as *Bioinformatics Analyst* under a
+`scientific-programmer` category; Eric Leonardis as *Postdoctoral Fellow*).
+`salkTitle` is deliberately empty everywhere — it is a slot for when you
+standardize, not something to fill in by guessing.
 
-## 3. Missing start dates (7)
+## Still open
 
-Not stated in the bio and not derivable. Left blank rather than estimated.
+### 1. Three people have no start date
 
-- **Andrew Park** — current member, join date not stated in bio
-- **Dexter Tsin** — not stated in bio and not a summer stint; end=2022
-- **Fabian Plum** — current member, join date not stated in bio
-- **Kevin Bian** — current member, join date not stated in bio
-- **Max Weinberg** — not stated in bio and not a summer stint; end=2024
-- **Nick Andrews** — current member, join date not stated in bio
-- **Zaher Abbara** — not stated in bio and not a summer stint; end=2024
+Not in the roster CSV and not stated in their bios. Left blank, not estimated.
 
-## 4. One unrecoverable boundary
+- **Fabian Plum**
+- **Nick Andrews**
+- **Zaher Abbara**
 
-**Aaditya Prasad** — 2 roles ['undergrad-intern', 'ms-student'] but only departure year 2024; the handover date is not recorded anywhere.
+### 2. Ten member files reference portraits that do not exist
 
-Encoded as one continuous tenure with the handover date omitted, so it renders
-`2021–2024` rather than implying two separate stints the way a repeat intern does.
-
-## 5. Ten member files reference portraits that do not exist
-
-These render a broken image on the live site today; the new team page falls back
-to initials. Supply photos or accept the fallback.
+Broken images on the live site today; the new team page falls back to initials.
 
 Amitha Attapu, Arnav Dagar, Arthur Mayo III, Ava Barbano, Drake Thompson, Hutton Saunders, Papa Manu, Rusham Bhatt, Van Nguyen, Yipeng Li
 
-## 6. §6.2b — who keeps a full member page?
+### 3. People missing from the collection entirely
 
-The plan says this is a per-person judgement on bio substance, to be surfaced
-rather than decided silently. **Nothing has been dropped** — all 55 existing pages
-still build. Below are the thinnest alumni bios as candidates for becoming table
-rows only. Dropping one means adding a 301 to the alumni anchor.
-
-| Person | Bio length |
-|---|---|
-| Pranav Sankar | 0 chars |
-| Ramiz Hajj | 127 chars |
-| Vincent Tu | 142 chars |
-| Marcus Intal | 159 chars |
-| Will Knickrehm | 165 chars |
-| Gregory Quach | 172 chars |
-| David Samy | 173 chars |
-| Neeraj Venna | 187 chars |
-| Keya Loding | 191 chars |
-| Nathaniel Nono | 202 chars |
-| Mariela Mendoza | 205 chars |
-| Sean Afshar | 213 chars |
-
-Pranav Sankar already has no page and is listed as plain text — the precedent
-§6.2b cites, now expressed as `page: false` in the collection.
+You flagged that a lot of this year's people are absent. Nothing has been added
+speculatively — the collection contains exactly the 55 who had member files, minus
+the three dropped, plus Pranav Sankar. Adding the rest is queued for after the
+migration, as you asked.

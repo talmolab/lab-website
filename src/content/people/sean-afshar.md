@@ -4,7 +4,7 @@ image: ../../assets/people/sean-afshar.jpg
 appointments:
   - role: research-assistant
     start: "2022-01"
-    end: "2023"
+    end: "2023-09"
 next:
   org: "Princeton"
   what: "PhD in Neuroscience"

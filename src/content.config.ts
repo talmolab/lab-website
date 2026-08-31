@@ -47,7 +47,20 @@ export const ROLE_LABEL: Record<(typeof ROLE_ORDER)[number], string> = {
 };
 
 const appointment = z.object({
+  /** Category. Drives sorting, grouping and filtering — never displayed raw. */
   role: z.enum(ROLE_ORDER),
+
+  /** What the site calls this appointment, when the category label is not what
+   *  the lab would say. Salk HR titles historically did not reflect what people
+   *  actually did, so the website deliberately used better ones; both need to be
+   *  representable rather than reconciled. Falls back to ROLE_LABEL[role]. */
+  title: z.string().optional(),
+
+  /** The official Salk job title, where it differs from both of the above. */
+  salkTitle: z.string().optional(),
+
+  /** Salk co-advisor for jointly supervised appointments. */
+  coAdvisor: z.string().optional(),
   start: yearMonth.optional(),
   /** Absent means still here. "Alumni" is derived from this, never stored — that
    *  is what let four people fall off the site: their file said role: alumni,

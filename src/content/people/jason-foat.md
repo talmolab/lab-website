@@ -2,9 +2,9 @@
 name: "Jason Foat"
 image: ../../assets/people/jason-foat.jpg
 appointments:
-  - role: software-engineer
+  - role: scientific-programmer
     start: "2024-06"
-    end: "2024"
+    end: "2025-03"
 links:
   github: "jf514"
 ---

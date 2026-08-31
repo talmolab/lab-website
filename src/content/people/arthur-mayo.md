@@ -2,8 +2,9 @@
 name: "Arthur Mayo III"
 appointments:
   - role: undergrad-summer-intern
-    start: "2024"
-    end: "2024"
+    title: "Undergraduate Research Intern"
+    start: "2024-06"
+    end: "2024-08"
 ---
 
 Arthur is an undergraduate pursuing his B.S. in Molecular and Cellular Neuroscience at

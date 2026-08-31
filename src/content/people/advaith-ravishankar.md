@@ -3,8 +3,8 @@ name: "Advaith Ravishankar"
 image: ../../assets/people/advaith-ravishankar.jpg
 appointments:
   - role: undergrad-intern
-    start: "2022-03"
-    end: "2025"
+    start: "2022-05"
+    end: "2025-05"
     note: "TRELS Scholar"
 next:
   org: "Harvard"

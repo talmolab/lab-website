@@ -2,8 +2,9 @@
 name: "Arnav Dagar"
 appointments:
   - role: highschool-summer-intern
-    start: "2024"
-    end: "2024"
+    title: "High School Research Intern"
+    start: "2024-06"
+    end: "2024-08"
 ---
 
 Arnav worked in the lab as a high school research intern through [Salk's Heithoff-Brody

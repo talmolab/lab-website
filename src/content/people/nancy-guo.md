@@ -4,7 +4,7 @@ image: ../../assets/people/nancy-guo.jpg
 appointments:
   - role: research-assistant
     start: "2022-03"
-    end: "2022"
+    end: "2022-08"
 next:
   org: "NYU"
   what: "PhD in Bioengineering"

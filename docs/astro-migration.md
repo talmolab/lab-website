@@ -644,3 +644,44 @@ them hard (577kB → 4kB webp). **Still open for Phase 5:** the other ~22 files 
 `images/`, including `/images/papers/maree-2024.pdf`, which §8 flags as the actual
 target of a cited work rather than a thumbnail. Astro serves none of `/images/**`
 today, so that must be resolved before cutover.
+
+### 2026-08-30 — Phase 2b: roster CSV merged, title model settled
+
+Talmo's review closed most of the Phase 2a gaps. 53 people, 52 member pages.
+
+**A second data source exists and is far better than the website prose:**
+`Salk/annual-review/2025/lab_roster.csv` (as of 2025-10). It has `YYYY-MM` on both
+ends, co-advisors, and **one row per role period**, so role transitions are recorded
+facts rather than inferences. 47 of 53 matched. It resolved every open date
+question: Aaditya Prasad's unrecoverable handover is 2022-11; Scott Yang turns out
+to be undergrad → MS → PhD, a three-stage career the site never showed; Amick Licup
+converted undergrad → RA in 2025-06. `end: "unknown"` is now used by nobody.
+
+**Worth knowing for Phase 4:** this CSV is a better input than `_members/` prose for
+anything date-shaped, and it is refreshed annually for the Salk review. It stops at
+2025-10, so this year's people are missing entirely — Talmo asked to add them after
+the migration rather than now, so nothing was invented to fill the gap.
+
+**Job titles are three fields, not one.** Talmo's reasoning: Salk HR historically
+gave people job titles that did not reflect what they did, so the website
+deliberately used better ones. Reconciling them would destroy information, so the
+schema holds all three — `role` (category, drives sort/group/filter, never shown
+raw), `title` (what the site displays), `salkTitle` (the official one). The seven
+"role conflicts" from Phase 2a were never conflicts; they were this distinction with
+nowhere to live. 13 people carry a `title`; `salkTitle` is deliberately empty
+everywhere, a slot for a later standardization pass rather than something to guess.
+
+**Three people removed outright** — Gregory Quach, Neeraj Venna, Ramiz Hajj. Their
+`/members/<slug>.html` URLs resolve on the live site, so they 301 to `/team/`
+instead of 404ing. This exposed an ordering rule worth recording: **`_redirects` is
+first-match-wins**, so a specific rule must sit ABOVE the `/members/:slug.html`
+wildcard. Underneath it, the wildcard swallows the request and rewrites to
+`/members/<slug>`, which no longer exists — a 301 straight into a 404. Verified.
+
+**Everyone who had a full member page keeps it** (§12 q4 answered). `page: false`
+remains in the schema, used only by Pranav Sankar, who never had one.
+
+One process note: the first merge attempt did regex surgery on frontmatter text and
+silently dropped the closing `---`, which made every record fail validation as
+"name: Required" — a confusing error, because the field is plainly there. Frontmatter
+is parsed and re-emitted through a real YAML parser now.

@@ -2,12 +2,13 @@
 name: "David Samy"
 image: ../../assets/people/david-samy.jpg
 appointments:
-  - role: highschool-intern
-    start: "2022"
-    end: "2022"
-  - role: highschool-intern
-    start: "2023"
-    end: "2023"
+  - role: highschool-summer-intern
+    start: "2022-06"
+    end: "2022-08"
+  - role: highschool-summer-intern
+    title: "High School Research Intern"
+    start: "2023-06"
+    end: "2023-08"
 links:
   "home-page": "http://davidsamy.com/"
   github: "davidasamy"

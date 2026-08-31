@@ -1,9 +1,10 @@
 ---
 name: "Amitha Attapu"
 appointments:
-  - role: software-engineer
+  - role: scientific-programmer
+    title: "Bioinformatics Analyst"
     start: "2025-01"
-    end: "2025"
+    end: "2025-05"
 next:
   org: "AWS"
 links:

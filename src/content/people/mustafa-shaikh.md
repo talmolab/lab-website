@@ -4,6 +4,7 @@ image: ../../assets/people/mustafa-shaikh.jpg
 appointments:
   - role: research-assistant
     start: "2024-07"
+    coAdvisor: "Uri Manor"
 ---
 
 Mustafa joined in the lab July 2024 co-advised by [Uri Manor](https://manorlab.ucsd.edu/).

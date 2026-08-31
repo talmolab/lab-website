@@ -2,9 +2,9 @@
 name: "Liezl Maree"
 image: ../../assets/people/liezl-maree.jpg
 appointments:
-  - role: software-engineer
+  - role: scientific-programmer
     start: "2022-02"
-    end: "2025"
+    end: "2025-05"
 links:
   github: "roomrys"
 ---

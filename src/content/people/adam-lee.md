@@ -4,7 +4,7 @@ image: ../../assets/people/adam-lee.jpg
 appointments:
   - role: undergrad-intern
     start: "2021-11"
-    end: "2023"
+    end: "2023-08"
 next:
   org: "Harvard"
   what: "PhD in Computer Science"

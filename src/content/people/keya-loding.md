@@ -3,8 +3,8 @@ name: "Keya Loding"
 image: ../../assets/people/keya-loding.jpg
 appointments:
   - role: undergrad-intern
-    start: "2024"
-    end: "2024"
+    start: "2024-06"
+    end: "2025-03"
 ---
 
 Keya is an undergraduate pursuing his B.S. in Biological Sciences and B.A. in Computer Science

@@ -3,6 +3,7 @@ name: "Fabian Plum"
 image: ../../assets/people/fabian-plum.jpg
 appointments:
   - role: friend
+    title: "Postdoctoral Fellow"
     note: "Postdoctoral Fellow (Visiting)"
 links:
   github: "FabianPlum"

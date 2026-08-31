@@ -2,8 +2,8 @@
 name: "Drake Thompson"
 appointments:
   - role: undergrad-summer-intern
-    start: "2025"
-    end: "2025"
+    start: "2025-06"
+    end: "2025-08"
 links:
   github: "dthomps3"
   linkedin: "drake-thompson"

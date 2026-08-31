@@ -2,8 +2,10 @@
 name: "Benfica Xavier Fernando"
 image: ../../assets/people/benfica-xavier.jpg
 appointments:
-  - role: bioinformatics-analyst
+  - role: scientific-programmer
+    title: "Bioinformatics Analyst"
     start: "2025-01"
+    coAdvisor: "Todd Michael"
 links:
   github: "blm3886"
 ---

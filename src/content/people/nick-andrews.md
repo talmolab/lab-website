@@ -3,6 +3,7 @@ name: "Nick Andrews"
 image: ../../assets/people/nick-andrews.png
 appointments:
   - role: friend
+    title: "Staff Scientist"
     note: "Staff Scientist"
 ---
 

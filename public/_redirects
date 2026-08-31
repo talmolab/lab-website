@@ -1,3 +1,14 @@
+# ORDER MATTERS: _redirects is first-match-wins, so these specific rules must sit
+# above the /members/:slug.html wildcard below. Otherwise the wildcard swallows
+# them and rewrites to /members/<slug>, which no longer exists — a 301 into a 404.
+#
+# Removed from the site entirely (not just de-listed), so there is no alumni row
+# to anchor to. These URLs resolve on the live site today, and §8 treats every
+# currently-resolving URL as a hard requirement.
+/members/gregory-quach.html  /team/  301
+/members/neeraj-venna.html   /team/  301
+/members/ramiz-hajj.html     /team/  301
+
 # Jekyll served member pages at /members/<slug>.html and everything else at a
 # trailing slash. Workers' default html_handling (auto-trailing-slash) already
 # redirects the .html form, but with a 307 — which does not move Google's index.

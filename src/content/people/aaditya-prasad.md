@@ -4,8 +4,12 @@ image: ../../assets/people/aaditya-prasad.jpg
 appointments:
   - role: undergrad-intern
     start: "2021-11"
+    end: "2022-11"
+    coAdvisor: "Uri Manor"
   - role: ms-student
-    end: "2024"
+    start: "2022-11"
+    end: "2024-10"
+    coAdvisor: "Uri Manor"
 next:
   org: "MIT"
   what: "PhD in Brain and Cognitive Sciences"

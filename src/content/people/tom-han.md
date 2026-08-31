@@ -4,6 +4,7 @@ image: ../../assets/people/tom-han.jpg
 appointments:
   - role: research-assistant
     start: "2025-08"
+    coAdvisor: "Uri Manor"
 links:
   "home-page": "https://tomhcy.com/"
   github: "tom21100227"
