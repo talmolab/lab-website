@@ -685,3 +685,45 @@ One process note: the first merge attempt did regex surgery on frontmatter text 
 silently dropped the closing `---`, which made every record fail validation as
 "name: Required" — a confusing error, because the field is plainly there. Frontmatter
 is parsed and re-emitted through a real YAML parser now.
+
+### 2026-08-30 — Phase 2c: publications loader and overlay
+
+`src/loaders/openalex.ts` + `src/data/publications.yaml` + a publications page and
+the three export endpoints (§6.1). All 28 entries the site showed are preserved,
+plus the two genuinely new journal articles. Build-time caching works: a second
+build resolves 0 records.
+
+**The overlay is an allowlist, and that is not a stylistic choice.** OpenAlex holds
+69 works for this author; publishing them unfiltered would add ~40 entries that are
+not publications — **twelve** Figshare `MOESM` supplementary-material stubs, three
+`Author response:` peer-review records, a publisher erratum, Research Square
+duplicates of papers already listed, and conference abstracts. "Auto-discovered with
+a curated overlay" therefore has to mean *discovery feeds a PR*, never *discovery
+publishes*. Decision 3b was right and this is the concrete reason.
+
+**Keys are derived from the EARLIEST version's year**, so `rose-2024` stays
+`rose-2024` after the paper appears in Nature Methods in 2025. Keying on the
+published year would churn the identifier at exactly the moment the record matters.
+
+**API notes, all verified:**
+- OpenAlex singleton lookup by DOI resolves **arXiv DOIs**, which Crossref 404s
+  (they are registered with DataCite). So OpenAlex is the primary resolver and
+  Crossref the fallback — the reverse of what seemed natural.
+- Both filter and singleton calls answer **unauthenticated**. `OPENALEX_API_KEY` is
+  supported and raises the budget, but is not required to build.
+
+**Two open items for Talmo:**
+
+1. **MIMIC-MJX has two OpenAlex records that disagree on date.** The arXiv record
+   (`10.48550/arxiv.2511.20532`) says **2025-11-25**; the PubMed-indexed record,
+   which has `doi: null`, says **2025-12-02** — the date §4.3 recorded as correct.
+   The site currently shows the arXiv date because that is the DOI being cited.
+   This is the "one work, two records" hazard §6.1 predicted, now concrete.
+2. **Possible preprint match, NOT acted on.** bioRxiv `10.1101/2023.11.10.566632`
+   ("A behavioral roadmap for the development of agency in the rodent") looks like
+   the preprint of the PLoS Biology gerbil paper. Crossref carries **no** relation.
+   All 9 authors match on surname + initials **in the same order**, first and last
+   author included. §6.1 forbids acting on a title/author match, so both remain
+   separate entries pending a human call. Worth noting my first comparison was
+   exact-string and reported **0 overlap** — bioRxiv uses initials, PLoS uses full
+   names — which would have been the opposite error.

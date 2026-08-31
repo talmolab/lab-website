@@ -1,0 +1,162 @@
+# Publications — the curated layer.
+#
+# OpenAlex supplies the metadata and the discovery; THIS FILE decides what appears.
+# That is not decoration. The author's OpenAlex record currently holds 69 works, and
+# publishing them unfiltered would add ~40 entries that are not publications: twelve
+# Figshare "MOESM" supplementary-material stubs, three "Author response:" peer-review
+# records, a publisher erratum, Research Square duplicates of papers already listed,
+# and conference abstracts. So the overlay is an allowlist.
+#
+# key           Lab-assigned and PERMANENT. Derived from first author + year of the
+#               EARLIEST version, so it does not change when a preprint is published
+#               — which is the whole point of not keying on a DOI. (Verified need:
+#               MIMIC-MJX has doi: null in OpenAlex, indexed via PubMed only, while
+#               sources.yaml tracks its arXiv DOI. One work, two identifiers.)
+# published     The version of record. Shown when present.
+# preprint      The earlier version. Linked secondarily, never listed separately.
+# manual        Everything, for works no API knows about (no DOI at all).
+# image         Thumbnail, relative to public/images/ or an absolute URL.
+#
+# Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
+# API at build time; anything written here overrides them.
+
+- key: cheng-2026
+  published: { doi: "10.1038/s41586-026-10900-1" }
+
+- key: mitelut-2025
+  published: { doi: "10.1371/journal.pbio.3003348" }
+
+- key: duporge-2025
+  published: { doi: "10.1038/s41526-025-00460-5" }
+
+- key: zhang-2025
+  published: { doi: "10.48550/arxiv.2511.20532" }
+  image: "papers/zhang-2025.png"
+
+- key: coley-2024
+  published: { doi: "10.1101/2024.12.18.629202" }
+  image: "papers/coley-2024.png"
+
+- key: weinreb-2024
+  published: { doi: "10.1038/s41592-024-02318-2" }
+  image: "papers/weinreb-2023.png"
+
+- key: maree-2024
+  manual:
+    title: "Multi-view triangulation-enabled annotation for multi-animal 3D pose in SLEAP"
+    authors:
+      - "Liezl Maree"
+      - "Sean Afshar"
+      - "Stefan Oline"
+      - "Eric Leonardis"
+      - "Annegret Falkner"
+      - "Talmo Pereira"
+    venue: "Measuring Behavior 2024"
+    date: "2024-05-15"
+    link: "/images/papers/maree-2024.pdf"
+  image: "papers/maree-2024.png"
+
+- key: rose-2024
+  # Crossref is-preprint-of
+  preprint: { doi: "10.1101/2024.05.03.592173" }
+  published: { doi: "10.1038/s41592-025-02893-y" }
+  image: "papers/rose-2024.png"
+
+- key: berrigan-2024
+  published: { doi: "10.34133/plantphenomics.0175" }
+  image: "papers/berrigan-2023.png"
+
+- key: mitelut-2023
+  published: { doi: "10.1101/2023.11.10.566632" }
+  image: "papers/mitelut-2023.png"
+
+- key: patel-2023
+  # associated BY HAND: Crossref carries no relation for this preprint,
+  #   but the two records share all 24 authors and a title differing only by an en-dash
+  preprint: { doi: "10.1101/2023.11.09.566421" }
+  published: { doi: "10.1038/s41593-026-02413-x" }
+  image: "papers/patel-2023.png"
+
+- key: luxem-2023
+  published: { doi: "10.7554/elife.79305" }
+  image: "papers/luxem-2022.png"
+
+- key: mills-2022
+  published: { doi: "10.1101/2022.10.28.514263" }
+  image: "papers/mills-2022.jpg"
+
+- key: prasad-2022
+  manual:
+    title: "Exploring the role of image domain in self-supervised DNN models of rodent brains"
+    authors:
+      - "Aaditya Prasad"
+      - "Uri Manor"
+      - "Talmo Pereira"
+    venue: "SVRHM 2022 Workshop @ NeurIPS"
+    date: "2022-09-27"
+    link: "https://openreview.net/forum?id=KIlSyKTulXO"
+  image: "papers/prasad-2022.jpg"
+
+- key: wang-2022
+  published: { doi: "10.1016/j.cub.2022.04.066" }
+  image: "papers/wang-2021.png"
+
+- key: pereira-2022
+  published: { doi: "10.1038/s41592-022-01426-1" }
+  image: "sleap_movie.gif"
+
+- key: gall-2022
+  published: { doi: "10.1186/s13007-022-00851-9" }
+  image: "papers/gall-2022.png"
+
+- key: bourrianne-2022
+  published: { doi: "10.1115/1.4053386" }
+  image: "https://www.medrxiv.org/content/medrxiv/early/2021/06/14/2020.06.29.20141283/F1.medium.gif"
+
+- key: deutsch-2020
+  published: { doi: "10.7554/elife.59502" }
+  image: "papers/deutsch-2020.png"
+
+- key: pereira-2020
+  published: { doi: "10.1038/s41593-020-00734-z" }
+  image: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41593-020-00734-z/MediaObjects/41593_2020_734_Fig3_HTML.png?as=webp"
+
+- key: jones-2020
+  published: { doi: "10.7554/elife.57258" }
+  image: "https://iiif.elifesciences.org/lax/57258%2Felife-57258-fig2-v2.tif/full/617,/0/default.webp"
+
+- key: charles-2020
+  published: { doi: "10.1146/annurev-neuro-100119-110036" }
+  image: "papers/charles-2020.png"
+
+- key: pereira-2018
+  published: { doi: "10.1038/s41592-018-0234-5" }
+  image: "papers/pereira-2019.png"
+
+- key: badura-2018
+  published: { doi: "10.7554/elife.36401" }
+  image: "https://iiif.elifesciences.org/lax/36401%2Felife-36401-fig9-v3.tif/full/617,/0/default.webp"
+
+- key: clemens-2018
+  published: { doi: "10.1016/j.cub.2018.06.011" }
+  image: "papers/clemens-2018.png"
+
+- key: giovannucci-2018
+  published: { doi: "10.1016/j.jneumeth.2017.07.014" }
+  image: "https://ars.els-cdn.com/content/image/1-s2.0-S0165027017302509-gr2.jpg"
+
+- key: hermsdorff-2018
+  published: { doi: "10.1007/978-3-319-96661-8_30" }
+  image: "papers/hermsdorff-2018.png"
+
+- key: pereira-2017
+  published: { doi: "10.1016/j.neuron.2017.08.029" }
+  image: "https://els-jbs-prod-cdn.jbs.elsevierhealth.com/cms/attachment/cc6b48f6-bbb3-47d7-9429-eeb7472861c4/gr1.jpg"
+
+- key: giovannucci-2017
+  published: { doi: "10.1038/nn.4531" }
+  image: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fnn.4531/MediaObjects/41593_2017_Article_BFnn4531_Fig2_HTML.jpg?as=webp"
+
+- key: hobbs-2016
+  published: { doi: "10.1186/s13015-016-0082-8" }
+  image: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1186%2Fs13015-016-0082-8/MediaObjects/13015_2016_82_Fig4_HTML.gif?as=webp"

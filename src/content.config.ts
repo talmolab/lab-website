@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { publications as publicationsLoader } from './loaders/openalex';
 
 /** "2024" or "2024-06". Deliberately allows year-only: for most alumni the month
  *  genuinely is not known, and padding it to "-01" would invent a fact. */
@@ -94,7 +95,7 @@ const people = defineCollection({
         .object({
           org: z.string(),
           what: z.string().optional(),
-          url: z.string().url().optional(),
+          url: z.url().optional(),
         })
         .optional(),
       links: z
@@ -111,4 +112,34 @@ const people = defineCollection({
     }),
 });
 
-export const collections = { people };
+const publications = defineCollection({
+  loader: publicationsLoader(),
+  schema: z.object({
+    key: z.string(),
+    title: z.string(),
+    authors: z.array(z.string()),
+    venue: z.string().optional(),
+    date: z.string().optional(),
+    doi: z.string().optional(),
+    url: z.string().optional(),
+    type: z.string().optional(),
+    citations: z.number().optional(),
+    image: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    highlight: z.boolean().default(false),
+    links: z.array(z.object({ label: z.string(), url: z.string() })).default([]),
+    /** The earlier version, when this work has one. Linked secondarily; never a
+     *  separate list entry — showing both is the bug this whole model exists to
+     *  fix (§4.1: two Nature-family papers were displayed as bioRxiv preprints). */
+    preprint: z
+      .object({
+        doi: z.string().optional(),
+        venue: z.string().optional(),
+        date: z.string().optional(),
+        url: z.string().optional(),
+      })
+      .optional(),
+  }),
+});
+
+export const collections = { people, publications };
