@@ -1,5 +1,6 @@
 ---
 import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
 interface Props {
@@ -26,6 +27,8 @@ const nav = [
   { href: '/team/', label: 'Team' },
   { href: '/blog/', label: 'Blog' },
 ];
+// Search sits apart from the five nav items (§5b keeps that list to five) but has
+// to be reachable, so it lives at the end of the bar as an icon-weight link.
 ---
 <!doctype html>
 <html lang="en">
@@ -68,6 +71,11 @@ const nav = [
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f9fb" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#101419" />
+
+    {/* §5: zero-JS baseline. ClientRouter is the one exception — a few KB that
+        buys cross-document view transitions. It degrades to ordinary navigation
+        where the browser lacks support, and honours prefers-reduced-motion. */}
+    <ClientRouter />
   </head>
 
   <body>
@@ -77,7 +85,7 @@ const nav = [
       <nav aria-label="Primary">
         {/* Never set the word "talmolab" in type — design/type-system.css. The
             horizontal lockup is the nav one; the stacked needs too much height. */}
-        <a class="brand" href="/" aria-label="talmolab — home">
+        <a class="brand" href="/" aria-label="talmolab — home" transition:persist>
           <img class="brand-light" src="/talmolab-lockup-h-light.svg" alt="talmolab" width="2323" height="767" />
           <img class="brand-dark" src="/talmolab-lockup-h-dark.svg" alt="talmolab" width="2323" height="767" />
         </a>
@@ -88,10 +96,11 @@ const nav = [
             </li>
           ))}
         </ul>
+        <a class="nav-search" href="/search/" aria-label="Search">Search</a>
       </nav>
     </header>
 
-    <main id="main">
+    <main id="main" data-pagefind-body>
       <slot />
     </main>
 

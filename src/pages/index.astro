@@ -1,25 +1,143 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { Button } from '../components/starwind/button';
----
-<BaseLayout title="talmolab" description="Computational tools for studying complex biological systems.">
-  <h1>Scaffold</h1>
-  <p class="lede">
-    Astro 6 + Tailwind v4 + Starwind, wired to the ratified palette and type
-    system. Content lands in Phase 2.
-  </p>
-  <p>
-    Body copy at the specified scale, to check the measure holds at
-    <code>68ch</code> and that the mono face is picking up DOIs like
-    <span class="doi">10.1038/s41592-025-02893-y</span> without ligature mangling.
-  </p>
+import groupPhoto from '../assets/pages/2024-08-06.lab-group1.jpg';
 
-  <h2>Starwind, inheriting the palette</h2>
-  <div style="display:flex; gap:.75rem; flex-wrap:wrap; align-items:center;">
-    <Button variant="primary">Primary</Button>
-    <Button variant="secondary">Secondary</Button>
-    <Button variant="outline">Outline</Button>
-    <Button variant="ghost">Ghost</Button>
-    <Button variant="default">Default</Button>
-  </div>
+const pubs = (await getCollection('publications'))
+  .sort((a, b) => (b.data.date ?? '').localeCompare(a.data.date ?? ''))
+  .slice(0, 4);
+
+const areas = (await getCollection('areas')).sort((a, b) => a.data.order - b.data.order);
+
+const tools = (await getCollection('repos'))
+  .filter((r) => r.data.group === 'maintained')
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4);
+
+const people = await getCollection('people');
+const current = people.filter((p) => p.data.appointments.at(-1)?.end === undefined).length;
+
+const year = (d?: string) => (d ?? '').slice(0, 4);
+---
+<BaseLayout>
+  <section class="hero">
+    <h1>
+      Computational tools for studying
+      <em>complex biological systems</em>
+    </h1>
+    <p class="lede">
+      The lab is led by <a href="/members/talmo-pereira">Talmo Pereira</a> at the
+      <a href="https://salk.edu">Salk Institute for Biological Studies</a>. We build
+      methods that leverage deep learning and computer vision to measure behavior,
+      morphology and neural systems — and we ship them as open source.
+    </p>
+    <div class="cta">
+      <a class="btn btn-primary" href="/research/">Our research</a>
+      <a class="btn" href="/team/#join">Join us</a>
+    </div>
+  </section>
+
+  {/* The publication list being visibly current is the whole point of the rebuild
+      (§1). Putting the four most recent on the front page makes staleness obvious
+      rather than hidden three clicks deep. */}
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Recent work</h2>
+      <a href="/publications/">All publications →</a>
+    </div>
+    <ul class="recent">
+      {pubs.map(({ data: p }) => (
+        <li>
+          <span class="year">{year(p.date)}</span>
+          <div>
+            <a class="recent-title" href={p.url ?? `https://doi.org/${p.doi}`}>{p.title}</a>
+            {p.venue && <div class="recent-venue">{p.venue}</div>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>What we work on</h2>
+      <a href="/research/">More →</a>
+    </div>
+    <ul class="areas">
+      {areas.map(({ data: a }) => <li>{a.name}</li>)}
+    </ul>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Tools</h2>
+      <a href="/tools/">All tools →</a>
+    </div>
+    <ul class="tools">
+      {tools.map(({ data: r }) => (
+        <li>
+          <a class="tool-name" href={`https://github.com/${r.repo}`}>{r.name}</a>
+          <span class="muted">{r.blurb?.split('.')[0]}.</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <figure class="group">
+    <a href="/team/">
+      <Image src={groupPhoto} alt="The Talmo Lab group, 2024" width={1400} />
+    </a>
+    <figcaption class="muted">
+      {current} people in the lab today. Photo ca. 2024, credit Chris Keeney.
+    </figcaption>
+  </figure>
 </BaseLayout>
+
+<style>
+  .hero { max-width: 46rem; }
+  .hero h1 em { font-style: normal; color: var(--mark); }
+  .hero .lede { margin-top: 1rem; }
+
+  .cta { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.75rem; }
+  .btn {
+    display: inline-flex; align-items: center; height: 2.75rem; padding: 0 1.25rem;
+    border-radius: 0.5rem; border: 1px solid var(--line);
+    font-weight: 600; text-decoration: none; color: var(--fg);
+  }
+  .btn:hover { background: var(--sunk); }
+  .btn-primary {
+    background: var(--color-brand-blue); border-color: var(--color-brand-blue);
+    color: var(--color-paper);
+  }
+  /* 4.62:1 in both themes; see the palette note in global.css. */
+  .btn-primary:hover { background: var(--color-brand-blue); filter: brightness(1.08); }
+
+  .panel { margin-top: 4rem; }
+  .panel-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 1rem; border-bottom: 1px solid var(--line); padding-bottom: 0.5rem;
+  }
+  .panel-head h2 { font-size: 1.25rem; }
+  .panel-head a { font-size: 0.875rem; text-decoration: none; white-space: nowrap; }
+
+  .recent { list-style: none; padding: 0; margin: 1rem 0 0; }
+  .recent > li {
+    display: grid; grid-template-columns: 3.25rem minmax(0, 1fr);
+    gap: 0.75rem; padding: 0.7rem 0;
+  }
+  .year { color: var(--fg-muted); font-variant-numeric: tabular-nums; font-size: 0.9375rem; }
+  .recent-title { font-weight: 600; text-decoration: none; }
+  .recent-title:hover { text-decoration: underline; }
+  .recent-venue { color: var(--fg-muted); font-size: 0.875rem; margin-top: 0.15rem; }
+
+  .areas { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.5rem; }
+  .areas > li { font-weight: 600; }
+
+  .tools { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.75rem; }
+  .tool-name { font-family: var(--font-mono); font-weight: 600; margin-right: 0.5rem; }
+
+  .group { margin: 4rem 0 0; }
+  .group img { width: 100%; height: auto; border-radius: 0.5rem; }
+  .group figcaption { margin-top: 0.5rem; font-size: 0.875rem; }
+</style>

@@ -776,3 +776,53 @@ each route, which under `build.format: 'preserve'` means a trailing slash for
 directory routes but extensionless-no-slash for the flat member pages (a `serialize`
 hook handles this; verified all 58 return 200 directly, following no redirects). And
 the live Jekyll sitemap emits **`http://`** URLs, not `https://`.
+
+### 2026-08-30 — Phase 3: home page, View Transitions, Pagefind
+
+The home page is now a real front door rather than the two group photos the Jekyll
+one had. It leads with the positioning line and then the **four most recent
+publications** — deliberately, because §1's whole complaint was that staleness was
+invisible. Putting recent work on the front page makes it obvious rather than three
+clicks deep.
+
+**View Transitions.** `ClientRouter` in the base layout, plus a portrait → member
+page morph via a matched `transition:name` on both ends (verified: both documents
+emit `view-transition-name: portrait-<slug>`). The brand lockup carries
+`transition:persist` so it does not re-animate on every navigation. A
+`prefers-reduced-motion` block reduces all of it to a plain cut.
+
+**The zero-JS baseline holds and is measured**, not asserted: every page ships
+exactly one external script (ClientRouter, a few KB), and only `/search/` ships a
+second. That is precisely the §5 shape.
+
+**Pagefind: the bundled UIs were abandoned, and not on taste.** pagefind 1.5.2's
+build output recommends the Component UI for new integrations, so that was tried
+first — and it renders **permanent `aria-hidden` skeleton placeholders**. The failure
+is entirely in that layer: driving the API directly in the same page returns 2 hits
+for "imputation" and `result.data()` resolves with url, title and a 256-character
+excerpt. Ruled out along the way: it is not a ClientRouter interaction (a hard load
+behaves identically), and it is not asset delivery (fragments arrive byte-identical
+at 425 bytes with the gzip magic intact, which matters because Pagefind gunzips them
+itself and a CDN re-encoding them would break exactly this way).
+
+So `/search/` is ~40 lines over Pagefind's JS API: a `<search>` landmark, a labelled
+input, an `aria-live` status region, debounced input, a request token so a slow
+earlier keystroke cannot overwrite a newer result set, and `?q=` support so results
+are linkable. It ships none of the 175 KB bundle and takes the palette directly
+instead of fighting vendor CSS.
+
+Two smaller things worth recording:
+
+- **Matched terms come back wrapped in `<mark>`**, and results are injected with
+  `innerHTML`, so Astro's scoped styles never reach them — the rule has to be global.
+  Left alone, the browser default paints a saturated yellow, the one colour on the
+  site that belongs to nothing in the palette. Weight is used instead.
+- **The content-layer cache lives in `node_modules/.astro/data-store.json`**, not
+  `.astro/`. Deleting the latter and rebuilding silently reuses stale loader output —
+  which is how a venue-normalisation change appeared to do nothing.
+
+Venue names are normalised in the loader: OpenAlex returns "arXiv (Cornell
+University)" and "bioRxiv (Cold Spring Harbor Laboratory)", which nobody cites that
+way. The trailing parenthetical is stripped and the overlay can still override.
+
+§8 gate still passing 72/72 after all of it.

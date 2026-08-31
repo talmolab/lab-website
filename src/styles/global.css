@@ -142,6 +142,8 @@
 .site-header ul a { color: var(--fg-muted); }
 .site-header ul a:hover,
 .site-header ul a[aria-current="page"] { color: var(--fg); }
+.nav-search { color: var(--fg-muted); }
+.nav-search:hover { color: var(--fg); }
 
 /* The lockup is art, never re-typeset. Horizontal cut in the nav — the stacked
    one needs too much height before the wordmark is legible. */
@@ -176,3 +178,24 @@ main > * + * { margin-top: 1rem; }
   padding: 1.5rem clamp(1rem, 4vw, 2rem);
 }
 .muted { color: var(--fg-muted); }
+
+/* --- motion ---------------------------------------------------------------
+ * View transitions are decoration. Anyone who has asked their OS not to animate
+ * things gets a plain cut, including the portrait morph. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Pagefind wraps matched terms in <mark>. Results are injected with innerHTML, so
+ * Astro's scoped styles never reach them — this has to be global. The browser
+ * default is a yellow highlight, which is the one saturated colour on the site and
+ * belongs to nothing in the palette. Use weight instead. */
+#results mark {
+  background: transparent;
+  color: var(--fg);
+  font-weight: 700;
+}

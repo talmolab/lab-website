@@ -23,7 +23,7 @@ const coAdvisors = [...new Set(person.data.appointments.map((a) => a.coAdvisor).
   <article class="member">
     <header>
       {person.data.image && (
-        <Image src={person.data.image} alt="" width={200} height={200} class="portrait" />
+        <Image src={person.data.image} alt="" width={200} height={200} class="portrait" transition:name={`portrait-${person.id}`} />
       )}
       <div>
         <h1>{person.data.name}</h1>

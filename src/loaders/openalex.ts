@@ -86,6 +86,14 @@ export async function publishedVersionOf(doi: string): Promise<string | null> {
   return rel?.[0]?.id ?? null;
 }
 
+/** OpenAlex source names carry the publisher in parentheses — "arXiv (Cornell
+ *  University)", "bioRxiv (Cold Spring Harbor Laboratory)". Nobody cites them that
+ *  way. Strip the trailing parenthetical; the overlay can still override outright. */
+function tidyVenue(v?: string): string | undefined {
+  if (!v) return undefined;
+  return v.replace(/\s*\([^)]*\)\s*$/, '').trim() || v;
+}
+
 async function resolve(ref: Ref, logger: any): Promise<Meta | null> {
   // OpenAlex first: it resolves arXiv DOIs, which Crossref 404s (they are
   // registered with DataCite). Crossref is the fallback, not the primary.
@@ -129,7 +137,7 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
             title: meta.title,
             authors: meta.authors ?? [],
             // The overlay wins over the API for every field it sets.
-            venue: entry.published?.venue ?? entry.preprint?.venue ?? meta.venue,
+            venue: entry.published?.venue ?? entry.preprint?.venue ?? tidyVenue(meta.venue),
             date: entry.published?.date ?? meta.date,
             doi: meta.doi,
             url: (meta as any).link ?? meta.url,
@@ -140,7 +148,7 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
             highlight: entry.highlight ?? false,
             links: entry.links ?? [],
             preprint: preprintMeta
-              ? { doi: preprintMeta.doi, venue: preprintMeta.venue, date: preprintMeta.date, url: preprintMeta.url }
+              ? { doi: preprintMeta.doi, venue: tidyVenue(preprintMeta.venue), date: preprintMeta.date, url: preprintMeta.url }
               : undefined,
           },
         });

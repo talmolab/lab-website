@@ -19,7 +19,7 @@ const groups = byRole(current);
           <li>
             <a href={`/members/${p.id}.html`}>
               {p.data.image ? (
-                <Image src={p.data.image} alt="" width={220} height={220} class="portrait" />
+                <Image src={p.data.image} alt="" width={220} height={220} class="portrait" transition:name={`portrait-${p.id}`} />
               ) : (
                 <span class="portrait portrait-empty" aria-hidden="true">
                   {p.data.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}
