@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import Shell from '../../layouts/Shell.astro';
+import Clip from '../../components/Clip.astro';
+import { clips } from '../../lib/media';
+
+const all = (await getCollection('repos')).sort((a, b) => a.data.order - b.data.order);
+const media = new Map(
+  (await clips(all.flatMap((r) => (r.data.media ? [r.data.media] : [])))).map((c) => [c.id, c]),
+);
+
+// Lifecycle states, in reading order. A group heading sets a support expectation; it
+// is not a popularity tier, and nothing here is ranked by stars.
+const GROUPS = [
+  { key: 'maintained' as const, title: 'Maintained', note: 'Actively developed and supported. Issues and pull requests get looked at.' },
+  { key: 'research' as const, title: 'Research code', note: 'Real and usable, but built to answer a research question rather than to be a product. Expect rough edges and few guarantees.' },
+  { key: 'archived' as const, title: 'Archived', note: 'No longer maintained, kept available because published work depends on it.' },
+];
+const groups = GROUPS.map((g) => ({ ...g, items: all.filter((r) => r.data.group === g.key) })).filter((g) => g.items.length);
+
+const fmt = (d?: string) =>
+  d ? new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }) : undefined;
+
+const index = groups.map((g) => ({ href: `#${g.key}`, label: g.title }));
+---
+<Shell title="Tools" description="Open-source software from the Talmo Pereira Lab: SLEAP, DREEM, LUC3D, sleap-roots, MIMIC-MJX and more." index={index} indexLabel="Groups">
+  <header class="page-head">
+    <h1>Tools</h1>
+    <p class="lede">
+      Software from the lab. Everything here is open source and on
+      <a href="https://github.com/talmolab">GitHub</a>.
+    </p>
+  </header>
+
+  {groups.map((g) => (
+    <section class="section" id={g.key} aria-labelledby={`${g.key}-h`}>
+      <div class="section-head">
+        <h2 id={`${g.key}-h`}>{g.title}</h2>
+      </div>
+      <p class="muted" style="max-width: 60ch; margin-top: -8px">{g.note}</p>
+      <ul class="rows">
+        {g.items.map(({ data: r }) => {
+          const clip = r.media ? media.get(r.media.id) : undefined;
+          return (
+            <li class:list={['repo', { 'no-media': !clip }]} id={r.name}>
+              {clip && <Clip clip={clip} chip={clip.data.title} />}
+              <div class="repo-body">
+                <div class="repo-head">
+                  <a class="repo-name" href={`https://github.com/${r.repo}`}>{r.name}</a>
+                  {r.archivedOnGitHub && <span class="mono muted">archived on GitHub</span>}
+                </div>
+                <p>{r.blurb ?? r.description}</p>
+                <p class="repo-meta mono">
+                  {r.language && <span>{r.language}</span>}
+                  {r.license && r.license !== 'NOASSERTION' && <span>{r.license}</span>}
+                  {r.pushedAt && <span>updated {fmt(r.pushedAt)}</span>}
+                </p>
+                {r.links.length > 0 && (
+                  <p class="links mono">{r.links.map((l) => <a href={l.url}>{l.label}</a>)}</p>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  ))}
+</Shell>

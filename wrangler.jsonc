@@ -1,0 +1,11 @@
+{
+  // Preview deploy of the media-first redesign. No routes: it serves only at
+  // talmolab-redux.talmo-lab.workers.dev and cannot touch talmolab.org or the
+  // talmolab-site preview of the lab-website repo.
+  "name": "talmolab-redux",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

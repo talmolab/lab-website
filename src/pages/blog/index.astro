@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Shell from '../../layouts/Shell.astro';
+
+// One merged reverse-chronological stream. Drafts never render: the discovery Action
+// opens PRs with draft: true, and a person merges.
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).map((p) => ({
+  kind: 'post', date: p.data.date, title: p.data.title, href: `/blog/${p.id}/`, description: p.data.description,
+}));
+const news = (await getCollection('news', ({ data }) => !data.draft)).map((n) => ({
+  kind: 'news', date: n.data.date, title: n.data.title, href: n.data.url, description: undefined,
+}));
+const stream = [...posts, ...news].sort((a, b) => b.date.getTime() - a.date.getTime());
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+<Shell title="Blog" description="Posts and news from the Talmo Pereira Lab.">
+  <header class="page-head">
+    <h1>Blog</h1>
+    {stream.length === 0 && <p class="lede">Nothing here yet. <a href="/feed.xml">The feed</a> is live, and will carry posts when there are some.</p>}
+  </header>
+  {stream.length > 0 && (
+    <ul class="rows">
+      {stream.map((it) => (
+        <li class="paper">
+          <span class="y mono">{it.kind}</span>
+          {it.href ? <a class="t" href={it.href}>{it.title}</a> : <span class="t">{it.title}</span>}
+          <time class="v mono" datetime={it.date.toISOString()}>{fmt(it.date)}</time>
+        </li>
+      ))}
+    </ul>
+  )}
+</Shell>

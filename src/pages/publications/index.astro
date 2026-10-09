@@ -1,0 +1,79 @@
+---
+import { existsSync } from 'node:fs';
+import { getCollection } from 'astro:content';
+import Shell from '../../layouts/Shell.astro';
+
+const pubs = (await getCollection('publications')).sort((a, b) =>
+  (b.data.date ?? '').localeCompare(a.data.date ?? ''),
+);
+
+const byYear = new Map<string, typeof pubs>();
+for (const p of pubs) {
+  const y = (p.data.date ?? '').slice(0, 4) || 'Undated';
+  byYear.set(y, [...(byYear.get(y) ?? []), p]);
+}
+
+// Thumbnails are figure crops in public/images/papers/, converted to WebP. The overlay
+// names the original file; fall back to no thumbnail rather than a broken image.
+function thumb(image?: string) {
+  if (!image || image.endsWith('.pdf')) return undefined;
+  const rel = `/images/${image.replace(/\.(png|jpe?g)$/i, '.webp')}`;
+  return existsSync(`public${rel}`) ? rel : undefined;
+}
+const fmt = (d?: string) =>
+  d
+    ? new Date(d.length === 4 ? `${d}-01-01T00:00:00Z` : `${d}T00:00:00Z`).toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric',
+        timeZone: 'UTC',
+      })
+    : '';
+
+const index = [...byYear.keys()].map((y) => ({ href: `#y${y}`, label: y }));
+---
+<Shell title="Publications" description="Publications from the Talmo Pereira Lab at the Salk Institute." index={index} indexLabel="Years">
+  <header class="page-head">
+    <h1>Publications</h1>
+    <p class="lede">{pubs.length} papers, preprints and proceedings, newest first. A preprint that has since been published is listed once, under the published version.</p>
+    <p class="links mono">
+      <a href="/publications.bib">BibTeX</a>
+      <a href="/publications.csl.json">CSL JSON</a>
+      <a href="/publications.json">JSON</a>
+    </p>
+  </header>
+
+  {[...byYear.entries()].map(([year, items]) => (
+    <section class="section" id={`y${year}`} aria-labelledby={`y${year}-h`}>
+      <div class="section-head">
+        <h2 id={`y${year}-h`}>{year}</h2>
+        <span class="mono muted">{items.length}</span>
+      </div>
+      <ul class="rows">
+        {items.map(({ data: p }) => {
+          const t = thumb(p.image);
+          const href = p.url ?? (p.doi ? `https://doi.org/${p.doi}` : undefined);
+          return (
+            <li class:list={['pub', { 'no-thumb': !t }]}>
+              {t && <img class="thumb" src={t} alt="" loading="lazy" width="132" height="99" />}
+              <div>
+                {href ? <a class="t" href={href}>{p.title}</a> : <span class="t">{p.title}</span>}
+                <p class="a">{p.authors.join(', ')}</p>
+                <p class="m mono">
+                  {p.venue && <span class="venue">{p.venue}</span>}
+                  {p.date && <time datetime={p.date}>{fmt(p.date)}</time>}
+                  {p.doi && <a href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a>}
+                  {p.preprint?.doi && (
+                    <a href={p.preprint.url ?? `https://doi.org/${p.preprint.doi}`}>
+                      Preprint{p.preprint.venue ? ` (${p.preprint.venue})` : ''}
+                    </a>
+                  )}
+                  {p.links.map((l) => <a href={l.url}>{l.label}</a>)}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  ))}
+</Shell>

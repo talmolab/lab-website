@@ -1,0 +1,99 @@
+---
+import { videoUrl, posterUrl, type Clip } from '../lib/media';
+
+interface Props {
+  clips: Clip[];
+}
+
+const { clips } = Astro.props;
+const n = (i: number) => String(i + 1).padStart(2, '0');
+const first = clips[0];
+---
+{/* The reel: one stage, one clip at a time. It advances by itself after each clip has
+    had at least eight seconds; choosing a clip stops the advance and loops that one. */}
+<div class="stage" data-stage style="display: flex; flex-direction: column; gap: 12px">
+  <div class="hud mono" aria-live="polite">
+    <span data-stage-label>{first.data.tool} · {first.data.title}</span>
+    <span data-stage-count>{n(0)} / {n(clips.length - 1)}</span>
+  </div>
+  <div class="stage-frame">
+    {clips.map((c, i) => (
+      <video
+        src={videoUrl(c)}
+        poster={posterUrl(c)}
+        width={c.data.width}
+        height={c.data.height}
+        muted
+        playsinline
+        preload={i === 0 ? 'auto' : 'none'}
+        data-auto
+        data-tool={c.data.tool}
+        data-title={c.data.title}
+        data-caption={c.data.caption}
+        aria-label={c.data.title}
+        hidden={i !== 0}
+      ></video>
+    ))}
+  </div>
+  <p class="muted" data-stage-note style="max-width: 70ch">{first.data.caption}</p>
+  <ul class="reel" aria-label="Reel">
+    {clips.map((c, i) => (
+      <li>
+        <button type="button" data-pick={i} aria-pressed={i === 0 ? 'true' : 'false'}>
+          <img src={posterUrl(c)} alt="" width="320" height="180" loading="lazy" />
+          <span class="n">{n(i)}</span>
+          <span class="t">{c.data.title}</span>
+        </button>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script>
+  const MIN_DWELL = 8000;
+  for (const stage of document.querySelectorAll<HTMLElement>('[data-stage]')) {
+    const vids = [...stage.querySelectorAll<HTMLVideoElement>('video')];
+    const picks = [...stage.querySelectorAll<HTMLButtonElement>('[data-pick]')];
+    const label = stage.querySelector('[data-stage-label]')!;
+    const count = stage.querySelector('[data-stage-count]')!;
+    const note = stage.querySelector('[data-stage-note]')!;
+    const total = String(vids.length).padStart(2, '0');
+    const sync = (v: HTMLVideoElement) => (window as any).talmolabSync?.(v, true);
+    let cur = 0;
+    let pinned = false;
+    let shownAt = performance.now();
+
+    function show(i: number) {
+      vids.forEach((v, j) => {
+        if (j !== i) { v.pause(); v.hidden = true; }
+      });
+      const v = vids[i];
+      v.hidden = false;
+      v.currentTime = 0;
+      picks.forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+      label.textContent = `${v.dataset.tool} · ${v.dataset.title}`;
+      count.textContent = `${String(i + 1).padStart(2, '0')} / ${total}`;
+      note.textContent = v.dataset.caption ?? '';
+      cur = i;
+      shownAt = performance.now();
+      sync(v);
+    }
+
+    for (const v of vids) {
+      v.addEventListener('ended', () => {
+        if (pinned || performance.now() - shownAt < MIN_DWELL) {
+          v.currentTime = 0;
+          sync(v);
+        } else {
+          show((cur + 1) % vids.length);
+        }
+      });
+    }
+    picks.forEach((b, i) =>
+      b.addEventListener('click', () => {
+        pinned = true;
+        show(i);
+      }),
+    );
+  }
+</script>

@@ -1,0 +1,52 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import Shell from '../../layouts/Shell.astro';
+import { roleHistory, years, isCurrent } from '../../lib/people';
+
+export async function getStaticPaths() {
+  const people = await getCollection('people');
+  // Not everyone in the collection has a page; those without one are still listed on
+  // the team page, as plain text.
+  return people.filter((p) => p.data.page).map((p) => ({ params: { slug: p.id }, props: { person: p } }));
+}
+
+const { person } = Astro.props;
+const { Content } = await render(person);
+const d = person.data;
+const roles = roleHistory(person);
+const coAdvisors = [...new Set(d.appointments.map((a) => a.coAdvisor).filter(Boolean))];
+const l = d.links ?? {};
+const links = [
+  l.email && { label: 'Email', href: `mailto:${l.email}` },
+  l['home-page'] && { label: 'Website', href: l['home-page'] },
+  l.github && { label: 'GitHub', href: `https://github.com/${l.github}` },
+  l.scholar && { label: 'Scholar', href: l.scholar.startsWith('http') ? l.scholar : `https://scholar.google.com/citations?user=${l.scholar}` },
+  l.orcid && { label: 'ORCID', href: l.orcid.startsWith('http') ? l.orcid : `https://orcid.org/${l.orcid}` },
+  l.linkedin && { label: 'LinkedIn', href: l.linkedin.startsWith('http') ? l.linkedin : `https://www.linkedin.com/in/${l.linkedin}` },
+  l.twitter && { label: 'X', href: l.twitter.startsWith('http') ? l.twitter : `https://x.com/${l.twitter}` },
+].filter(Boolean) as { label: string; href: string }[];
+---
+<Shell title={d.name} description={`${d.name}, ${roles.join(', ')} at the Talmo Pereira Lab.`}>
+  <article class="section" style="gap: 40px">
+    <header class="member-head">
+      {d.image ? (
+        <Image src={d.image} alt="" width={400} height={400} class="portrait" />
+      ) : null}
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <p class="mono muted"><a href="/team/">Team</a>{!isCurrent(person) && <> · <a href="/team/#alumni">Alumni</a></>}</p>
+        <h1>{d.name}</h1>
+        <p style="font-weight: 600">{roles.join(', ')}</p>
+        <p class="mono muted">
+          {years(person)}
+          {coAdvisors.length > 0 && <> · co-advised by {coAdvisors.join(' and ')}</>}
+          {!isCurrent(person) && d.next && (
+            <> · now at {d.next.url ? <a href={d.next.url}>{d.next.org}</a> : d.next.org}</>
+          )}
+        </p>
+        {links.length > 0 && <p class="links mono">{links.map((x) => <a href={x.href}>{x.label}</a>)}</p>}
+      </div>
+    </header>
+    <div class="prose"><Content /></div>
+  </article>
+</Shell>

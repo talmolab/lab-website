@@ -1,0 +1,190 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** In-page index shown in the rail on wide screens. */
+  index?: { href: string; label: string }[];
+  indexLabel?: string;
+}
+
+const {
+  title,
+  description = "Talmo Pereira's lab at the Salk Institute for Biological Studies. We build AI to measure and model biological motion.",
+  index = [],
+  indexLabel = 'On this page',
+} = Astro.props;
+
+const fullTitle = title ? `${title} · talmolab` : 'talmolab';
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL('/og-card.png', site).href;
+// Anything that is not the production host is a preview: keep it out of search
+// results so it cannot compete with talmolab.org.
+const isPreview = site.hostname !== 'talmolab.org';
+
+const nav = [
+  { href: '/research/', label: 'Research' },
+  { href: '/publications/', label: 'Publications' },
+  { href: '/tools/', label: 'Tools' },
+  { href: '/team/', label: 'Team' },
+  { href: '/team/#join', label: 'Join us' },
+];
+const path = Astro.url.pathname;
+const current = (href: string) =>
+  !href.includes('#') && (path === href || (href !== '/' && path.startsWith(href)) ||
+    (href === '/team/' && path.startsWith('/members/')));
+---
+<!doctype html>
+<html lang="en" data-motion="on">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {isPreview && <meta name="robots" content="noindex, nofollow" />}
+
+    <Font cssVariable="--font-sans-src" preload />
+    <Font cssVariable="--font-mono-src" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="talmolab" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The talmolab logo: a lowercase t drawn as a neuron beside an l with a pose skeleton." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/talmolab-favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#141319" />
+    <link rel="alternate" type="application/rss+xml" title="talmolab" href="/feed.xml" />
+
+    {/* Before first paint, so a visitor who paused motion never sees it start. */}
+    <script is:inline>
+      (function () {
+        var on;
+        try { on = localStorage.getItem('talmolab:motion'); } catch (e) {}
+        if (on !== 'on' && on !== 'off') on = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'off' : 'on';
+        document.documentElement.dataset.motion = on;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="shell">
+      <aside class="rail">
+        <a class="rail-logo" href="/" aria-label="talmolab, home">
+          {/* Never set the name in type: the lockup is an image. */}
+          <img src="/talmolab-lockup-h-dark.svg" alt="talmolab" width="109" height="36" />
+        </a>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map((n) => (
+              <li><a href={n.href} aria-current={current(n.href) ? 'page' : undefined}>{n.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+        {index.length > 0 && (
+          <nav class="rail-index" aria-label={indexLabel}>
+            <p class="rail-label mono">{indexLabel}</p>
+            <ol>
+              {index.map((it, i) => (
+                <li><a href={it.href}><span class="n">{String(i + 1).padStart(2, '0')}</span><span>{it.label}</span></a></li>
+              ))}
+            </ol>
+          </nav>
+        )}
+        <div class="rail-foot">
+          <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false">Pause motion</button>
+          <p class="salk mono muted">Salk Institute for<br />Biological Studies</p>
+        </div>
+      </aside>
+
+      <main id="main">
+        <slot />
+        <footer class="site-foot mono">
+          <span>Talmo Pereira Lab · Salk Institute for Biological Studies, La Jolla</span>
+          <nav aria-label="Elsewhere">
+            <a href="https://github.com/talmolab">GitHub</a>
+            <a href="/blog/">Blog</a>
+            <a href="/publications.bib">BibTeX</a>
+            <a href="/feed.xml">RSS</a>
+          </nav>
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      // Footage plays only while on screen and while motion is on. Motion is a site-wide
+      // switch (WCAG 2.2.2: looping video needs a pause control), remembered per visitor,
+      // and off by default under prefers-reduced-motion. Clicking a clip plays or pauses
+      // that clip alone, whatever the switch says.
+      const KEY = 'talmolab:motion';
+      const root = document.documentElement;
+      const toggle = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+      const seen = new WeakMap<HTMLVideoElement, boolean>();
+      const isOn = () => root.dataset.motion !== 'off';
+
+      // `inView` lets a caller that just revealed a clip (the reel) skip waiting for the
+      // observer's next callback.
+      function sync(v: HTMLVideoElement, inView = false) {
+        if (inView) seen.set(v, true);
+        const manual = v.dataset.manual;
+        const want = !v.hidden && !!seen.get(v) && (manual ? manual === 'play' : isOn());
+        if (want) {
+          if (v.preload !== 'auto') v.preload = 'auto';
+          v.play().catch(() => {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      }
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            const v = e.target as HTMLVideoElement;
+            seen.set(v, e.isIntersecting);
+            sync(v);
+          }
+        },
+        { rootMargin: '160px 0px' },
+      );
+
+      const videos = [...document.querySelectorAll<HTMLVideoElement>('video[data-auto]')];
+      for (const v of videos) {
+        v.muted = true;
+        io.observe(v);
+        v.addEventListener('click', () => {
+          v.dataset.manual = v.paused ? 'play' : 'pause';
+          sync(v);
+        });
+        v.style.cursor = 'pointer';
+      }
+
+      function paint() {
+        if (!toggle) return;
+        toggle.textContent = isOn() ? 'Pause motion' : 'Play motion';
+        toggle.setAttribute('aria-pressed', String(!isOn()));
+      }
+      toggle?.addEventListener('click', () => {
+        root.dataset.motion = isOn() ? 'off' : 'on';
+        try { localStorage.setItem(KEY, root.dataset.motion); } catch {}
+        for (const v of videos) { delete v.dataset.manual; sync(v); }
+        paint();
+      });
+      paint();
+
+      (window as any).talmolabSync = sync;
+    </script>
+  </body>
+</html>

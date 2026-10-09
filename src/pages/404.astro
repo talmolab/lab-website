@@ -1,0 +1,18 @@
+---
+import Shell from '../layouts/Shell.astro';
+import Clip from '../components/Clip.astro';
+import { clips } from '../lib/media';
+const [wake] = await clips(['fly-wake']);
+---
+<Shell title="Not found">
+  <section class="section">
+    <header class="page-head">
+      <h1>No page at this address</h1>
+      <p class="lede">It may have moved when the site was rebuilt. Try <a href="/research/">Research</a>, <a href="/publications/">Publications</a> or <a href="/team/">Team</a>.</p>
+    </header>
+    <Clip clip={wake} chip="Still tracking" />
+  </section>
+</Shell>
+<style>
+  .section :global(.frame) { aspect-ratio: 1280 / 586; }
+</style>

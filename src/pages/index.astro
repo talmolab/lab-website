@@ -1,0 +1,124 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Shell from '../layouts/Shell.astro';
+import Stage from '../components/Stage.astro';
+import Layers from '../components/Layers.astro';
+import Clip from '../components/Clip.astro';
+import { clips } from '../lib/media';
+import { isCurrent } from '../lib/people';
+import groupPhoto from '../assets/pages/2024-08-06.lab-group2.jpg';
+
+const reel = await clips(['flies-trails', 'homecage-neon', 'cages-zoom', 'mice-3d', 'mimic-montage', 'rice-roots']);
+const [gait, gaitKp] = await clips(['mouse-gait', 'mouse-gait-kp']);
+
+const areas = (await getCollection('areas')).sort((a, b) => a.data.order - b.data.order);
+const areaLeads = await clips(areas.map((a) => a.data.lead));
+
+const tools = (await getCollection('repos'))
+  .filter((r) => r.data.media && r.data.group !== 'archived')
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 6);
+const toolClips = await clips(tools.map((t) => t.data.media!));
+
+const papers = (await getCollection('publications'))
+  .sort((a, b) => (b.data.date ?? '').localeCompare(a.data.date ?? ''))
+  .slice(0, 5);
+
+const members = (await getCollection('people')).filter(isCurrent).length;
+
+const index = [
+  { href: '#reel', label: 'Reel' },
+  { href: '#model', label: 'What the model sees' },
+  { href: '#research', label: 'Research' },
+  { href: '#tools', label: 'Tools' },
+  { href: '#papers', label: 'Recent papers' },
+  { href: '#lab', label: 'The lab' },
+];
+---
+<Shell index={index}>
+  <section id="reel" class="section" aria-labelledby="tagline">
+    <div class="page-head">
+      <h1 id="tagline" style="max-width: 22ch">We build AI to measure and model biological motion</h1>
+      <p class="lede">
+        The Talmo Pereira Lab at the <a href="https://salk.edu">Salk Institute</a> writes open
+        software that turns video into measurements of behavior, and builds physics models
+        that reproduce it.
+      </p>
+    </div>
+    <Stage clips={reel} />
+  </section>
+
+  <section id="model" class="section" aria-labelledby="model-h">
+    <Layers raw={gait} kp={gaitKp}>
+      <h2 id="model-h">What the model sees</h2>
+      <p class="muted">
+        Twelve seconds of mouse locomotion. Switch between the camera and the keypoints
+        SLEAP extracts from it.
+      </p>
+    </Layers>
+  </section>
+
+  <section id="research" class="section" aria-labelledby="research-h">
+    <div class="section-head">
+      <h2 id="research-h">Research</h2>
+      <a class="more" href="/research/">All research</a>
+    </div>
+    <div class="cards">
+      {areas.map((a, i) => (
+        <a class="card" href={`/research/#${a.id}`}>
+          <Clip clip={areaLeads[i]} />
+          <h3>{a.data.name}</h3>
+          <p>{a.data.summary}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section id="tools" class="section" aria-labelledby="tools-h">
+    <div class="section-head">
+      <h2 id="tools-h">Tools</h2>
+      <a class="more" href="/tools/">All tools</a>
+    </div>
+    <div class="cards">
+      {tools.map(({ data: r }, i) => (
+        <article class="card">
+          <Clip clip={toolClips[i]} />
+          <h3 class="repo-name">{r.name}</h3>
+          <p>{(r.blurb ?? r.description ?? '').split(/(?<=\.)\s/)[0]}</p>
+          <p class="links mono">
+            <a href={`https://github.com/${r.repo}`}>GitHub</a>
+            {r.links.map((l) => <a href={l.url}>{l.label}</a>)}
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section id="papers" class="section" aria-labelledby="papers-h">
+    <div class="section-head">
+      <h2 id="papers-h">Recent papers</h2>
+      <a class="more" href="/publications/">All publications</a>
+    </div>
+    <ul class="rows">
+      {papers.map(({ data: p }) => (
+        <li class="paper">
+          <span class="y mono">{(p.date ?? '').slice(0, 4)}</span>
+          <a class="t" href={p.url ?? (p.doi ? `https://doi.org/${p.doi}` : '/publications/')}>{p.title}</a>
+          <span class="v mono">{p.venue}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section id="lab" class="section" aria-labelledby="lab-h">
+    <div class="section-head">
+      <h2 id="lab-h">The lab</h2>
+      <span class="links mono"><a href="/team/">Team</a><a href="/team/#join">Join us</a></span>
+    </div>
+    <figure class="photo">
+      <a href="/team/"><Image src={groupPhoto} alt="The Talmo Pereira Lab, outdoors at the Salk Institute" width={1600} /></a>
+      <figcaption>{members} people in the lab today. Photo ca. 2024, credit Chris Keeney.</figcaption>
+    </figure>
+  </section>
+</Shell>

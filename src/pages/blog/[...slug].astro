@@ -1,0 +1,20 @@
+---
+import { getCollection, render } from 'astro:content';
+import Shell from '../../layouts/Shell.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((p) => ({ params: { slug: p.id }, props: { post: p } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<Shell title={post.data.title} description={post.data.description}>
+  <article class="section" style="gap: 28px">
+    <header class="page-head">
+      <p class="mono muted"><a href="/blog/">Blog</a> · {post.data.date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</p>
+      <h1>{post.data.title}</h1>
+    </header>
+    <div class="prose"><Content /></div>
+  </article>
+</Shell>
