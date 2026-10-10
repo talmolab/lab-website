@@ -9,6 +9,18 @@ allowed-tools: Read, Write, Edit, Bash, WebSearch, AskUserQuestion, Glob
 
 This skill guides you through adding a new lab member to the website with proper formatting, bio writing, and image handling.
 
+## Two routes in
+
+- **Members can do it themselves**: the "Lab member update" issue form
+  (`.github/ISSUE_TEMPLATE/member.yml`) covers joining, updating an entry, a role change
+  and leaving. `.github/workflows/member.yaml` runs `scripts/member-from-issue.mjs` on the
+  issue, validates with `astro check`, and opens a PR (`member/issue-<n>`). Editing the
+  issue updates the PR. Point people there first; it needs no local checkout.
+- **This skill** is for maintainers working locally: research, bio drafting, bulk edits,
+  and cleaning up a PR the form produced (a portrait that did not download, a bio that
+  needs work). Test the converter without writing anything:
+  `node scripts/member-from-issue.mjs --body-file issue.md --dry-run`.
+
 ## When to Use This Skill
 
 Use this skill when:
@@ -368,15 +380,18 @@ When student moves from undergrad → MS → PhD:
 This is what makes the alumni table able to say `2021–2024` with
 `Undergraduate Research Intern, Master's Student`, and to tell that apart from a
 repeat intern who did two separate summers (`2023, 2024`). A run is treated as
-contiguous when an appointment has no `end` or the next has no `start`, so if you
-genuinely do not know the handover date, leave both blank rather than inventing one.
+contiguous when the next appointment starts the month the previous one ends (or the
+month after), or when either boundary is missing. So close the old appointment with
+`end` equal to the new `start`, as above. If you genuinely do not know the handover
+date, leave both blank rather than inventing one.
 
 ### Summer Interns
 
 Short-term members (2-3 months):
 
-1. **While active**: Add with role `undergrad` or `highschool`
-2. **When leaving**: Change to `role: alumni`
+1. **While active**: Add with role `undergrad-summer-intern` or `highschool-summer-intern`
+2. **When leaving**: Set `end` on the appointment. Never change the role: there is no
+   `alumni` role, and alumni status is derived from `end` alone
 3. **Bio**: Can be brief (50-80 words) but highlight:
    - Institution and program
    - What they worked on
@@ -408,7 +423,7 @@ Short-term members (2-3 months):
 Before finalizing, verify:
 
 - [ ] Full name matches across filename, frontmatter, and bio
-- [ ] Role is valid (one of: pi, postdoc, staff, phd, ms, ra, programmer, undergrad, highschool, alumni)
+- [ ] Role is one of `ROLE_ORDER` in `src/content.config.ts` (there is no `alumni` role)
 - [ ] Image filename follows convention (kebab-case, .jpg)
 - [ ] Bio is third person throughout
 - [ ] Bio length appropriate for role (see guidelines)

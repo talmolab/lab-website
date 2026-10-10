@@ -1,0 +1,140 @@
+name: Lab member update
+description: Join the team page, update your entry, record a new role, or record leaving the lab.
+title: "Team: "
+labels: [member]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submitting this opens a pull request against the website automatically. **Nothing is
+        published until a maintainer reviews and merges it.** Fill in only what applies and leave
+        the rest blank. To fix a mistake, edit this issue: the pull request updates itself.
+  - type: dropdown
+    id: change
+    attributes:
+      label: Change
+      options:
+        - Joining the lab
+        - Updating my entry
+        - Changing role
+        - Leaving the lab
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Full name
+      description: As it should appear on the site.
+    validations:
+      required: true
+  - type: input
+    id: slug
+    attributes:
+      label: Existing page
+      description: For updates only, and only if your name has changed. The end of your page address, e.g. `talmo-pereira` in /members/talmo-pereira.
+  - type: dropdown
+    id: role
+    attributes:
+      label: Role
+      description: For joining or changing role. The category used to sort the team page.
+      options:
+          - (no change)
+          - Principal Investigator (pi)
+          - Staff Scientist (staff-scientist)
+          - Postdoctoral Researcher (postdoc)
+          - Scientific Programmer (scientific-programmer)
+          - Software Engineer (software-engineer)
+          - Bioinformatics Analyst (bioinformatics-analyst)
+          - PhD Student (phd-student)
+          - PhD Rotation Student (phd-rotation)
+          - Master's Student (ms-student)
+          - Research Assistant (research-assistant)
+          - Undergraduate Research Intern (undergrad-intern)
+          - Undergraduate Summer Research Intern (undergrad-summer-intern)
+          - High School Research Intern (highschool-intern)
+          - High School Summer Research Intern (highschool-summer-intern)
+          - Friend of the Lab (friend)
+  - type: input
+    id: title
+    attributes:
+      label: Title on the site
+      description: Only if it differs from the role name, e.g. "Postdoctoral Fellow".
+  - type: input
+    id: start
+    attributes:
+      label: Start (YYYY-MM)
+      description: When you joined, or when the new role starts.
+      placeholder: "2026-10"
+  - type: input
+    id: end
+    attributes:
+      label: End (YYYY-MM)
+      description: Leaving only. Your last month in the lab.
+  - type: input
+    id: coadvisor
+    attributes:
+      label: Co-advisor
+      description: If you are jointly supervised.
+  - type: input
+    id: next_org
+    attributes:
+      label: Where next
+      description: Leaving only. Where you are going, e.g. "MIT".
+  - type: input
+    id: next_what
+    attributes:
+      label: Doing what
+      description: Leaving only, e.g. "PhD in Brain and Cognitive Sciences".
+  - type: input
+    id: next_url
+    attributes:
+      label: Link for where next
+  - type: input
+    id: email
+    attributes:
+      label: Email
+  - type: input
+    id: github
+    attributes:
+      label: GitHub username
+  - type: input
+    id: linkedin
+    attributes:
+      label: LinkedIn
+      description: Username or full profile URL.
+  - type: input
+    id: twitter
+    attributes:
+      label: X / Twitter
+      description: Handle, without the @.
+  - type: input
+    id: website
+    attributes:
+      label: Website
+  - type: input
+    id: orcid
+    attributes:
+      label: ORCID
+      placeholder: "0000-0000-0000-0000"
+  - type: input
+    id: scholar
+    attributes:
+      label: Google Scholar
+      description: Full profile URL.
+  - type: textarea
+    id: bio
+    attributes:
+      label: Bio
+      description: A few sentences in the third person. Markdown links are fine. If given, this replaces your current bio.
+  - type: textarea
+    id: photo
+    attributes:
+      label: Portrait
+      description: Drag a photo in here. It is cropped to a square around your face, so leave some room around it.
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I agree to my name, photo and bio appearing on the public lab website.
+          required: true

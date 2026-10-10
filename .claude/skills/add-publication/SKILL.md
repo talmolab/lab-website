@@ -41,6 +41,16 @@ bug.
 Optional fields: `image` (relative to `public/images/`, or an absolute URL),
 `tags`, `highlight: true`, and `links: [{ label, url }]`.
 
+### Thumbnail
+
+```bash
+node scripts/paper-thumb.mjs <key> path/to/figure.png   # -> public/images/papers/<key>.webp
+```
+
+then `image: "papers/<key>.webp"`. Crop to the panel first: the page shows thumbnails at
+4:3 with `object-fit: cover`. Entries that name an old `.png` resolve to its `.webp`
+conversion; a file that does not exist simply shows no thumbnail.
+
 ## Resolving a preprint to its published version
 
 This is the case the whole model exists for. Two Nature-family papers were
@@ -131,11 +141,21 @@ node scripts/discover-publications.mjs              # report only
 node scripts/discover-publications.mjs --write      # stage changes too
 ```
 
-Runs weekly via `.github/workflows/discover.yaml`, which opens a PR. It never
-commits to `main` and never publishes (decision 3b). Buckets its findings into
-journal articles (staged), preprints (your call — listing a preprint is editorial),
-records with no DOI (need a `manual:` block), and everything it filtered out as not
-a publication (listed, so the filter stays auditable).
+Runs weekly via `.github/workflows/discover.yaml` (Mondays 07:00 UTC, or by hand from
+the Actions tab). It never commits to `main` and never publishes (decision 3b). It
+buckets its findings into journal articles (staged), preprints of papers already listed
+(staged: attached as that entry's `preprint:` when Crossref `is-preprint-of` links them),
+other preprints (your call; listing a preprint is editorial), records with no DOI (need
+a `manual:` block), and everything it filtered out as not a publication (listed, so the
+filter stays auditable).
+
+What it produces:
+
+- **A PR** (`discover/<date>`) when anything is staged, validated with `astro check`
+  first. Review each stanza, add a thumbnail if wanted, merge.
+- **The "Discovery report" issue** (label `discovery`), edited in place every week with
+  the full report, including the items that need a human decision and so are never
+  staged. Work through it, then leave it open for next week.
 
 ## After editing
 

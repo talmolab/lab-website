@@ -43,6 +43,7 @@ const NOT_A_PUBLICATION = [
   { test: (w) => /^NAPPN Annual Conference Abstract/i.test(w.title ?? ''), why: 'conference abstract' },
 ];
 
+const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const norm = (d) => (d ?? '').replace(/^https?:\/\/doi\.org\//, '').toLowerCase();
 const titleKey = (t) => (t ?? '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
@@ -133,6 +134,17 @@ for (const e of overlay) {
   const found = await publishedVersionOf(pre.doi);
   if (found) upgrades.push({ key: e.key, preprint: pre.doi, published: found });
 }
+// Unlisted preprints whose published version IS listed: attach them to that entry,
+// so the paper shows once with its preprint linked. Same forward-only Crossref rule.
+const attach = [];
+for (const w of [...buckets.preprints]) {
+  const pub = await publishedVersionOf(norm(w.doi));
+  if (!pub || !known.has(pub)) continue;
+  const e = overlay.find((x) => x.dois.some((d) => d.role === 'published' && d.doi === pub));
+  if (!e || e.dois.some((d) => d.role === 'preprint') || attach.some((a) => a.key === e.key)) continue;
+  attach.push({ key: e.key, preprint: norm(w.doi), published: pub, title: w.title });
+  buckets.preprints.splice(buckets.preprints.indexOf(w), 1);
+}
 // Entries tracked only as a preprint, with no Crossref relation: worth naming, so
 // the manual-association case (§6.1) stays visible instead of silently pending.
 const preprintOnly = overlay.filter(
@@ -167,6 +179,16 @@ if (upgrades.length) {
   add('Crossref `is-preprint-of` resolved these. The overlay entries are updated in place.');
   add();
   for (const u of upgrades) add(`- \`${u.key}\`: ${u.preprint} → **${u.published}**`);
+  add();
+}
+
+if (attach.length) {
+  add(`### ${attach.length} preprint(s) of papers already listed`);
+  add();
+  add('Crossref `is-preprint-of` links these to a published DOI in the overlay. Each is');
+  add('attached to that entry as its `preprint:`, so the paper still shows once.');
+  add();
+  for (const a of attach) add(`- \`${a.key}\` ← ${a.preprint} (${a.title})`);
   add();
 }
 
@@ -221,7 +243,7 @@ if (buckets.excluded.length) {
 }
 
 const nothing =
-  !buckets.articles.length && !upgrades.length && !buckets.preprints.length && !buckets.noDoi.length;
+  !buckets.articles.length && !upgrades.length && !attach.length && !buckets.preprints.length && !buckets.noDoi.length;
 if (nothing) add('Nothing new. No action needed.');
 
 const report = L.join('\n');
@@ -229,15 +251,19 @@ if (REPORT) writeFileSync(REPORT, report);
 console.log(report);
 
 // --- staged edits ------------------------------------------------------------
-if (WRITE && (buckets.articles.length || upgrades.length)) {
+if (WRITE && (buckets.articles.length || upgrades.length || attach.length)) {
   let out = overlayText;
   for (const u of upgrades) {
     // Turn `preprint: {...}` into a preprint + published pair for that key.
-    const re = new RegExp(`(- key: ${u.key}\\n(?:  #[^\\n]*\\n)*)(  preprint: \\{ doi: "${u.preprint}" \\}\\n)`);
+    const re = new RegExp(`(- key: ${esc(u.key)}\\n(?:  #[^\\n]*\\n)*)(  preprint: \\{ doi: "${esc(u.preprint)}" \\}\\n)`);
     out = out.replace(
       re,
       `$1$2  published: { doi: "${u.published}" }   # added by discovery, via Crossref is-preprint-of\n`,
     );
+  }
+  for (const a of attach) {
+    const re = new RegExp(`(- key: ${esc(a.key)}\\n(?:  #[^\\n]*\\n)*)(  published: \\{ doi: "${esc(a.published)}" \\}[^\\n]*\\n)`, 'i');
+    out = out.replace(re, `$1  preprint: { doi: "${a.preprint}" }   # added by discovery, via Crossref is-preprint-of\n$2`);
   }
   if (buckets.articles.length) {
     // Keys are permanent, so a collision must not silently produce two entries
@@ -262,7 +288,7 @@ if (WRITE && (buckets.articles.length || upgrades.length)) {
     out = out.replace(/\n(- key: )/, `${stanzas.join('\n')}\n\n$1`);
   }
   writeFileSync(OVERLAY, out);
-  console.log(`\nstaged ${buckets.articles.length} addition(s) and ${upgrades.length} upgrade(s) in ${OVERLAY}`);
+  console.log(`\nstaged ${buckets.articles.length} addition(s), ${upgrades.length} upgrade(s), ${attach.length} attached preprint(s) in ${OVERLAY}`);
 }
 
 // Exit code communicates "is there anything to PR", not success/failure.

@@ -8,6 +8,10 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+  schedule:
+    # Weekly rebuild after discovery, so citation counts and paper metadata from
+    # OpenAlex and repo details from GitHub stay current without a commit.
+    - cron: "0 9 * * 1"
 
 permissions:
   contents: read

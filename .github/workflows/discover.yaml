@@ -1,0 +1,131 @@
+name: Discover
+
+# Weekly: finds new publications (OpenAlex), preprints that have since been published or
+# that belong to papers already listed (Crossref is-preprint-of, forward only), and new
+# tool releases (GitHub). It NEVER commits to main and never publishes. It opens one PR
+# with the staged changes and a report; a person reviews and merges. News items carry
+# draft: true, so even merging does not put them on the site.
+on:
+  schedule:
+    # Mondays, 07:00 UTC. Weekly is enough: journal records take days to appear.
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+    inputs:
+      since:
+        description: "Only consider releases on or after this date (YYYY-MM-DD)"
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  # A run in progress should finish rather than be replaced mid-PR.
+  group: discover
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Discover publications
+        env:
+          # Optional: filter and singleton calls answer unauthenticated; a key raises
+          # the daily budget.
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+        run: node scripts/discover-publications.mjs --write --report "$RUNNER_TEMP/pubs.md"
+
+      - name: Discover news
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SINCE: ${{ inputs.since }}
+        run: |
+          # Passed through the environment, never interpolated into the script.
+          args=(--write --report "$RUNNER_TEMP/news.md")
+          if [[ -n "$SINCE" ]]; then
+            [[ "$SINCE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { echo "since must be YYYY-MM-DD"; exit 1; }
+            args+=(--since "$SINCE")
+          fi
+          node scripts/discover-news.mjs "${args[@]}"
+
+      - name: Validate staged changes
+        # The content schemas are the only guardrail on content, so a PR that would
+        # break the build is not opened. Fetches metadata for any new DOI, too.
+        if: ${{ always() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then npx astro check; else echo "nothing staged"; fi
+
+      - name: Open or update the PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "No changes staged; nothing to open."
+            exit 0
+          fi
+          {
+            echo "Opened automatically by \`.github/workflows/discover.yaml\`."
+            echo
+            echo "**Nothing here is published by merging alone.** Publication additions are staged"
+            echo "in the overlay for review, and news items carry \`draft: true\`."
+            echo
+            echo "Before merging: check each staged paper belongs on the site, and add a thumbnail"
+            echo "with \`node scripts/paper-thumb.mjs <key> <figure.png>\` if it should have one."
+            echo
+            cat "$RUNNER_TEMP/pubs.md"
+            echo
+            cat "$RUNNER_TEMP/news.md" 2>/dev/null || true
+          } > "$RUNNER_TEMP/body.md"
+          BRANCH="discover/$(date -u +%Y-%m-%d)"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "Discovered publications and draft news items"
+          git push --force origin "$BRANCH"
+          # Reuse the day's PR on a re-run rather than stacking duplicates.
+          if gh pr view "$BRANCH" >/dev/null 2>&1; then
+            gh pr edit "$BRANCH" --body-file "$RUNNER_TEMP/body.md"
+          else
+            gh pr create --base main --head "$BRANCH" \
+              --title "Discovered publications and draft news ($(date -u +%Y-%m-%d))" \
+              --body-file "$RUNNER_TEMP/body.md"
+          fi
+
+      - name: Keep the standing report up to date
+        # Items that need a decision (unlisted preprints, records with no DOI) are never
+        # staged, so they would never reach a PR. One open issue labelled `discovery`
+        # holds the latest report; editing it does not notify anyone.
+        if: ${{ always() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo "Latest weekly report from \`.github/workflows/discover.yaml\`, $(date -u +%Y-%m-%d)."
+            echo "Edited in place each run. Close it to stop; the next run opens a fresh one."
+            echo
+            cat "$RUNNER_TEMP/pubs.md" 2>/dev/null || echo "_Publication discovery did not produce a report._"
+            echo
+            cat "$RUNNER_TEMP/news.md" 2>/dev/null || true
+          } > "$RUNNER_TEMP/report.md"
+          cat "$RUNNER_TEMP/report.md" >> "$GITHUB_STEP_SUMMARY"
+          gh label create discovery --color 8c6bd6 --description "Weekly discovery report" 2>/dev/null || true
+          num=$(gh issue list --label discovery --state open --json number --jq '.[0].number // empty')
+          if [[ -n "$num" ]]; then
+            gh issue edit "$num" --body-file "$RUNNER_TEMP/report.md"
+          else
+            gh issue create --title "Discovery report" --label discovery --body-file "$RUNNER_TEMP/report.md"
+          fi

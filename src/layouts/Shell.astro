@@ -19,7 +19,12 @@ const {
 
 const fullTitle = title ? `${title} · talmolab` : 'talmolab';
 const site = Astro.site!;
-const canonical = new URL(Astro.url.pathname, site).href;
+// Member pages are flat files served without a trailing slash (build.format: 'preserve');
+// everything else is a directory route served with one.
+const canonicalPath = Astro.url.pathname.startsWith('/members/')
+  ? Astro.url.pathname.replace(/\/$/, '')
+  : Astro.url.pathname;
+const canonical = new URL(canonicalPath, site).href;
 const ogImage = new URL('/og-card.png', site).href;
 // Anything that is not the production host is a preview: keep it out of search
 // results so it cannot compete with talmolab.org.

@@ -109,7 +109,7 @@
 
 - key: pereira-2022
   published: { doi: "10.1038/s41592-022-01426-1" }
-  image: "sleap_movie.gif"
+  image: "papers/pereira-2022.webp"
 
 - key: gall-2022
   published: { doi: "10.1186/s13007-022-00851-9" }

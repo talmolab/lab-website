@@ -40,7 +40,7 @@ export function roleHistory(p: Person): string[] {
  *  how a role handover with an unrecorded boundary is encoded. Two appointments
  *  that are both fully bounded are genuinely separate stints. */
 export function years(p: Person): string {
-  type Run = { start?: string; end?: string; open: boolean };
+  type Run = { start?: string; end?: string; endRaw?: string; open: boolean };
   const runs: Run[] = [];
 
   for (const a of p.data.appointments) {
@@ -48,13 +48,18 @@ export function years(p: Person): string {
     const e = a.end && a.end !== 'unknown' ? a.end.slice(0, 4) : undefined;
     const open = a.end === 'unknown';
     const prev = runs[runs.length - 1];
-    const contiguous = prev && (prev.end === undefined || a.start === undefined);
+    // A role change is recorded as one appointment ending the month the next one
+    // starts (Aaditya Prasad: intern to 2022-11, MS student from 2022-11). That is a
+    // handover, not a gap, so it continues the run; so does an unrecorded boundary.
+    const contiguous =
+      prev && (prev.endRaw === undefined || a.start === undefined || handover(prev.endRaw, a.start));
     if (contiguous) {
       if (e) prev.end = e;
+      prev.endRaw = a.end && a.end !== 'unknown' ? a.end : undefined;
       if (open) prev.open = true;
       if (!prev.start && s) prev.start = s;
     } else {
-      runs.push({ start: s, end: e, open });
+      runs.push({ start: s, end: e, endRaw: a.end && a.end !== 'unknown' ? a.end : undefined, open });
     }
   }
 
@@ -66,6 +71,15 @@ export function years(p: Person): string {
   const seen = new Set<string>();
   const uniq = parts.filter((x): x is string => !!x && !seen.has(x) && !!seen.add(x));
   return uniq.length ? uniq.join(', ') : '—';
+}
+
+/** True when `start` follows `end` with no gap: the same month or the next one. Year-only
+ *  values compare on the year, since the month was never recorded. */
+function handover(end: string, start: string): boolean {
+  if (end.length === 4 || start.length === 4) return start.slice(0, 4) === end.slice(0, 4);
+  const [ey, em] = end.split('-').map(Number);
+  const next = em === 12 ? `${ey + 1}-01` : `${ey}-${String(em + 1).padStart(2, '0')}`;
+  return start <= next;
 }
 
 /** Sort key for alumni: most recent departure first, then name. */

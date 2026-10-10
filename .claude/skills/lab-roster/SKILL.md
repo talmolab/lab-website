@@ -98,8 +98,8 @@ Remove markdown links and extract just the name.
 - "received [degree] from..."
 - Education background
 
-**Next positions** - look in `team/index.md` alumni section:
-- Format: `**Next:** [position]`
+**Next positions** - the `next:` block in the person's front matter (`org`, `what`, `url`).
+The script reads it directly.
 
 ## Validation Checklist
 
@@ -156,7 +156,7 @@ If subagents miss information:
 
 ## See Also
 
-- [reference.md](reference.md) - Detailed documentation on member formats and inference patterns
+- [../add-member/reference.md](../add-member/reference.md) - The member file format and the appointment rules
 - [examples.md](examples.md) - Example usage scenarios
 - [templates/roster-entry.md](templates/roster-entry.md) - Entry format template
 - `src/content.config.ts` - the `people` schema, which is the authority on fields

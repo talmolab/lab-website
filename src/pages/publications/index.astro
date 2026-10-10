@@ -13,12 +13,14 @@ for (const p of pubs) {
   byYear.set(y, [...(byYear.get(y) ?? []), p]);
 }
 
-// Thumbnails are figure crops in public/images/papers/, converted to WebP. The overlay
-// names the original file; fall back to no thumbnail rather than a broken image.
+// Thumbnails live in public/images/papers/ (scripts/paper-thumb.mjs makes them). The
+// overlay names a file; older entries name the original PNG, which was converted to
+// WebP, so try that first. No file, no thumbnail, never a broken image.
 function thumb(image?: string) {
   if (!image || image.endsWith('.pdf')) return undefined;
-  const rel = `/images/${image.replace(/\.(png|jpe?g)$/i, '.webp')}`;
-  return existsSync(`public${rel}`) ? rel : undefined;
+  if (/^https?:\/\//.test(image)) return image;
+  const candidates = [`/images/${image.replace(/\.(png|jpe?g)$/i, '.webp')}`, `/images/${image}`];
+  return candidates.find((rel) => existsSync(`public${rel}`));
 }
 const fmt = (d?: string) =>
   d

@@ -24,6 +24,19 @@ Set `GITHUB_TOKEN` (e.g. `export GITHUB_TOKEN=$(gh auth token)`) before building
 page enriches `src/data/repos.yaml` from the GitHub API, and unauthenticated calls run out
 quickly. Publications come from OpenAlex and need no key.
 
+## Keeping it current
+
+- **Lab members** open a [Lab member update](../../issues/new?template=member.yml) issue to
+  join the team page, update their entry, record a new role or record leaving. A workflow
+  turns it into a pull request; a maintainer reviews and merges.
+- **Publications** are discovered weekly from OpenAlex and Crossref. New papers and
+  preprint links arrive as a pull request; anything that needs a decision is listed in
+  the standing "Discovery report" issue.
+- **Deploys** happen on every merge to `main`, and weekly to refresh citation counts,
+  once the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repository secrets are set.
+
+`CLAUDE.md` has the details.
+
 ## What came from where
 
 Content, schemas and loaders are carried over from `lab-website` (branch `astro-migration`),
