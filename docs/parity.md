@@ -131,3 +131,32 @@ returns 200, or a redirect that ends in 200.
 | Portraits | Team, member pages |
 | `banner.jpg`, `background.jpg` | not used: old header/footer art, 141 px and 101 px strips |
 | `logo*.svg`, `placeholder.svg` | not used: the v003 lockup replaces the logo |
+
+## Verification (2026-11-04)
+
+- `./scripts/check-urls.sh https://talmolab-next.talmo-lab.workers.dev`: **72 passed, 0 failed**
+  (every path in `test/live-urls.txt`, the sitemap's 69 plus three external ones).
+- Also served on the preview: `/feed.xml`, `/publications.bib` (text), `/publications.csl.json`,
+  `/publications.json`, `/search.json`, `/sitemap-index.xml`, `/robots.txt` (Disallow: / off
+  production), favicons, manifest, `/og-card.png` (absolute `og:image`), a real 404 status.
+- `npm run build` (`astro check && astro build`): 0 errors, 0 warnings, 0 hints.
+- Every page type reviewed in the built-in browser at 1440×900 and 375×812, light and dark;
+  no horizontal overflow at 375, 768, 900, 1024, 1280 or 1440. axe-core (WCAG 2.1 AA plus
+  best practice): no violations on any page type in either theme.
+- Search: `/publications/?search="Talmo Pereira"` shows 29 of 31 (the live phrase search
+  missed every "Talmo D. Pereira"); `?search=Benna` opens the collapsed author list that
+  holds the match; the site search finds people, papers, tools, areas and pages.
+
+## Deliberate differences from the live site
+
+| Live | New | Why |
+|---|---|---|
+| `/members/<slug>.html` is the page | `/members/<slug>` is the page; `.html` 301s to it | Workers serves `build.format: 'preserve'` files without the extension; a 301 moves the index (as decided for the Astro migration) |
+| `/join/` and `/contact/` both pages | `/join/` a page; `/contact/` 301 → `/team/#join` | `/contact/` is template filler |
+| Example posts, `/CLAUDE.html` | 301 | template filler / internal notes |
+| `/tools/` lorem ipsum | real list from `repos.yaml` | parity of intent |
+| 28 publications | 31 | the discovery workflow added three since the live site was last edited |
+| "mills-2022" shown as bioRxiv 2022 | still bioRxiv 2022 | OpenAlex merges it with a 2026 Neuron paper with a different title; Crossref has no `is-preprint-of` link, so the overlay rule says do not associate (see the PR's open questions) |
+| Footer "Google Scholar" goes to an error page (`user=Talmo Pereira`) | author search that lands on the profile | the live link is broken; a profile id would be better |
+| Yipeng Li's portrait is a broken image | initials tile | no portrait exists in the old site's media |
+| Live footer art (`banner.jpg`, `background.jpg`) | not used | the old header/footer strips belong to the old design |
