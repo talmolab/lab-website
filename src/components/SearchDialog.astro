@@ -71,9 +71,11 @@
       ? `${hits.length} result${hits.length === 1 ? '' : 's'}`
       : `Nothing matches “${q}”.`;
 
+    // Groups appear in the order of their best hit, so "sleap" leads with the tool and
+    // "pereira" with the person, not with whichever type happens to come first.
     const groups = new Map<string, Doc[]>();
     for (const { d } of hits.slice(0, 40)) groups.set(d.type, [...(groups.get(d.type) ?? []), d]);
-    out.innerHTML = ORDER.filter((t) => groups.has(t))
+    out.innerHTML = [...groups.keys()]
       .map(
         (t) => `<section class="search-group"><h2 class="search-type mono">${PLURAL[t]}</h2><ul>${groups
           .get(t)!
@@ -108,6 +110,12 @@
     if (first) location.href = first.href;
   });
   dlg.addEventListener('keydown', (e) => {
+    // A search field swallows the first Escape (it clears itself); close regardless.
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      dlg.close();
+      return;
+    }
     const ls = links();
     const i = ls.indexOf(document.activeElement as HTMLAnchorElement);
     if (e.key === 'ArrowDown' && ls.length) {

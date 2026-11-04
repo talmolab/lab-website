@@ -119,8 +119,12 @@ const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(n
     }
   }
 
+  const details = [...document.querySelectorAll<HTMLDetailsElement>('.all-authors')];
+
   function run(q: string, push = true) {
     for (const [t, html] of original) t.innerHTML = html;
+    // Close the author lists this filter opened (not the ones a reader opened).
+    for (const d of details) if (d.dataset.auto) { d.open = false; delete d.dataset.auto; }
     const { terms, phrases, tags } = parse(q);
     const active = terms.length + phrases.length + tags.length > 0;
     let shown = 0;
@@ -141,6 +145,12 @@ const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(n
       c.textContent = active ? `${visible} of ${total}` : `${total} ${total === 1 ? 'entry' : 'entries'}`;
     }
     if (active) highlight([...terms, ...phrases]);
+    // A match among the authors a long list hides: open that list so the match shows.
+    for (const d of details)
+      if (!d.open && d.querySelector('mark') && !d.previousElementSibling?.querySelector('mark')) {
+        d.open = true;
+        d.dataset.auto = '1';
+      }
     status.textContent = active ? `Showing ${shown} of ${rows.length}` : '';
     empty.hidden = shown > 0;
     for (const c of clears) if (c.closest('[data-filter]')) c.hidden = !q;

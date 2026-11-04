@@ -3,7 +3,7 @@
 // Research and member pages. Lab members are set in bold in the author list, matched
 // on first and last name (src/lib/names.ts).
 import type { CollectionEntry } from 'astro:content';
-import { thumb, href, fmtDate, isPreprintVenue } from '../lib/pubs';
+import { thumbInfo, href, fmtDate, isPreprintVenue } from '../lib/pubs';
 import { nameKey } from '../lib/names';
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
 
 const { pub, lab, compact = false, filterable = false, level = 'h3' } = Astro.props;
 const p = pub.data;
-const t = compact ? undefined : thumb(p.image);
+const t = compact ? undefined : await thumbInfo(p.image);
 const link = href(p);
 const pdf = p.url?.endsWith('.pdf') ? p.url : undefined;
 const H = level;
@@ -27,11 +27,13 @@ const H = level;
 // "Talmo D. Pereira" (the Greene search matched raw text only).
 const names = p.authors.map(nameKey).join(' | ');
 
-// Compact rows shorten long author lists to the first three, every lab member and the
-// last author, with an ellipsis for each gap. The full list is on Publications.
+// Long author lists are shortened to the first three, every lab member and the last
+// author, with an ellipsis for each gap (the live site truncated them too). Compact
+// rows link to Publications for the rest; full rows can expand in place.
 type Bit = { name: string } | { gap: true };
+const limit = compact ? 8 : 12;
 function shown(authors: string[]): Bit[] {
-  if (!compact || authors.length <= 8) return authors.map((name) => ({ name }));
+  if (authors.length <= limit) return authors.map((name) => ({ name }));
   const keep = new Set([0, 1, 2, authors.length - 1]);
   authors.forEach((a, i) => lab.has(nameKey(a)) && keep.add(i));
   const out: Bit[] = [];
@@ -55,7 +57,9 @@ const shortened = bits.length < p.authors.length;
 >
   {!compact && (
     t ? (
-      <div class="pub-thumb"><img src={t} alt="" loading="lazy" decoding="async" /></div>
+      <div class:list={['pub-thumb', { box: !t.width }]}>
+        <img src={t.src} alt="" width={t.width} height={t.height} loading="lazy" decoding="async" />
+      </div>
     ) : (
       <div class="pub-thumb none" aria-hidden="true">{p.venue ?? ''}</div>
     )
@@ -69,8 +73,18 @@ const shortened = bits.length < p.authors.length;
           {i < bits.length - 1 ? ', ' : ''}
         </>
       ))}
-      {shortened && <span class="nowrap"> ({p.authors.length} authors)</span>}
+      {shortened && compact && <span class="nowrap"> ({p.authors.length} authors)</span>}
     </p>
+    {shortened && !compact && (
+      <details class="all-authors">
+        <summary>All {p.authors.length} authors</summary>
+        <p class="pub-authors">
+          {p.authors.map((a, i) => (
+            <>{lab.has(nameKey(a)) ? <b>{a}</b> : a}{i < p.authors.length - 1 ? ', ' : ''}</>
+          ))}
+        </p>
+      </details>
+    )}
     <p class="pub-venue">
       {p.venue && <i>{p.venue}</i>}
       {p.venue && p.date && ' · '}

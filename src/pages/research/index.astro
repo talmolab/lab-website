@@ -65,7 +65,7 @@ const rendered = await Promise.all(
                           <li>
                             <a class="plain" href={`/publications/#${p.key}`}>{p.title}</a>
                             <span class="ref-meta">
-                              {p.venue && <i>{p.venue}</i>}{p.venue && p.date ? ', ' : ''}{(p.date ?? '').slice(0, 4)}
+                              {p.venue && <i>{p.venue}</i>}{p.date && !p.venue?.includes(p.date.slice(0, 4)) && <>{p.venue ? ', ' : ''}{p.date.slice(0, 4)}</>}
                               {href(p) && <> · <a href={href(p)}>paper</a></>}
                             </span>
                           </li>

@@ -92,7 +92,7 @@ const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
         <section class="member-papers" aria-labelledby="papers-h">
           <div class="section-intro" style="margin: 0">
             <h2 id="papers-h" class="h3">Publications{papers.length > 0 && <span class="count"> · {papers.length}</span>}</h2>
-            <a class="more" href={search}>Search all publications for {d.name}</a>
+            {papers.length > 0 && <a class="more" href={search}>Search all publications for {d.name}</a>}
           </div>
           {papers.length > 0 ? (
             <ul class="pubs compact">

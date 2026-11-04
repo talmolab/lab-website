@@ -84,8 +84,10 @@ html {
   text-size-adjust: 100%;
 }
 
+/* Smooth only for in-page jumps a reader clicks (the link has focus), not for a deep
+ * link arriving from elsewhere, which should land at once. */
 @media (prefers-reduced-motion: no-preference) {
-  html {
+  html:focus-within {
     scroll-behavior: smooth;
   }
 }
@@ -443,9 +445,10 @@ button {
 
   html.js .site-nav[data-open] {
     display: block;
-    border-top: 1px solid var(--rule);
+    width: calc(100% + 2 * var(--gutter));
     margin-inline: calc(-1 * var(--gutter));
     padding-inline: var(--gutter);
+    border-top: 1px solid var(--rule);
   }
 
   html.js .site-nav[data-open] ul {
@@ -736,6 +739,12 @@ figcaption {
   padding-top: 8px;
 }
 
+.photo .crop-169 {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: 50% 68%;
+}
+
 .photo .crop-wide {
   aspect-ratio: 2 / 1;
   object-fit: cover;
@@ -905,24 +914,48 @@ figcaption {
 }
 
 .pub-thumb {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
+  align-self: start;
+}
+
+/* Each figure keeps its own shape inside the fixed column: no letterboxing, and the
+ * rule hugs the image. */
+.pub-thumb img {
+  width: auto;
+  max-width: 100%;
+  max-height: 150px;
+  height: auto;
   background: #fff;
   border: 1px solid var(--rule);
   border-radius: 2px;
-  color: var(--muted);
 }
 
-.pub-thumb img {
+/* A hotlinked figure of unknown size: a fixed white box, so nothing shifts. */
+.pub-thumb.box {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.pub-thumb.box img {
   width: 100%;
   height: 100%;
+  max-height: none;
   object-fit: contain;
+  border: 0;
 }
 
 /* No figure: the venue, set small, instead of an empty box or a jump in alignment. */
 .pub-thumb.none {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--muted);
   background: var(--sunk);
   padding: 8px;
   text-align: center;
@@ -933,6 +966,7 @@ figcaption {
 }
 
 .pub-title {
+  text-wrap: pretty;
   font-size: 1.0625rem;
   font-weight: 600;
   line-height: 1.38;
@@ -960,6 +994,35 @@ figcaption {
 .pub-authors b {
   color: var(--text);
   font-weight: 600;
+}
+
+.all-authors summary {
+  width: fit-content;
+  margin-top: 2px;
+  color: var(--link);
+  font-size: 0.875rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.all-authors summary::-webkit-details-marker {
+  display: none;
+}
+
+.all-authors summary::after {
+  content: ' +';
+}
+
+.all-authors[open] summary::after {
+  content: ' −';
+}
+
+.pub > div:has(> .all-authors[open]) > .pub-authors {
+  display: none;
+}
+
+.all-authors .pub-authors {
+  margin-top: 4px;
 }
 
 .pub-venue {
@@ -1169,7 +1232,14 @@ figcaption {
 }
 
 .tool-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 0;
   color: var(--muted);
+}
+
+.tool-meta span {
+  white-space: nowrap;
 }
 
 .tool-meta span + span::before {
@@ -1461,6 +1531,12 @@ figcaption {
 
 .alumni .name {
   font-weight: 600;
+}
+
+@media (min-width: 701px) {
+  .alumni .name {
+    white-space: nowrap;
+  }
 }
 
 .alumni .name a {

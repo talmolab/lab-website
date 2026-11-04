@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs';
+import sharp from 'sharp';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type Pub = CollectionEntry<'publications'>;
@@ -28,6 +29,17 @@ export function thumb(image?: string): string | undefined {
   if (/^https?:\/\//.test(image)) return image;
   const candidates = [`/images/${image.replace(/\.(png|jpe?g)$/i, '.webp')}`, `/images/${image}`];
   return candidates.find((rel) => existsSync(`public${rel}`));
+}
+
+/** A thumbnail with its pixel size when it is ours, so the page reserves the right
+ *  space before it loads (anchors like /publications/#key then land where they
+ *  should). Hotlinked publisher figures have no known size and get a fixed box. */
+export async function thumbInfo(image?: string): Promise<{ src: string; width?: number; height?: number } | undefined> {
+  const src = thumb(image);
+  if (!src) return undefined;
+  if (/^https?:\/\//.test(src)) return { src };
+  const m = await sharp(`public${src}`).metadata();
+  return { src, width: m.width, height: m.height };
 }
 
 /** Where the title links: the overlay's own link, else the DOI. */
