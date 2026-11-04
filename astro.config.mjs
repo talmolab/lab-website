@@ -37,7 +37,8 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'Source Sans 3',
       cssVariable: '--font-sans-src',
-      weights: [400, 500, 600, 700],
+      // 600 is the heaviest weight the design sets (headings, names, bold); no 700.
+      weights: [400, 500, 600],
       styles: ['normal', 'italic'],
       subsets: ['latin', 'latin-ext', 'vietnamese', 'greek'],
       fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -46,7 +47,8 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'JetBrains Mono',
       cssVariable: '--font-mono-src',
-      weights: [400, 500],
+      // Mono is for small metadata only, always at 400.
+      weights: [400],
       subsets: ['latin', 'latin-ext', 'vietnamese', 'greek'],
       fallbacks: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
     },

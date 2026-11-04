@@ -52,7 +52,7 @@ const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
 <Base title={d.name} description={`${d.name}, ${roles.join(', ')} in the Talmo Pereira Lab at the Salk Institute.`}>
   <div class="wrap">
     <article class="member">
-      <aside class="member-side">
+      <div class="member-side">
         {d.image ? (
           <Image src={d.image} alt={`Portrait of ${d.name}`} width={640} height={640} class="portrait" loading="eager" />
         ) : (
@@ -65,7 +65,7 @@ const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
             ))}
           </ul>
         )}
-      </aside>
+      </div>
 
       <div class="member-main">
         <nav class="crumbs mono" aria-label="Breadcrumb">

@@ -1,6 +1,7 @@
 name: Deploy
 
-# Builds on every push and PR. Deploys to the talmolab-redux Worker (no routes, so it
+# Builds on every push and PR. Deploys to the Worker named in wrangler.jsonc
+# (talmolab-next; no routes, so it
 # serves only on workers.dev) when CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are set;
 # until then the deploy step is skipped and the build result is what to watch.
 on:

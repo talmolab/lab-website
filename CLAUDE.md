@@ -4,11 +4,14 @@ Guidance for Claude Code in this repository.
 
 ## What this is
 
-The media-first redesign of [talmolab.org](https://talmolab.org) (direction C,
-"Instrument"): an **Astro 6** static site on **Cloudflare Workers**, live as a preview at
-https://talmolab-redux.talmo-lab.workers.dev. talmolab.org itself is still served from
-`talmolab/lab-website`; nothing here can affect it. This Worker (`talmolab-redux`)
-declares no routes, and non-production builds are noindexed.
+The rebuild of [talmolab.org](https://talmolab.org) ("fresh start", branch `fresh-start`):
+an **Astro 6** static site on **Cloudflare Workers**, live as a preview at
+https://talmolab-next.talmo-lab.workers.dev. It uses only the media the live site already
+has, and maps every live page to a page or a decided redirect (`docs/parity.md`).
+talmolab.org itself is still served from `talmolab/lab-website`; nothing here can affect
+it. This Worker (`talmolab-next`) declares no routes, and non-production builds are
+noindexed. The earlier direction-C build stays up at
+https://talmolab-redux.talmo-lab.workers.dev (Worker `talmolab-redux`) for comparison.
 
 ## Commands
 
@@ -49,25 +52,53 @@ guardrail on content.
   Keys are permanent. Preprint and published version are one entry. Resolve via Crossref
   `is-preprint-of`, forward only, and never fuzzy-match. Thumbnails:
   `node scripts/paper-thumb.mjs <key> <figure>`.
-- **repos**: `src/data/repos.yaml`, array order is display order; `media:` names a clip.
-- **areas**: `src/content/areas/*.md`, prose plus `lead` and `media` clip references.
-- **media**: `src/data/media.yaml`, written by `scripts/encode-media.py` (do not edit by
-  hand). 51 encodes in `public/media/`; each `source` is a catalogue ID in
-  `lab-website/scratch/2026-10-03-redesign-redux/CATALOGUE.md`. Clips with identifiable
-  people are excluded until there is consent.
+- **repos**: `src/data/repos.yaml`, array order is display order; optional `title`
+  (display name) and `media:` list.
+- **areas**: `src/content/areas/*.md`: prose plus optional `media:` (the first item leads),
+  `tools:` (repo ids) and `papers:` (overlay keys). Both are `reference()`s, so a typo
+  fails the build. `draft: true` keeps an area out of the site (phenotyping.md).
+- **media**: inline, not a collection. Each item is `{ src, poster?, width, height, alt,
+  caption?, credit?, plate? }`, and `src`/`poster` must exist under `public/` or the build
+  fails. Today: the old site's `sleap_movie.gif` and `root_sleap.gif` (as MP4 + WebM in
+  `public/media/`, the GIFs kept at their old URLs) and `nn_systems.png`.
+
+### Adding a clip later
+
+1. `scripts/encode-clip.sh <source> <name> [max-width] [poster-seconds]` writes
+   `public/media/<name>.{mp4,webm,jpg}` (muted, H.264 + VP9, poster) and prints the YAML.
+2. Paste it into an area's or a repo's `media:` list and write a real `alt`.
+3. Build. A missing file or a typo fails `astro check`.
+
+New footage is catalogued in `lab-website/scratch/2026-10-03-redesign-redux/CATALOGUE.md`.
+Clips with identifiable people need consent first.
 - **posts / news**: empty today; news arrives as `draft: true`.
 
 ## Design rules
 
-- v003 brand, dark only: ground `#141319`, text `#e8e7eb`, muted `#abaab1`, rule `#2c2a31`,
-  one accent `#8c6bd6` (4.56:1). The brand violet `#8b6dd2` is the logo's, not UI text.
-- Source Sans 3 + JetBrains Mono, self-hosted via Astro's Fonts API. No serif.
-- Never set "talmolab" in type: use the SVG lockup.
-- One accent: categorical state comes from weight, rule and position.
-- Video plays only on screen and while motion is on (the rail's Pause motion button,
-  remembered; off under `prefers-reduced-motion`). Keep it that way: WCAG 2.2.2.
-- `.jrow` justified rows give each clip a flex-grow equal to its aspect ratio; use
-  `pack()` from `src/lib/media.ts` and the `Wall` component rather than fixed grids.
+- v003 brand. Light paper first (`#f8f8fb`, text `#1e1a29`, muted `#5c5965`, rule
+  `#dedde3`, links `#805fc9` at 4.50:1), dark second (`#141319`, `#e8e7eb`, `#abaab1`,
+  `#2c2a31`, links `#8c6bd6`). The theme follows the system until the header switch
+  sets it (stored in `localStorage.theme`). The brand violet `#8b6dd2` is for the logo
+  and non-text marks only: it is 3.80:1 on paper.
+- Source Sans 3 (400/500/600, italic) + JetBrains Mono (400), self-hosted via Astro's
+  Fonts API with Greek and Vietnamese subsets. No serif.
+- Never set "talmolab" in type: `src/components/Logo.astro` inlines the lockup so its ink
+  follows the theme and its violet never changes. Clear space is 2b (0.232 × height).
+- One accent. Structure comes from weight, rules and position. The recurring layout is
+  the ledger (`.ledger`): a sticky label column beside the content.
+- Clips play only while on screen, never automatically under `prefers-reduced-motion`,
+  and each has its own pause button (WCAG 2.2.2). See the script in `Base.astro`.
+- Figures that share a row (`.panel`) get `flex-grow` equal to their aspect ratio, so
+  they share a height without cropping.
+- Text contrast ≥ 4.5:1, visible focus, real buttons, no overflow at 375 px. Check every
+  page type at 1440 and 375, light and dark, under `npm run preview`.
+
+## Search
+
+`/search.json` is built from the collections; `SearchDialog.astro` searches it (`/` or
+Cmd-K, the header button, the 404 page). `/publications/` also has an in-page filter that
+keeps the Greene template's `?search=` syntax: words AND, `"phrases"` OR, `"tag: x"`.
+Member pages link to `/publications/?search="Name"`, as the live site did.
 
 ## Things that will waste your time
 
@@ -76,3 +107,8 @@ guardrail on content.
 - npm 11 blocks install scripts; `esbuild`, `sharp` and `workerd` are allowed in
   `package.json` `allowScripts`. A new native dependency needs `npm approve-scripts`.
 - `output: 'static'` throughout. If something seems to need SSR, reconsider.
+- `npm run preview` (wrangler dev) can reload while `astro build` is emptying `dist/`
+  and then 404 everything. Restart it after a rebuild.
+- OpenAlex merges preprints with their published versions and answers a preprint DOI with
+  the journal's record. The loader takes Crossref's exact record when the DOIs differ;
+  do not "fix" that by accepting OpenAlex's answer.

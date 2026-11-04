@@ -1,0 +1,4 @@
+# Static assets get their type from the extension; .bib has none Workers knows.
+/publications.bib
+  Content-Type: text/plain; charset=utf-8
+  Content-Disposition: inline; filename="talmolab.bib"
