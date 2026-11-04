@@ -69,7 +69,8 @@ async function crossrefByDoi(doi: string): Promise<Meta | null> {
   return {
     title: Array.isArray(m.title) ? m.title[0] : m.title,
     authors: (m.author ?? []).map((a: any) => `${a.given ?? ''} ${a.family ?? ''}`.trim()),
-    venue: Array.isArray(m['container-title']) ? m['container-title'][0] : undefined,
+    // Posted content (bioRxiv, medRxiv) has no container; the server is the institution.
+    venue: (Array.isArray(m['container-title']) ? m['container-title'][0] : undefined) ?? m.institution?.[0]?.name,
     date: parts.length ? parts.map((n: number, i: number) => (i ? String(n).padStart(2, '0') : n)).join('-') : undefined,
     doi: m.DOI,
     url: m.URL,
@@ -111,7 +112,20 @@ function givenFirst(name: string): string {
 async function resolve(ref: Ref, logger: any): Promise<Meta | null> {
   // OpenAlex first: it resolves arXiv DOIs, which Crossref 404s (they are
   // registered with DataCite). Crossref is the fallback, not the primary.
-  return (await openalexByDoi(ref.doi, logger)) ?? (await crossrefByDoi(ref.doi));
+  const oa = await openalexByDoi(ref.doi, logger);
+  if (oa && oa.doi?.toLowerCase() === ref.doi.toLowerCase()) return oa;
+  // OpenAlex merges a preprint and its published version into one work, and then
+  // answers a lookup by the preprint's DOI with the journal's record. Taking that
+  // would associate the two without Crossref's is-preprint-of, which is exactly the
+  // fuzzy match the overlay forbids (and it mislabelled preprint links as journals).
+  // So a different DOI in the answer means: get the exact record from Crossref.
+  const cr = await crossrefByDoi(ref.doi);
+  if (cr) return cr;
+  if (oa) {
+    logger.warn(`${ref.doi}: OpenAlex answered with ${oa.doi} and Crossref has no record; keeping the requested DOI`);
+    return { ...oa, doi: ref.doi, url: `https://doi.org/${ref.doi}`, venue: undefined };
+  }
+  return null;
 }
 
 export function publications(file = 'src/data/publications.yaml'): Loader {
