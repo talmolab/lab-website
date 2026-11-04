@@ -57,7 +57,7 @@ const shortened = bits.length < p.authors.length;
 >
   {!compact && (
     t ? (
-      <div class:list={['pub-thumb', { box: !t.width }]}>
+      <div class:list={['pub-thumb', { box: !t.width }]} data-venue={t.width ? undefined : (p.venue ?? '')}>
         <img src={t.src} alt="" width={t.width} height={t.height} loading="lazy" decoding="async" />
       </div>
     ) : (

@@ -53,6 +53,21 @@ const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(n
 </Base>
 
 <script>
+  // Hotlinked publisher figures (the live site's choice, kept) can start refusing at any
+  // time. A figure that fails becomes the venue placeholder, never a broken image.
+  for (const img of document.querySelectorAll<HTMLImageElement>('.pub-thumb.box img')) {
+    const fail = () => {
+      const box = img.parentElement!;
+      box.className = 'pub-thumb none';
+      box.setAttribute('aria-hidden', 'true');
+      box.textContent = box.dataset.venue ?? '';
+    };
+    if (img.complete && img.naturalWidth === 0) fail();
+    else img.addEventListener('error', fail);
+  }
+</script>
+
+<script>
   // The Greene template's search, kept compatible: ?search= in the URL, words must all
   // match, "quoted phrases" match any one, "tag: x" matches a tag. Additions: accents
   // are ignored, "Talmo Pereira" also finds "Talmo D. Pereira", and the URL follows the
