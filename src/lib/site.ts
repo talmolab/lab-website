@@ -16,11 +16,10 @@ export const NAV = [
 ];
 
 /** The live site's footer links (email, Google Scholar, GitHub, Twitter). The live
- *  Scholar link passes a name where Scholar expects a profile id, so it lands on an
- *  error page; the author search below resolves to the profile instead. */
+ *  Scholar link passed a name where Scholar expects a profile id; this is the id. */
 export const ELSEWHERE = [
   { href: 'https://github.com/talmolab', label: 'GitHub' },
-  { href: 'https://scholar.google.com/citations?view_op=search_authors&mauthors=Talmo+Pereira', label: 'Google Scholar' },
+  { href: 'https://scholar.google.com/citations?user=tFrElIUAAAAJ', label: 'Google Scholar' },
   { href: 'https://x.com/talmop', label: 'X (Twitter)' },
 ];
 

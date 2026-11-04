@@ -157,6 +157,6 @@ returns 200, or a redirect that ends in 200.
 | `/tools/` lorem ipsum | real list from `repos.yaml` | parity of intent |
 | 28 publications | 31 | the discovery workflow added three since the live site was last edited |
 | "mills-2022" shown as bioRxiv 2022 | still bioRxiv 2022 | OpenAlex merges it with a 2026 Neuron paper with a different title; Crossref has no `is-preprint-of` link, so the overlay rule says do not associate (see the PR's open questions) |
-| Footer "Google Scholar" goes to an error page (`user=Talmo Pereira`) | author search that lands on the profile | the live link is broken; a profile id would be better |
+| Footer "Google Scholar" goes to an error page (`user=Talmo Pereira`) | the profile (`user=tFrElIUAAAAJ`), also on Talmo's member page | the live link is broken |
 | Yipeng Li's portrait is a broken image | initials tile | no portrait exists in the old site's media |
 | Live footer art (`banner.jpg`, `background.jpg`) | not used | the old header/footer strips belong to the old design |
