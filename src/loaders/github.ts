@@ -5,9 +5,10 @@ import type { Loader } from 'astro/loaders';
 type RepoEntry = {
   repo: string;
   group: 'maintained' | 'research' | 'archived';
+  title?: string;
   blurb?: string;
   image?: string;
-  media?: string;
+  media?: unknown[];
   links?: { label: string; url: string }[];
 };
 
@@ -66,6 +67,7 @@ export function repos(file = 'src/data/repos.yaml'): Loader {
             name,
             order: index,
             group: entry.group,
+            title: entry.title,
             blurb: entry.blurb,
             image: entry.image,
             media: entry.media,

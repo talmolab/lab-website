@@ -2,8 +2,15 @@
 name: "Computational ethology"
 summary: "Pose estimation and tracking: from video to the posture of every animal in it."
 order: 1
-lead: flies-trails
-media: [sleap-flies, sleap-mice, five-mice, dreem-arena, luc3d-flythrough, mice-3d, two-cam, bees, gerbils, giraffes, fly-wake, many-flies, dreem-cells]
+media:
+  - src: /media/sleap-flies.mp4
+    poster: /media/sleap-flies.jpg
+    width: 600
+    height: 280
+    alt: "Two fruit flies on a dark floor with their SLEAP-predicted skeletons overlaid; beside them, the same skeletons moving on their own."
+    caption: "Two fruit flies tracked with SLEAP: the video with predicted poses, and the poses alone."
+tools: [talmolab/sleap, talmolab/sleap-nn, talmolab/sleap-io, talmolab/dreem, talmolab/luc3d]
+papers: [pereira-2022, pereira-2018, pereira-2020, weinreb-2024, maree-2024]
 ---
 
 We develop methods for **pose estimation and tracking** to
