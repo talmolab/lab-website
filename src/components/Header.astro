@@ -1,0 +1,74 @@
+---
+import Logo from './Logo.astro';
+import { NAV, inSection } from '../lib/site';
+
+const path = Astro.url.pathname;
+---
+<header class="site-head">
+  <div class="wrap head-row">
+    <a class="brand" href="/" aria-label="Talmo Pereira Lab, home">
+      <Logo />
+    </a>
+
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <ul>
+        {NAV.map((n) => (
+          <li>
+            <a href={n.href} aria-current={inSection(path, n.href) ? (path === n.href ? 'page' : 'true') : undefined}>
+              {n.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="head-tools">
+      <button class="icon-btn search-open" type="button" data-search-open aria-haspopup="dialog">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.5 4.5" /></svg>
+        <span class="label">Search</span>
+        <kbd class="mono">/</kbd>
+      </button>
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch to dark theme">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="10" cy="10" r="7" /><path d="M10 3a7 7 0 0 0 0 14Z" class="fill" /></svg>
+      </button>
+      <button class="icon-btn menu-btn" type="button" data-menu aria-expanded="false" aria-controls="site-nav">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M3 7h14M3 13h14" /></svg>
+        <span class="label">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Theme: the stored choice wins; otherwise the system preference applies (set before
+  // paint by the inline script in Base.astro). The toggle always sets an explicit choice.
+  const root = document.documentElement;
+  const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+  const dark = () =>
+    root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  const paint = () => btn?.setAttribute('aria-label', dark() ? 'Switch to light theme' : 'Switch to dark theme');
+  btn?.addEventListener('click', () => {
+    root.dataset.theme = dark() ? 'light' : 'dark';
+    try { localStorage.setItem('theme', root.dataset.theme); } catch {}
+    paint();
+  });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paint);
+  paint();
+
+  // Menu: below the nav breakpoint the links fold behind a button. Without JS they stay
+  // visible (the CSS only folds them under html.js).
+  const menu = document.querySelector<HTMLButtonElement>('[data-menu]');
+  const nav = document.getElementById('site-nav');
+  menu?.addEventListener('click', () => {
+    const open = menu.getAttribute('aria-expanded') !== 'true';
+    menu.setAttribute('aria-expanded', String(open));
+    nav?.toggleAttribute('data-open', open);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu?.getAttribute('aria-expanded') === 'true') {
+      menu.setAttribute('aria-expanded', 'false');
+      nav?.removeAttribute('data-open');
+      menu.focus();
+    }
+  });
+</script>

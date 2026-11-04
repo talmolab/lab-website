@@ -1,0 +1,44 @@
+---
+import { LAB, INSTITUTE, EMAIL, ADDRESS, NAV, ELSEWHERE, EXPORTS } from '../lib/site';
+
+const built = new Date();
+const updated = built.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Los_Angeles' });
+---
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-lab">
+        <p class="foot-name">{LAB}</p>
+        <address>
+          {INSTITUTE}<br />
+          {ADDRESS.map((l) => <>{l}<br /></>)}
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        </address>
+      </div>
+      <nav class="foot-col" aria-label="Site">
+        <p class="foot-label">Site</p>
+        <ul>
+          {NAV.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+          <li><a href="/blog/">Blog</a></li>
+        </ul>
+      </nav>
+      <nav class="foot-col" aria-label="Elsewhere">
+        <p class="foot-label">Elsewhere</p>
+        <ul>
+          <li><a href={`mailto:${EMAIL}`}>Email</a></li>
+          {ELSEWHERE.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+        </ul>
+      </nav>
+      <nav class="foot-col" aria-label="Data">
+        <p class="foot-label">Data</p>
+        <ul>
+          {EXPORTS.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+    <p class="foot-meta mono">
+      <span>&copy; {built.getFullYear()} {LAB} at the {INSTITUTE}</span>
+      <span>Last updated <time datetime={built.toISOString().slice(0, 10)}>{updated}</time></span>
+    </p>
+  </div>
+</footer>

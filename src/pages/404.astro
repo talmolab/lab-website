@@ -1,18 +1,39 @@
 ---
-import Shell from '../layouts/Shell.astro';
-import Clip from '../components/Clip.astro';
-import { clips } from '../lib/media';
-const [wake] = await clips(['fly-wake']);
+import Base from '../layouts/Base.astro';
+// The live 404 offered a Google site: search. This one opens the site's own search,
+// seeded with the words from the address that was not found (see the script).
 ---
-<Shell title="Not found">
-  <section class="section">
-    <header class="page-head">
-      <h1>No page at this address</h1>
-      <p class="lede">It may have moved when the site was rebuilt. Try <a href="/research/">Research</a>, <a href="/publications/">Publications</a> or <a href="/team/">Team</a>.</p>
-    </header>
-    <Clip clip={wake} chip="Still tracking" />
-  </section>
-</Shell>
-<style>
-  .section :global(.frame) { aspect-ratio: 1280 / 586; }
-</style>
+<Base title="Page not found">
+  <div class="wrap">
+    <section class="lost" aria-labelledby="lost-h">
+      <p class="mono muted">404</p>
+      <h1 id="lost-h" class="title">There is no page at this address</h1>
+      <p class="lede">
+        It may have moved when the site was rebuilt. Search for it, or start from one of
+        the main sections.
+      </p>
+      <button class="search-cta" type="button" data-search-open="" data-lost-search>
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.5 4.5" /></svg>
+        <span>Search people, papers, tools and pages</span>
+      </button>
+      <nav class="jump" aria-label="Main sections">
+        <a href="/">Home</a>
+        <a href="/research/">Research</a>
+        <a href="/publications/">Publications</a>
+        <a href="/tools/">Tools</a>
+        <a href="/team/">Team</a>
+        <a href="/join/">Join</a>
+      </nav>
+    </section>
+  </div>
+</Base>
+<script>
+  // "/members/jane-doe.html" -> "jane doe": a likely query, offered on the button.
+  const words = decodeURIComponent(location.pathname)
+    .replace(/\.(html?|pdf|png|jpe?g|gif)$/i, '')
+    .split(/[\/\-_.]+/)
+    .filter((w) => w && !/^(members|images|index|\d+)$/i.test(w))
+    .join(' ');
+  const b = document.querySelector<HTMLElement>('[data-lost-search]');
+  if (b && words) b.dataset.searchOpen = words;
+</script>

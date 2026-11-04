@@ -1,52 +1,108 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
-import Shell from '../../layouts/Shell.astro';
-import { roleHistory, years, isCurrent } from '../../lib/people';
+import Base from '../../layouts/Base.astro';
+import PubRow from '../../components/PubRow.astro';
+import { roleHistory, years, isCurrent, latest, displayTitle } from '../../lib/people';
+import { allPubs } from '../../lib/pubs';
+import { isAuthor, nameKey } from '../../lib/names';
 
 export async function getStaticPaths() {
   const people = await getCollection('people');
   // Not everyone in the collection has a page; those without one are still listed on
   // the team page, as plain text.
-  return people.filter((p) => p.data.page).map((p) => ({ params: { slug: p.id }, props: { person: p } }));
+  return people.filter((p) => p.data.page).map((p) => ({ params: { slug: p.id }, props: { person: p, people } }));
 }
 
-const { person } = Astro.props;
+const { person, people } = Astro.props;
 const { Content } = await render(person);
 const d = person.data;
-const roles = roleHistory(person);
+const current = isCurrent(person);
+const roles = current ? [displayTitle(latest(person))] : roleHistory(person);
+const earlier = current ? roleHistory(person).filter((r) => !roles.includes(r)) : [];
 const coAdvisors = [...new Set(d.appointments.map((a) => a.coAdvisor).filter(Boolean))];
+const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(nameKey)));
+const papers = (await allPubs()).filter((p) => p.data.authors.some((a) => isAuthor(person, a)));
+const initials = d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
+
 const l = d.links ?? {};
+const strip = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 const links = [
-  l.email && { label: 'Email', href: `mailto:${l.email}` },
-  l['home-page'] && { label: 'Website', href: l['home-page'] },
-  l.github && { label: 'GitHub', href: `https://github.com/${l.github}` },
-  l.scholar && { label: 'Scholar', href: l.scholar.startsWith('http') ? l.scholar : `https://scholar.google.com/citations?user=${l.scholar}` },
-  l.orcid && { label: 'ORCID', href: l.orcid.startsWith('http') ? l.orcid : `https://orcid.org/${l.orcid}` },
-  l.linkedin && { label: 'LinkedIn', href: l.linkedin.startsWith('http') ? l.linkedin : `https://www.linkedin.com/in/${l.linkedin}` },
-  l.twitter && { label: 'X', href: l.twitter.startsWith('http') ? l.twitter : `https://x.com/${l.twitter}` },
-].filter(Boolean) as { label: string; href: string }[];
+  l.email && { label: 'Email', href: `mailto:${l.email}`, show: l.email },
+  l['home-page'] && { label: 'Website', href: l['home-page'], show: strip(l['home-page']) },
+  l.github && { label: 'GitHub', href: `https://github.com/${l.github}`, show: l.github },
+  l.scholar && {
+    label: 'Google Scholar',
+    href: l.scholar.startsWith('http') ? l.scholar : `https://scholar.google.com/citations?user=${l.scholar}`,
+    show: '',
+  },
+  l.orcid && { label: 'ORCID', href: l.orcid.startsWith('http') ? l.orcid : `https://orcid.org/${l.orcid}`, show: strip(l.orcid).replace('orcid.org/', '') },
+  l.linkedin && {
+    label: 'LinkedIn',
+    href: l.linkedin.startsWith('http') ? l.linkedin : `https://www.linkedin.com/in/${l.linkedin}`,
+    show: '',
+  },
+  l.twitter && { label: 'X (Twitter)', href: l.twitter.startsWith('http') ? l.twitter : `https://x.com/${l.twitter}`, show: `@${l.twitter.replace(/^.*\//, '')}` },
+].filter(Boolean) as { label: string; href: string; show: string }[];
+
+// The live site's "<Name>'s papers" button, kept: it opens Publications filtered to
+// this name, with the same ?search= URL.
+const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
 ---
-<Shell title={d.name} description={`${d.name}, ${roles.join(', ')} at the Talmo Pereira Lab.`}>
-  <article class="section" style="gap: 40px">
-    <header class="member-head">
-      {d.image ? (
-        <Image src={d.image} alt="" width={400} height={400} class="portrait" />
-      ) : null}
-      <div style="display: flex; flex-direction: column; gap: 10px">
-        <p class="mono muted"><a href="/team/">Team</a>{!isCurrent(person) && <> · <a href="/team/#alumni">Alumni</a></>}</p>
-        <h1>{d.name}</h1>
-        <p style="font-weight: 600">{roles.join(', ')}</p>
-        <p class="mono muted">
-          {years(person)}
-          {coAdvisors.length > 0 && <> · co-advised by {coAdvisors.join(' and ')}</>}
-          {!isCurrent(person) && d.next && (
-            <> · now at {d.next.url ? <a href={d.next.url}>{d.next.org}</a> : d.next.org}</>
+<Base title={d.name} description={`${d.name}, ${roles.join(', ')} in the Talmo Pereira Lab at the Salk Institute.`}>
+  <div class="wrap">
+    <article class="member">
+      <aside class="member-side">
+        {d.image ? (
+          <Image src={d.image} alt={`Portrait of ${d.name}`} width={640} height={640} class="portrait" loading="eager" />
+        ) : (
+          <span class="initials" aria-hidden="true" style="font-size: 3.5rem">{initials}</span>
+        )}
+        {links.length > 0 && (
+          <ul class="member-links" aria-label="Links">
+            {links.map((x) => (
+              <li><a href={x.href}><span>{x.label}</span>{x.show && <span class="mono">{x.show}</span>}</a></li>
+            ))}
+          </ul>
+        )}
+      </aside>
+
+      <div class="member-main">
+        <nav class="crumbs mono" aria-label="Breadcrumb">
+          <a href="/team/">Team</a>
+          <span aria-hidden="true">/</span>
+          {current ? <a href="/team/#current">In the lab</a> : <a href="/team/#alumni">Alumni</a>}
+        </nav>
+        <h1 class="title">{d.name}</h1>
+        <div class="member-role">
+          <p class="roles">{roles.join(', ')}</p>
+          <p class="mono muted">
+            {current ? `Since ${d.appointments[0].start?.slice(0, 4) ?? '—'}` : years(person)}
+            {earlier.length > 0 && <> · previously {earlier.join(', ')}</>}
+            {coAdvisors.length > 0 && <> · co-advised by {coAdvisors.join(' and ')}</>}
+          </p>
+          {!current && d.next && (
+            <p>
+              Now: {d.next.url ? <a href={d.next.url}>{d.next.org}</a> : d.next.org}{d.next.what && `, ${d.next.what}`}
+            </p>
           )}
-        </p>
-        {links.length > 0 && <p class="links mono">{links.map((x) => <a href={x.href}>{x.label}</a>)}</p>}
+        </div>
+        <div class="prose"><Content /></div>
+
+        <section class="member-papers" aria-labelledby="papers-h">
+          <div class="section-intro" style="margin: 0">
+            <h2 id="papers-h" class="h3">Publications{papers.length > 0 && <span class="count"> · {papers.length}</span>}</h2>
+            <a class="more" href={search}>Search all publications for {d.name}</a>
+          </div>
+          {papers.length > 0 ? (
+            <ul class="pubs compact">
+              {papers.map((p) => <PubRow pub={p} lab={lab} compact level="h3" />)}
+            </ul>
+          ) : (
+            <p class="muted">No papers from the lab's publication list yet.</p>
+          )}
+        </section>
       </div>
-    </header>
-    <div class="prose"><Content /></div>
-  </article>
-</Shell>
+    </article>
+  </div>
+</Base>

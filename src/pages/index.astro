@@ -1,124 +1,139 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import Shell from '../layouts/Shell.astro';
-import Stage from '../components/Stage.astro';
-import Layers from '../components/Layers.astro';
-import Clip from '../components/Clip.astro';
-import { clips } from '../lib/media';
-import { isCurrent } from '../lib/people';
-import groupPhoto from '../assets/pages/2024-08-06.lab-group2.jpg';
+import Base from '../layouts/Base.astro';
+import Media from '../components/Media.astro';
+import PubRow from '../components/PubRow.astro';
+import { team } from '../lib/people';
+import { allPubs } from '../lib/pubs';
+import { nameKey } from '../lib/names';
+import { EMAIL, INSTITUTE } from '../lib/site';
+import labPhoto from '../assets/pages/2024-08-06.lab-group1.jpg';
 
-const reel = await clips(['flies-trails', 'homecage-neon', 'cages-zoom', 'mice-3d', 'mimic-montage', 'rice-roots']);
-const [gait, gaitKp] = await clips(['mouse-gait', 'mouse-gait-kp']);
-
-const areas = (await getCollection('areas')).sort((a, b) => a.data.order - b.data.order);
-const areaLeads = await clips(areas.map((a) => a.data.lead));
-
-const tools = (await getCollection('repos'))
-  .filter((r) => r.data.media && r.data.group !== 'archived')
+const areas = (await getCollection('areas', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
+const { current, alumni, all } = await team();
+const lab = new Set(all.flatMap((p) => [p.data.name, ...p.data.aliases].map(nameKey)));
+const pubs = await allPubs();
+const recent = pubs.slice(0, 5);
+const repos = (await getCollection('repos'))
+  .filter((r) => r.data.group === 'maintained')
   .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 6);
-const toolClips = await clips(tools.map((t) => t.data.media!));
-
-const papers = (await getCollection('publications'))
-  .sort((a, b) => (b.data.date ?? '').localeCompare(a.data.date ?? ''))
   .slice(0, 5);
-
-const members = (await getCollection('people')).filter(isCurrent).length;
-
-const index = [
-  { href: '#reel', label: 'Reel' },
-  { href: '#model', label: 'What the model sees' },
-  { href: '#research', label: 'Research' },
-  { href: '#tools', label: 'Tools' },
-  { href: '#papers', label: 'Recent papers' },
-  { href: '#lab', label: 'The lab' },
-];
+const letters = 'abcdefghij';
 ---
-<Shell index={index}>
-  <section id="reel" class="section" aria-labelledby="tagline">
-    <div class="page-head">
-      <h1 id="tagline" style="max-width: 22ch">We build AI to measure and model biological motion</h1>
-      <p class="lede">
-        The Talmo Pereira Lab at the <a href="https://salk.edu">Salk Institute</a> writes open
-        software that turns video into measurements of behavior, and builds physics models
-        that reproduce it.
-      </p>
-    </div>
-    <Stage clips={reel} />
-  </section>
+<Base>
+  <div class="wrap">
+    <section class="hero" aria-labelledby="hero-h">
+      <div>
+        <h1 id="hero-h" class="display">Computational tools for studying complex biological systems</h1>
+        <p class="lede">
+          The lab of <a href="/members/talmo-pereira">Talmo Pereira</a> at the
+          <a href="https://salk.edu">{INSTITUTE}</a> builds deep learning and computer
+          vision methods to measure animal behavior, phenotype plant roots, and model the
+          neural circuits behind movement.
+        </p>
+        <p class="hero-links">
+          <a class="more" href="/research/">Learn about our work</a>
+          <a class="more" href="/join/">Join us</a>
+        </p>
+      </div>
+      <dl class="facts">
+        <div><dt>Led by</dt><dd><a class="plain" href="/members/talmo-pereira">Talmo Pereira</a></dd></div>
+        <div><dt>Institute</dt><dd>{INSTITUTE}<br />La Jolla, California</dd></div>
+        <div><dt>Founded</dt><dd>2021</dd></div>
+        <div><dt>People</dt><dd><a class="plain" href="/team/">{current.length} in the lab, {alumni.length} alumni</a></dd></div>
+        <div><dt>Software</dt><dd><a class="plain" href="/tools/">Open source, on GitHub</a></dd></div>
+      </dl>
+    </section>
 
-  <section id="model" class="section" aria-labelledby="model-h">
-    <Layers raw={gait} kp={gaitKp}>
-      <h2 id="model-h">What the model sees</h2>
-      <p class="muted">
-        Twelve seconds of mouse locomotion. Switch between the camera and the keypoints
-        SLEAP extracts from it.
-      </p>
-    </Layers>
-  </section>
+    <section class="band first" aria-labelledby="research-h">
+      <div class="section-intro">
+        <h2 id="research-h">Research</h2>
+        <a class="more" href="/research/">All research</a>
+      </div>
+      <ol class="panel" role="list" style="list-style: none; padding: 0">
+        {areas.map((a, i) => {
+          const m = a.data.media[0];
+          return (
+            <li class="panel-item" style={m ? `--ar: ${(m.width / m.height).toFixed(4)}` : '--ar: 2'}>
+              <a href={`/research/#${a.id}`}>
+                {m && <Media item={m} />}
+                <span class="panel-cap">
+                  <span class="fig-label">{letters[i]}</span>
+                  <span class="panel-name">{a.data.name}</span>
+                  <span class="panel-sum">{a.data.summary}</span>
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
 
-  <section id="research" class="section" aria-labelledby="research-h">
-    <div class="section-head">
-      <h2 id="research-h">Research</h2>
-      <a class="more" href="/research/">All research</a>
-    </div>
-    <div class="cards">
-      {areas.map((a, i) => (
-        <a class="card" href={`/research/#${a.id}`}>
-          <Clip clip={areaLeads[i]} />
-          <h3>{a.data.name}</h3>
-          <p>{a.data.summary}</p>
+    <section class="ledger" aria-labelledby="pubs-h">
+      <header class="ledger-head">
+        <h2 id="pubs-h">Recent publications</h2>
+        <p>Papers, preprints and proceedings. A preprint that was later published is listed once.</p>
+        <a class="more" href="/publications/">All {pubs.length} publications</a>
+      </header>
+      <ul class="pubs compact">
+        {recent.map((p) => <PubRow pub={p} lab={lab} compact />)}
+      </ul>
+    </section>
+
+    <section class="ledger" aria-labelledby="people-h">
+      <header class="ledger-head">
+        <h2 id="people-h">People</h2>
+        <p>
+          Scientists, engineers and students from neuroscience, computer science, biology
+          and beyond: {current.length} people in the lab today, and {alumni.length} alumni.
+        </p>
+        <a class="more" href="/team/">Meet the team</a>
+      </header>
+      <figure class="photo">
+        <a href="/team/">
+          <Image
+            src={labPhoto}
+            alt="Members of the lab, many in flannel shirts, standing and sitting in two rows on a concrete terrace at the Salk Institute."
+            widths={[640, 960, 1280, 1400]}
+            sizes="(min-width: 1280px) 880px, (min-width: 960px) 70vw, calc(100vw - 2 * var(--gutter))"
+            class="crop-wide"
+          />
         </a>
-      ))}
-    </div>
-  </section>
+        <figcaption>The lab, ca. 2024. Photo credit: Chris Keeney.</figcaption>
+      </figure>
+    </section>
 
-  <section id="tools" class="section" aria-labelledby="tools-h">
-    <div class="section-head">
-      <h2 id="tools-h">Tools</h2>
-      <a class="more" href="/tools/">All tools</a>
-    </div>
-    <div class="cards">
-      {tools.map(({ data: r }, i) => (
-        <article class="card">
-          <Clip clip={toolClips[i]} />
-          <h3 class="repo-name">{r.name}</h3>
-          <p>{(r.blurb ?? r.description ?? '').split(/(?<=\.)\s/)[0]}</p>
-          <p class="links mono">
-            <a href={`https://github.com/${r.repo}`}>GitHub</a>
-            {r.links.map((l) => <a href={l.url}>{l.label}</a>)}
-          </p>
-        </article>
-      ))}
-    </div>
-  </section>
+    <section class="ledger" aria-labelledby="tools-h">
+      <header class="ledger-head">
+        <h2 id="tools-h">Software</h2>
+        <p>Open-source tools we build and maintain, starting with SLEAP for multi-animal pose tracking.</p>
+        <a class="more" href="/tools/">All tools</a>
+      </header>
+      <ul class="tool-list">
+        {repos.map((r) => (
+          <li>
+            <a class="name plain" href={`/tools/#${r.data.name}`}>{r.data.title ?? r.data.name}</a>
+            <span class="desc">{(r.data.blurb ?? r.data.description ?? '').split(/(?<=\.)\s/)[0]}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
 
-  <section id="papers" class="section" aria-labelledby="papers-h">
-    <div class="section-head">
-      <h2 id="papers-h">Recent papers</h2>
-      <a class="more" href="/publications/">All publications</a>
-    </div>
-    <ul class="rows">
-      {papers.map(({ data: p }) => (
-        <li class="paper">
-          <span class="y mono">{(p.date ?? '').slice(0, 4)}</span>
-          <a class="t" href={p.url ?? (p.doi ? `https://doi.org/${p.doi}` : '/publications/')}>{p.title}</a>
-          <span class="v mono">{p.venue}</span>
-        </li>
-      ))}
-    </ul>
-  </section>
-
-  <section id="lab" class="section" aria-labelledby="lab-h">
-    <div class="section-head">
-      <h2 id="lab-h">The lab</h2>
-      <span class="links mono"><a href="/team/">Team</a><a href="/team/#join">Join us</a></span>
-    </div>
-    <figure class="photo">
-      <a href="/team/"><Image src={groupPhoto} alt="The Talmo Pereira Lab, outdoors at the Salk Institute" width={1600} /></a>
-      <figcaption>{members} people in the lab today. Photo ca. 2024, credit Chris Keeney.</figcaption>
-    </figure>
-  </section>
-</Shell>
+    <section class="ledger" aria-labelledby="join-h">
+      <header class="ledger-head">
+        <h2 id="join-h">Join us</h2>
+      </header>
+      <div>
+        <p class="lede">
+          We place a high value on mentorship, work-life balance and open communication,
+          and we recruit at every level: engineers, postdocs, graduate students and interns.
+        </p>
+        <p class="contact-line" style="margin-top: 24px">
+          <a class="more" href="/join/">Opportunities</a>
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
