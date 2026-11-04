@@ -49,7 +49,7 @@ async function openalexByDoi(doi: string, logger: any): Promise<Meta | null> {
   if (cost) logger.info(`openalex cost ${cost} for ${doi}`);
   return {
     title: w.title ?? w.display_name,
-    authors: (w.authorships ?? []).map((a: any) => a.author?.display_name).filter(Boolean),
+    authors: (w.authorships ?? []).map((a: any) => a.author?.display_name).filter(Boolean).map(givenFirst),
     venue: w.primary_location?.source?.display_name ?? undefined,
     date: w.publication_date,
     // OpenAlex reports doi: null for some records (MIMIC-MJX is indexed via
@@ -89,9 +89,23 @@ export async function publishedVersionOf(doi: string): Promise<string | null> {
 /** OpenAlex source names carry the publisher in parentheses — "arXiv (Cornell
  *  University)", "bioRxiv (Cold Spring Harbor Laboratory)". Nobody cites them that
  *  way. Strip the trailing parenthetical; the overlay can still override outright. */
-function tidyVenue(v?: string): string | undefined {
-  if (!v) return undefined;
+function tidyVenue(v?: string, doi?: string): string | undefined {
+  // An index is not a venue. MIMIC-MJX reaches OpenAlex only through PubMed, which it
+  // then reports as the source; the DOI says where the work actually lives.
+  const index = !!v && /^(pubmed|pubmed central|europe pmc)$/i.test(v.trim());
+  if (!v || index) return doi?.toLowerCase().startsWith('10.48550/arxiv') ? 'arXiv' : undefined;
   return v.replace(/\s*\([^)]*\)\s*$/, '').trim() || v;
+}
+
+/** Records that come in through PubMed carry names as "Zhang, Charles Y."; every other
+ *  record, and the site, says "Charles Y. Zhang". Only a single comma is flipped, so a
+ *  suffix ("Smith, John, Jr.") is left alone rather than mangled. */
+function givenFirst(name: string): string {
+  const parts = name.split(',');
+  if (parts.length !== 2) return name;
+  const [family, given] = parts.map((s) => s.trim());
+  if (!given || !family || /^(jr|sr|ii|iii|iv)\.?$/i.test(given)) return name;
+  return `${given} ${family}`;
 }
 
 async function resolve(ref: Ref, logger: any): Promise<Meta | null> {
@@ -137,7 +151,7 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
             title: meta.title,
             authors: meta.authors ?? [],
             // The overlay wins over the API for every field it sets.
-            venue: entry.published?.venue ?? entry.preprint?.venue ?? tidyVenue(meta.venue),
+            venue: entry.published?.venue ?? entry.preprint?.venue ?? tidyVenue(meta.venue, meta.doi),
             date: entry.published?.date ?? meta.date,
             doi: meta.doi,
             url: (meta as any).link ?? meta.url,
@@ -148,7 +162,7 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
             highlight: entry.highlight ?? false,
             links: entry.links ?? [],
             preprint: preprintMeta
-              ? { doi: preprintMeta.doi, venue: tidyVenue(preprintMeta.venue), date: preprintMeta.date, url: preprintMeta.url }
+              ? { doi: preprintMeta.doi, venue: tidyVenue(preprintMeta.venue, preprintMeta.doi), date: preprintMeta.date, url: preprintMeta.url }
               : undefined,
           },
         });
