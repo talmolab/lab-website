@@ -29,13 +29,15 @@
 # on a public site. Astro does not publish it; redirect the indexed URL home.
 /CLAUDE.html  /  301
 
-# §5b: "Join us" folds into the Team page rather than competing with Publications.
-/join/  /team/#join  301
-
 # The live /contact/ page is unmodified Greene template placeholder content —
 # "Department of Metaphor", scrooge@mcduck.com, a phone number and a Google Maps
 # pin in Nova Scotia. It is not migrated; the real contact route is the Team page.
 /contact/  /team/#join  301
+
+# Paper thumbnails were PNG and JPG on the live site and are WebP here, under the same
+# names. /images/papers/prasad-2022.jpg is linked from outside the site.
+/images/papers/:name.png  /images/papers/:name.webp  301
+/images/papers/:name.jpg  /images/papers/:name.webp  301
 
 # @astrojs/sitemap emits sitemap-index.xml. The live site serves /sitemap.xml and
 # §8 requires it keep resolving, so bridge the old name. Search engines follow a

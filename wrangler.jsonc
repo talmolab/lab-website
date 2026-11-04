@@ -1,8 +1,9 @@
 {
-  // Preview deploy of the media-first redesign. No routes: it serves only at
-  // talmolab-redux.talmo-lab.workers.dev and cannot touch talmolab.org or the
-  // talmolab-site preview of the lab-website repo.
-  "name": "talmolab-redux",
+  // Preview deploy of the fresh-start rebuild. No routes: it serves only at
+  // talmolab-next.talmo-lab.workers.dev and cannot touch talmolab.org, the
+  // talmolab-site preview of the lab-website repo, or the talmolab-redux (direction C)
+  // preview, which stays up for comparison.
+  "name": "talmolab-next",
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",

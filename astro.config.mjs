@@ -4,8 +4,8 @@ import sitemap from '@astrojs/sitemap';
 
 // The preview lives on workers.dev. SITE_URL lets the same build target talmolab.org
 // later; anything that is not talmolab.org is treated as a preview and kept out of
-// search indexes (see src/layouts/Shell.astro and scripts/robots.mjs).
-const site = process.env.SITE_URL ?? 'https://talmolab-redux.talmo-lab.workers.dev';
+// search indexes (see src/layouts/Base.astro and src/pages/robots.txt.ts).
+const site = process.env.SITE_URL ?? 'https://talmolab-next.talmo-lab.workers.dev';
 
 export default defineConfig({
   site,
