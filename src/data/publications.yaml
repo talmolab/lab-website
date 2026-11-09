@@ -23,6 +23,12 @@
 # DISCOVERED 2026-08-31 — review before merging.
 # Quantifying Behavior Using Deep Learning
 # Biological Psychiatry · 2023-04-10
+# DISCOVERED 2026-11-09 — review before merging.
+# Amygdalostriatal transition zone neurons encode sustained cue responses to guide defensive behaviors
+# Neuron · 2026-09-01
+- key: mills-2026
+  published: { doi: "10.1016/j.neuron.2026.08.012" }
+
 - key: maree-2023
   published: { doi: "10.1016/j.biopsych.2023.02.038" }
 
