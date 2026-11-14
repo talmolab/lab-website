@@ -54,8 +54,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # The empty --env names the top-level (preview) target explicitly.
-          command: deploy --env=""
+          # No --env: the action's default `deploy` targets the top-level (preview)
+          # Worker. wrangler warns that environments exist; that is expected here.
 
   production:
     needs: build
