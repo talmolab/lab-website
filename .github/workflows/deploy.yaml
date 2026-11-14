@@ -1,8 +1,16 @@
 name: Deploy
 
-# Builds on every push and PR. Deploys to the talmolab-redux Worker (no routes, so it
-# serves only on workers.dev) when CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are set;
-# until then the deploy step is skipped and the build result is what to watch.
+# Two jobs.
+#
+# build       Every push, PR, manual run and Monday. Builds, then deploys the PREVIEW
+#             Worker (talmolab-next; no routes, so it serves only on workers.dev) when
+#             CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID are set. On a PR, or
+#             without the secrets, the build result is what to watch.
+#
+# production  talmolab.org itself. Runs ONLY on main and ONLY while the repository
+#             variable PRODUCTION_DOMAIN equals `talmolab.org`. Until someone sets that
+#             variable this job is skipped and nothing here can reach the live site.
+#             Setting it and running this workflow is the cutover: docs/cutover.md.
 on:
   push:
     branches: [main]
@@ -40,9 +48,53 @@ jobs:
             echo "ready=false" >> "$GITHUB_OUTPUT"
             echo "::notice::CLOUDFLARE_API_TOKEN is not set; skipping deploy."
           fi
-      - name: Deploy
+      - name: Deploy preview
         if: github.event_name != 'pull_request' && steps.creds.outputs.ready == 'true'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # No --env: the action's default `deploy` targets the top-level (preview)
+          # Worker. wrangler warns that environments exist; that is expected here.
+
+  production:
+    needs: build
+    if: >-
+      github.event_name != 'pull_request' &&
+      github.ref == 'refs/heads/main' &&
+      vars.PRODUCTION_DOMAIN == 'talmolab.org'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Never two production deploys at once, and never cancel one halfway.
+    concurrency:
+      group: production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build for talmolab.org
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Canonical URLs, the sitemap and robots.txt all follow this. Without it the
+          # pages would go out noindexed, pointing at the preview.
+          SITE_URL: https://talmolab.org
+        run: npm run build
+      - name: Refuse to ship a preview build
+        run: |
+          grep -q '^Allow: /' dist/robots.txt || { echo "::error::robots.txt does not allow crawling"; exit 1; }
+          if grep -q 'name="robots" content="noindex' dist/index.html; then echo "::error::home page is noindexed"; exit 1; fi
+          grep -q 'rel="canonical" href="https://talmolab.org/"' dist/index.html || { echo "::error::canonical is not talmolab.org"; exit 1; }
+      - name: Deploy to talmolab.org
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env production
+      - name: Every live URL still resolves
+        run: ./scripts/check-urls.sh https://talmolab.org
+      - name: It is the production build that is being served
+        run: ./scripts/check-production.sh https://talmolab.org

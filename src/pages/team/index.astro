@@ -1,67 +1,97 @@
 ---
 import { Image } from 'astro:assets';
-import Shell from '../../layouts/Shell.astro';
+import Base from '../../layouts/Base.astro';
+import PersonCard from '../../components/PersonCard.astro';
 import Join from '../../components/Join.astro';
-import { team, roleHistory, years, label, latest } from '../../lib/people';
-import groupPhoto from '../../assets/pages/2024-08-06.lab-group2.jpg';
+import { team, grouped, roleHistory, years, latest, displayTitle } from '../../lib/people';
+import labPhoto from '../../assets/pages/the-lab.jpg';
 
 const { current, alumni } = await team();
-const initials = (name: string) => name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
+const groups = grouped(current);
+const [piGroup, ...rest] = groups[0]?.name === 'Principal investigator' ? groups : [undefined, ...groups];
+const pi = piGroup?.people[0];
 
-const index = [
-  { href: '#current', label: 'In the lab' },
-  { href: '#alumni', label: 'Alumni' },
-  { href: '#join', label: 'Join the team' },
-];
+// Appointment notes that add something ("TRELS Scholar"), not ones that restate a role.
+const notes = (p: (typeof alumni)[number]) => {
+  const roles = roleHistory(p);
+  return [...new Set(p.data.appointments.map((a) => a.note).filter((n): n is string => !!n && !roles.some((r) => n.startsWith(r))))];
+};
+
+// The PI's first paragraph, as plain text, to introduce the lab on this page.
+const firstPara = (md?: string) =>
+  (md ?? '')
+    .trim()
+    .split(/\n\s*\n/)[0]
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\s+/g, ' ');
 ---
-<Shell title="Team" description="The people of the Talmo Pereira Lab at the Salk Institute, and the alumni who came before them." index={index} indexLabel="People">
-  <header class="page-head">
-    <h1>Team</h1>
-    <p class="lede">{current.length} people in the lab today, and {alumni.length} alumni.</p>
-  </header>
+<Base title="Team" description="The people of the Talmo Pereira Lab at the Salk Institute, and the alumni who came before them.">
+  <div class="wrap">
+    <header class="page-head">
+      <h1 class="title">Team</h1>
+      <p class="lede">{current.length} people in the lab today, and {alumni.length} alumni.</p>
+      <nav class="jump mono" aria-label="On this page">
+        <a href="#current">In the lab</a>
+        <a href="#alumni">Alumni</a>
+        <a href="#join">Join the team</a>
+      </nav>
+    </header>
 
-  <figure class="photo">
-    <Image src={groupPhoto} alt="The Talmo Pereira Lab, outdoors at the Salk Institute" width={1600} />
-    <figcaption>The group, ca. 2024. Photo credit: Chris Keeney.</figcaption>
-  </figure>
+    <section class="ledger" id="current" aria-labelledby="current-h">
+      <header class="ledger-head">
+        <h2 id="current-h">In the lab</h2>
+        <span class="count">{current.length} people</span>
+        <p>Grouped by appointment and ordered by role, then by when each person joined.</p>
+      </header>
+      <div>
+        {pi && (
+          <div class="group">
+            <h3 class="group-name">{piGroup!.name}</h3>
+            <div class="pi">
+              <a href={`/members/${pi.id}`} tabindex="-1" aria-hidden="true">
+                {pi.data.image && <Image src={pi.data.image} alt="" width={440} height={440} class="portrait" />}
+              </a>
+              <div class="pi-text">
+                <h4 class="pi-name"><a class="plain" href={`/members/${pi.id}`}>{pi.data.name}</a></h4>
+                <p class="muted">{displayTitle(latest(pi))}</p>
+                <p>{firstPara(pi.body)}</p>
+                <p><a class="more" href={`/members/${pi.id}`}>Profile</a></p>
+              </div>
+            </div>
+          </div>
+        )}
+        {rest.map((g) => g && (
+          <div class="group">
+            <h3 class="group-name">{g.name} <span aria-hidden="true">·</span> {g.people.length}</h3>
+            <ul class="people">
+              {g.people.map((p) => <PersonCard person={p} />)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
 
-  <section class="section" id="current" aria-labelledby="current-h">
-    <div class="section-head">
-      <h2 id="current-h">In the lab</h2>
-      <span class="mono muted">{current.length}</span>
-    </div>
-    {/* One grid in rank order (never hand-ordered), with each person's title on their
-        card, rather than a heading per role: most roles have one or two people. */}
-    <ul class="people">
-      {current.map((p) => {
-        const a = latest(p);
-        const inner = (
-          <>
-            {p.data.image ? (
-              <Image src={p.data.image} alt="" width={300} height={300} class="portrait" />
-            ) : (
-              <span class="portrait portrait-empty" aria-hidden="true">{initials(p.data.name)}</span>
-            )}
-            <span class="pname">{p.data.name}</span>
-            <span class="ptitle">{label(a)}</span>
-            {a.note && <span class="ptitle">{a.note}</span>}
-          </>
-        );
-        return <li>{p.data.page ? <a href={`/members/${p.id}`}>{inner}</a> : <div style="display: flex; flex-direction: column; gap: 8px">{inner}</div>}</li>;
-      })}
-    </ul>
-  </section>
+    <figure class="photo band">
+      <Image
+        src={labPhoto}
+        alt="Lab members at their desks in a shared office with whiteboard walls, seen from above."
+        widths={[640, 960, 1280, 1600]}
+        sizes="(min-width: 1280px) 1184px, calc(100vw - 2 * var(--gutter))"
+        class="crop-169"
+      />
+      <figcaption>The lab, ca. 2022. Photo credit: Chris Keeney.</figcaption>
+    </figure>
 
-  <section class="section" id="alumni" aria-labelledby="alumni-h">
-    <div class="section-head">
-      <h2 id="alumni-h">Alumni</h2>
-      <span class="mono muted">{alumni.length}</span>
-    </div>
-    <p class="muted" style="max-width: 62ch; margin-top: -8px">
-      Generated from appointment history rather than hand-maintained. A span is one
-      continuous tenure; <code>–?</code> marks a departure whose date was never recorded.
-    </p>
-    <div class="table-scroll">
+    <section class="ledger" id="alumni" aria-labelledby="alumni-h">
+      <header class="ledger-head">
+        <h2 id="alumni-h">Alumni</h2>
+        <span class="count">{alumni.length} people</span>
+        <p>
+          Generated from appointment history, most recent first. A span is one continuous
+          tenure; <code>–?</code> marks a departure whose date was not recorded.
+        </p>
+      </header>
       <table class="alumni">
         <thead>
           <tr><th scope="col">Years</th><th scope="col">Name</th><th scope="col">Role</th><th scope="col">Next</th></tr>
@@ -70,24 +100,27 @@ const index = [
           {alumni.map((p) => (
             <tr>
               <td class="years">{years(p)}</td>
-              <td>{p.data.page ? <a href={`/members/${p.id}`}>{p.data.name}</a> : p.data.name}</td>
-              <td>{roleHistory(p).join(', ')}</td>
+              <td class="name">{p.data.page ? <a href={`/members/${p.id}`}>{p.data.name}</a> : p.data.name}</td>
               <td>
+                {roleHistory(p).join(', ')}
+                {notes(p).length > 0 && <span class="muted"> ({notes(p).join(', ')})</span>}
+              </td>
+              <td class="next">
                 {p.data.next ? (
                   <>
                     {p.data.next.url ? <a href={p.data.next.url}>{p.data.next.org}</a> : p.data.next.org}
                     {p.data.next.what && <span class="muted">, {p.data.next.what}</span>}
                   </>
                 ) : (
-                  <span class="muted">–</span>
+                  <span class="muted none">–</span>
                 )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
-  </section>
+    </section>
 
-  <Join />
-</Shell>
+    <Join />
+  </div>
+</Base>

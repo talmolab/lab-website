@@ -1,0 +1,107 @@
+---
+// One publication. Used on Publications (with a thumbnail), and compact on Home,
+// Research and member pages. Lab members are set in bold in the author list, matched
+// on first and last name (src/lib/names.ts).
+import type { CollectionEntry } from 'astro:content';
+import { thumbInfo, href, fmtDate, isPreprintVenue } from '../lib/pubs';
+import { nameKey } from '../lib/names';
+
+interface Props {
+  pub: CollectionEntry<'publications'>;
+  /** nameKeys of everyone in the people collection. */
+  lab: Set<string>;
+  compact?: boolean;
+  /** Carry the search hooks used by the Publications filter. */
+  filterable?: boolean;
+  /** Heading level for the title, so each page's outline stays correct. */
+  level?: 'h2' | 'h3' | 'h4';
+}
+
+const { pub, lab, compact = false, filterable = false, level = 'h3' } = Astro.props;
+const p = pub.data;
+const t = compact ? undefined : await thumbInfo(p.image);
+const link = href(p);
+const pdf = p.url?.endsWith('.pdf') ? p.url : undefined;
+const H = level;
+// "first last" forms of every author, so a search for "Talmo Pereira" also finds
+// "Talmo D. Pereira" (the Greene search matched raw text only).
+const names = p.authors.map(nameKey).join(' | ');
+
+// Long author lists are shortened to the first three, every lab member and the last
+// author, with an ellipsis for each gap (the live site truncated them too). Compact
+// rows link to Publications for the rest; full rows can expand in place.
+type Bit = { name: string } | { gap: true };
+const limit = compact ? 8 : 12;
+function shown(authors: string[]): Bit[] {
+  if (authors.length <= limit) return authors.map((name) => ({ name }));
+  const keep = new Set([0, 1, 2, authors.length - 1]);
+  authors.forEach((a, i) => lab.has(nameKey(a)) && keep.add(i));
+  const out: Bit[] = [];
+  let prev = -1;
+  for (const i of [...keep].sort((x, y) => x - y)) {
+    if (i - prev > 1) out.push({ gap: true });
+    out.push({ name: authors[i] });
+    prev = i;
+  }
+  return out;
+}
+const bits = shown(p.authors);
+const shortened = bits.length < p.authors.length;
+---
+<li
+  class="pub"
+  id={compact ? undefined : p.key}
+  data-pub={filterable ? '' : undefined}
+  data-names={filterable ? names : undefined}
+  data-tags={filterable && p.tags.length ? p.tags.join('|') : undefined}
+>
+  {!compact && (
+    t ? (
+      <div class:list={['pub-thumb', { box: !t.width }]} data-venue={t.width ? undefined : (p.venue ?? '')}>
+        <img src={t.src} alt="" width={t.width} height={t.height} loading="lazy" decoding="async" />
+      </div>
+    ) : (
+      <div class="pub-thumb none" aria-hidden="true">{p.venue ?? ''}</div>
+    )
+  )}
+  <div>
+    <H class="pub-title">{link ? <a href={link}>{p.title}</a> : p.title}</H>
+    <p class="pub-authors">
+      {bits.map((b, i) => (
+        <>
+          {'gap' in b ? '…' : lab.has(nameKey(b.name)) ? <b>{b.name}</b> : b.name}
+          {i < bits.length - 1 ? ', ' : ''}
+        </>
+      ))}
+      {shortened && compact && <span class="nowrap"> ({p.authors.length} authors)</span>}
+    </p>
+    {shortened && !compact && (
+      <details class="all-authors">
+        <summary>All {p.authors.length} authors</summary>
+        <p class="pub-authors">
+          {p.authors.map((a, i) => (
+            <>{lab.has(nameKey(a)) ? <b>{a}</b> : a}{i < p.authors.length - 1 ? ', ' : ''}</>
+          ))}
+        </p>
+      </details>
+    )}
+    <p class="pub-venue">
+      {p.venue && <i>{p.venue}</i>}
+      {p.venue && p.date && ' · '}
+      {p.date && <span class="muted"><time datetime={p.date}>{fmtDate(p.date)}</time></span>}
+      {isPreprintVenue(p.venue) && <span class="muted"> · preprint</span>}
+    </p>
+    {!compact && (
+      <p class="pub-links">
+        {p.doi && <a href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a>}
+        {pdf && <a href={pdf}>PDF</a>}
+        {p.preprint?.doi && (
+          <a href={p.preprint.url ?? `https://doi.org/${p.preprint.doi}`}>
+            Preprint{p.preprint.venue ? ` (${p.preprint.venue})` : ''}
+          </a>
+        )}
+        {p.links.map((l) => <a href={l.url}>{l.label}</a>)}
+      </p>
+    )}
+  </div>
+</li>

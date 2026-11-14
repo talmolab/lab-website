@@ -1,0 +1,150 @@
+---
+// Site-wide search over a build-time index (/search.json): pages, research areas,
+// people, papers and tools. It stands in for the Greene template's search, which only
+// filtered the cards on the page it was on. Loaded on first open, ~30 KB.
+---
+<dialog class="search" aria-labelledby="search-label" data-search>
+  <form class="search-bar" role="search" data-search-form>
+    <label id="search-label" for="search-q" class="vh">Search the site</label>
+    <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.5 4.5" /></svg>
+    <input id="search-q" type="search" autocomplete="off" spellcheck="false" placeholder="People, papers, tools, pages" data-search-input />
+    <button type="button" class="search-close mono" data-search-close aria-label="Close search">Esc</button>
+  </form>
+  <div class="search-body">
+    <p class="search-status mono" role="status" aria-live="polite" data-search-status></p>
+    <div data-search-results></div>
+  </div>
+</dialog>
+
+<script>
+  type Doc = { type: string; title: string; detail?: string; url: string; text: string };
+
+  const ORDER = ['Page', 'Research', 'Person', 'Tool', 'Paper'];
+  const PLURAL: Record<string, string> = { Page: 'Pages', Research: 'Research', Person: 'People', Tool: 'Tools', Paper: 'Publications' };
+  const fold = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  const dlg = document.querySelector<HTMLDialogElement>('[data-search]')!;
+  const form = dlg.querySelector<HTMLFormElement>('[data-search-form]')!;
+  const input = dlg.querySelector<HTMLInputElement>('[data-search-input]')!;
+  const out = dlg.querySelector<HTMLElement>('[data-search-results]')!;
+  const status = dlg.querySelector<HTMLElement>('[data-search-status]')!;
+  let docs: (Doc & { folded: string; ftitle: string })[] | null = null;
+  let opener: HTMLElement | null = null;
+
+  async function load() {
+    if (docs) return;
+    status.textContent = 'Loading…';
+    try {
+      const res = await fetch('/search.json');
+      const raw: Doc[] = await res.json();
+      docs = raw.map((d) => ({ ...d, folded: fold(`${d.title} ${d.detail ?? ''} ${d.text}`), ftitle: fold(d.title) }));
+    } catch {
+      status.textContent = 'Search is unavailable right now.';
+    }
+  }
+
+  function esc(s: string) {
+    return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  }
+
+  function render(q: string) {
+    if (!docs) return;
+    const terms = fold(q).split(/\s+/).filter(Boolean);
+    if (!terms.length) {
+      out.innerHTML = '';
+      status.textContent = `${docs.length} entries: people, publications, tools and pages.`;
+      return;
+    }
+    const hits = docs
+      .filter((d) => terms.every((t) => d.folded.includes(t)))
+      .map((d) => {
+        let score = ORDER.length - ORDER.indexOf(d.type);
+        for (const t of terms) {
+          if (d.ftitle.startsWith(t)) score += 6;
+          else if (d.ftitle.includes(t)) score += 3;
+        }
+        return { d, score };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    status.textContent = hits.length
+      ? `${hits.length} result${hits.length === 1 ? '' : 's'}`
+      : `Nothing matches “${q}”.`;
+
+    // Groups appear in the order of their best hit, so "sleap" leads with the tool and
+    // "pereira" with the person, not with whichever type happens to come first.
+    const groups = new Map<string, Doc[]>();
+    for (const { d } of hits.slice(0, 40)) groups.set(d.type, [...(groups.get(d.type) ?? []), d]);
+    out.innerHTML = [...groups.keys()]
+      .map(
+        (t) => `<section class="search-group"><h2 class="search-type mono">${PLURAL[t]}</h2><ul>${groups
+          .get(t)!
+          .map(
+            (d) =>
+              `<li><a href="${esc(d.url)}"><span class="search-title">${esc(d.title)}</span>${
+                d.detail ? `<span class="search-detail">${esc(d.detail)}</span>` : ''
+              }</a></li>`,
+          )
+          .join('')}</ul></section>`,
+      )
+      .join('');
+  }
+
+  async function open(q = '') {
+    opener = document.activeElement as HTMLElement | null;
+    dlg.showModal();
+    input.value = q;
+    input.focus();
+    await load();
+    render(input.value);
+  }
+
+  function links() {
+    return [...out.querySelectorAll<HTMLAnchorElement>('a')];
+  }
+
+  input.addEventListener('input', () => render(input.value));
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const first = links()[0];
+    if (first) location.href = first.href;
+  });
+  dlg.addEventListener('keydown', (e) => {
+    // A search field swallows the first Escape (it clears itself); close regardless.
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      dlg.close();
+      return;
+    }
+    const ls = links();
+    const i = ls.indexOf(document.activeElement as HTMLAnchorElement);
+    if (e.key === 'ArrowDown' && ls.length) {
+      e.preventDefault();
+      ls[Math.min(i + 1, ls.length - 1)].focus();
+    } else if (e.key === 'ArrowUp' && ls.length) {
+      e.preventDefault();
+      if (i <= 0) input.focus();
+      else ls[i - 1].focus();
+    }
+  });
+  dlg.querySelector('[data-search-close]')!.addEventListener('click', () => dlg.close());
+  // A click on the backdrop (the dialog element itself, outside its content) closes it.
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg) dlg.close();
+  });
+  dlg.addEventListener('close', () => opener?.focus());
+
+  document.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest<HTMLElement>('[data-search-open]');
+    if (t) open(t.dataset.searchOpen ?? '');
+  });
+  document.addEventListener('keydown', (e) => {
+    const el = e.target as HTMLElement;
+    const typing = el.isContentEditable || /^(input|textarea|select)$/i.test(el.tagName);
+    if (dlg.open) return;
+    if ((e.key === '/' && !typing) || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
+      e.preventDefault();
+      open();
+    }
+  });
+</script>

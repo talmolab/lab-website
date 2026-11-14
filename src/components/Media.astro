@@ -1,0 +1,55 @@
+---
+// One figure from an area's or a repo's `media:` list: a still, or a short muted loop.
+// Loops play only while on screen, never under prefers-reduced-motion until asked, and
+// every one has its own pause button (WCAG 2.2.2). See the script in Base.astro.
+import { existsSync } from 'node:fs';
+import type { z } from 'astro/zod';
+import type { mediaItem } from '../content.config';
+
+type Item = z.infer<typeof mediaItem>;
+interface Props {
+  item: Item;
+  /** Sizes hint for the browser; the element itself always fills its box. */
+  eager?: boolean;
+  class?: string;
+}
+
+const { item, eager = false, class: cls } = Astro.props;
+const isVideo = /\.(mp4|webm|mov)$/i.test(item.src);
+const webm = item.src.replace(/\.(mp4|mov)$/i, '.webm');
+const hasWebm = isVideo && webm !== item.src && existsSync(`public${webm}`);
+const ratio = `${item.width} / ${item.height}`;
+---
+<div class:list={['media', { plate: item.plate, 'is-video': isVideo }, cls]} style={`aspect-ratio: ${ratio}`}>
+  {isVideo ? (
+    <>
+      <video
+        muted
+        loop
+        playsinline
+        preload="none"
+        poster={item.poster}
+        width={item.width}
+        height={item.height}
+        aria-label={item.alt}
+        data-clip
+      >
+        {hasWebm && <source src={webm} type="video/webm" />}
+        <source src={item.src} type="video/mp4" />
+      </video>
+      <button class="media-toggle" type="button" data-clip-toggle aria-label="Play clip" aria-pressed="false">
+        <svg class="i-pause" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M5 3.5v9M11 3.5v9" /></svg>
+        <svg class="i-play" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M5 3.2v9.6L12.5 8Z" /></svg>
+      </button>
+    </>
+  ) : (
+    <img
+      src={item.src}
+      alt={item.alt}
+      width={item.width}
+      height={item.height}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  )}
+</div>
