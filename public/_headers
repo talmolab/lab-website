@@ -2,3 +2,13 @@
 /publications.bib
   Content-Type: text/plain; charset=utf-8
   Content-Disposition: inline; filename="talmolab.bib"
+
+# Everything under /_astro/ has a content hash in its name (CSS, scripts, fonts, the
+# optimised images), so a browser can keep it for a year. Other files keep Workers'
+# default: revalidate every time.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

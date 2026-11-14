@@ -10,7 +10,8 @@ page · **improved** = same intent, real content where live has filler · **301*
 redirect · **dropped** = template filler, deliberately not carried.
 
 The hard gate is `scripts/check-urls.sh <preview>`: every path in `test/live-urls.txt`
-returns 200, or a redirect that ends in 200.
+returns 200, or a redirect that ends in 200. `docs/cutover.md` is how the site goes
+onto talmolab.org once the gate passes.
 
 ## Site-wide chrome
 
@@ -55,7 +56,7 @@ returns 200, or a redirect that ends in 200.
 |---|---|---|---|---|
 | Intro "See below for a list of recent publications" | — | — | Page lede with the count and the preprint rule | kept |
 | Search box + "Showing x of n" | — | `?search=` | Filter box, same syntax and URL parameter | kept |
-| 28 citations, by year, newest first: thumbnail, title (→ paper), authors, venue · date | 19 local thumbnails (`images/papers/*`), 8 hotlinked publisher figures, `sleap_movie.gif` for SLEAP | DOI / publisher links; `maree-2024.pdf` | All overlay entries (31 today: the discovery workflow added 3), by year. Local thumbnails as WebP; the same 8 publisher figures hotlinked, as live. SLEAP's thumbnail is a still from `sleap_movie.gif` (the C build had swapped in a frame of new footage). Preprint linked secondarily on the published entry. Each row has an anchor (`#key`). | kept |
+| 28 citations, by year, newest first: thumbnail, title (→ paper), authors, venue · date | 19 local thumbnails (`images/papers/*`), 8 hotlinked publisher figures, `sleap_movie.gif` for SLEAP | DOI / publisher links; `maree-2024.pdf` | All overlay entries (31 today: the discovery workflow added 3), by year. Every thumbnail is a local WebP: the ones the live site kept in `images/papers/`, and 7 of the 8 figures it hotlinked from publishers, now copied in so a publisher's CDN cannot break the page. The eighth (pereira-2017, Cell Press) is refused to other sites by its publisher and is a broken image on live; it shows the venue tile until someone supplies a figure. SLEAP's thumbnail is a still from `sleap_movie.gif` (the C build had swapped in a frame of new footage). Preprint linked secondarily on the published entry. Each row has an anchor (`#key`). | kept |
 | — | — | — | BibTeX, CSL-JSON and JSON exports | new |
 | `/images/papers/maree-2024.pdf` | PDF | from the maree-2024 entry | Same path, linked from the same entry | kept |
 | `/images/papers/prasad-2022.jpg` (externally referenced) | JPG | — | 301 to the WebP at the same name | kept |
@@ -113,6 +114,26 @@ returns 200, or a redirect that ends in 200.
 | `/feed.xml`: 404 on live | RSS feed | new |
 | `/robots.txt` | Production allows all; every other host disallows all and pages carry `noindex` | kept |
 
+## Static files: everything else the live site serves
+
+GitHub Pages publishes every file in the Jekyll repo that does not start with an
+underscore, so the live site answers at many addresses no page links to. Each one was
+requested on talmolab.org (2026-11-14, `lab-website` @ `345c678`); the 105 that return
+200 are accounted for here, and the ones marked kept or 301 are in `test/live-urls.txt`.
+
+| Live | New site | Status |
+|---|---|---|
+| `/images/<name>.{jpg,jpeg,png}`: 7 lab photos and 42 portraits, at their original size | Same path, same bytes. `src/pages/images/[file].ts` republishes the originals from `src/assets/` at build time; the pages themselves use Astro's optimised copies. Five were renamed on the way into `src/assets/` (`aaditiya-prasad.jpg`, `ck.png`, `divya-murali.jpg`, `member.jpg`, `talmo-pereira-2024-09-alt@1x.png`) and keep their old names here. | kept |
+| `/images/papers/*.png`, `*.jpg` (18 thumbnails) | 301 → the WebP of the same name | 301 |
+| `/images/sleap_movie.gif`, `/images/root_sleap.gif`, `/images/papers/maree-2024.pdf`, `/f/RAPTR_HPI_Recruitment.pdf` | Same path, same file | kept |
+| `/images/nn_systems.png` | 301 → `/media/nn-systems.png` (same file) | 301 |
+| `/images/talmo-pereira.jpg`, `/images/talmo-pereira-old.jpg` (earlier portraits, unused by any live page) | 301 → the current portrait | 301 |
+| `/images/logo.svg`, `logo_static.svg`, `logo_static_outline.svg`, `logo_static_grey_bg.svg`, `logo_static_grey_bg.png` (the old flask logo) | 301 → the v003 mark, so an embed elsewhere picks up the new brand | 301 |
+| `/favicons/favicon.png`, `android.png`, `ios.png`, `share-thumbnail.jpg`, `site.webmanifest` | 301 → `/favicon-32.png`, `/icon-192.png`, `/apple-touch-icon.png`, `/og-card.png`, `/site.webmanifest` | 301 |
+| `/images/gregory-quach.jpg`, `neeraj-venna.jpg`, `ramiz-hajj.jpg`, `sungwook-min.jpg` | 404. These people were removed from the site (owner decision); their portraits go with them. | dropped |
+| `/images/background.jpg`, `/images/banner.jpg`, `/images/placeholder.svg` | 404. Header and footer art of the old theme, and its placeholder. | dropped |
+| `/css/*.css`, `/js/*.js`, `/auto-cite/*`, `/cite.sh`, `/start.sh`, `/CNAME`, `/CITATION.cff` | 404. The Jekyll theme's own assets and repo plumbing that Pages happened to publish. | dropped |
+
 ## Old-site media: where each file went
 
 | File | Used on |
@@ -132,10 +153,32 @@ returns 200, or a redirect that ends in 200.
 | `banner.jpg`, `background.jpg` | not used: old header/footer art, 141 px and 101 px strips |
 | `logo*.svg`, `placeholder.svg` | not used: the v003 lockup replaces the logo |
 
+## Verification (2026-11-14)
+
+Re-run against a local production build (`SITE_URL=https://talmolab.org npm run build`,
+served by `wrangler dev`), with the live site crawled the same day for comparison.
+
+- `./scripts/check-urls.sh`: **152 passed, 0 failed**: the live sitemap's 69 pages (the
+  sitemap is unchanged since the fixture was taken), three external paths, and 80 static
+  files (see "Static files" above).
+- `./scripts/check-production.sh`: **20 passed, 0 failed**: indexable, canonical to
+  talmolab.org, production robots.txt and sitemap, 301s, immutable hashed assets.
+- Content, page by page, in a browser on both sites: all 20 current members and all 32
+  live alumni rows are present (plus Vincent Tu); all 52 member bios match sentence for
+  sentence; all 28 live publications are present (three under the titles their
+  preprints now carry); every external link in the live pages' content is present,
+  with `twitter.com` profile links now `x.com`.
+- No failed request and no console error on any of the 67 crawled pages.
+- Interaction, in Chromium: theme switch and its persistence, `/` and the header button
+  opening search, results and Enter, the publications filter (`?search=`, phrases,
+  highlighting, empty state, clear), author-list expansion, `#key`, `#opportunities` and
+  `#join` anchors, clips playing on screen and pausing, no autoplay under reduced
+  motion, the phone menu, a real 404, and the site with JavaScript off.
+
 ## Verification (2026-11-04)
 
 - `./scripts/check-urls.sh https://talmolab-next.talmo-lab.workers.dev`: **72 passed, 0 failed**
-  (every path in `test/live-urls.txt`, the sitemap's 69 plus three external ones).
+  (every path in `test/live-urls.txt`, then the sitemap's 69 plus three external ones).
 - Also served on the preview: `/feed.xml`, `/publications.bib` (text), `/publications.csl.json`,
   `/publications.json`, `/search.json`, `/sitemap-index.xml`, `/robots.txt` (Disallow: / off
   production), favicons, manifest, `/og-card.png` (absolute `og:image`), a real 404 status.
@@ -159,4 +202,7 @@ returns 200, or a redirect that ends in 200.
 | "mills-2022" shown as bioRxiv 2022 | still bioRxiv 2022 | OpenAlex merges it with a 2026 Neuron paper with a different title; Crossref has no `is-preprint-of` link, so the overlay rule says do not associate (see the PR's open questions) |
 | Footer "Google Scholar" goes to an error page (`user=Talmo Pereira`) | the profile (`user=tFrElIUAAAAJ`), also on Talmo's member page | the live link is broken |
 | Yipeng Li's portrait is a broken image | initials tile | no portrait exists in the old site's media |
-| Live footer art (`banner.jpg`, `background.jpg`) | not used | the old header/footer strips belong to the old design |
+| Live footer art (`banner.jpg`, `background.jpg`) | not used, and their URLs 404 | the old header/footer strips belong to the old design |
+| 8 publication thumbnails hotlinked from publishers | 7 copied into `public/images/papers/`; pereira-2017 has none | a hotlink is one publisher CDN change from a broken image; Cell Press already refuses the eighth to other sites |
+| Portraits of the three removed people still served | 404 | removed with their pages |
+| Old flask logo and `/favicons/*` | 301 to the v003 mark and icons | the brand changed; embeds and shortcuts follow it |

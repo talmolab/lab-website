@@ -6,11 +6,16 @@ fresh design on the v003 brand.
 
 **Preview:** https://talmolab-next.talmo-lab.workers.dev (kept out of search indexes).
 
-This repo does not touch the live site. talmolab.org is still served from
+talmolab.org is still served from
 [`talmolab/lab-website`](https://github.com/talmolab/lab-website), and that repo's own Astro
-preview deploys to a different Worker (`talmolab-site`). This one deploys to
+preview deploys to a different Worker (`talmolab-site`). This repo deploys to
 `talmolab-next`, which declares no routes. The earlier direction-C build is still at
 https://talmolab-redux.talmo-lab.workers.dev for comparison.
+
+**Going live.** The site is ready to replace talmolab.org and the switch is off:
+[`docs/cutover.md`](docs/cutover.md) is the procedure (one repository variable and one
+workflow run) and the rollback. [`docs/parity.md`](docs/parity.md) maps every page,
+image and file of the live site to where it lands here.
 
 ## Commands
 
@@ -18,7 +23,10 @@ https://talmolab-redux.talmo-lab.workers.dev for comparison.
 npm run dev        # astro dev on :4321
 npm run build      # astro check && astro build
 npm run preview    # wrangler dev over dist/, the way Workers serves it
-npm run deploy     # build, then wrangler deploy
+npm run deploy     # build, then wrangler deploy to the preview
+
+./scripts/check-urls.sh <base>         # every URL the live site serves still resolves
+./scripts/check-production.sh <base>   # the build is the production one
 ```
 
 Set `GITHUB_TOKEN` (e.g. `export GITHUB_TOKEN=$(gh auth token)`) before building: the tools
@@ -35,6 +43,7 @@ quickly. Publications come from OpenAlex and need no key.
   the standing "Discovery report" issue.
 - **Deploys** happen on every merge to `main`, and weekly to refresh citation counts,
   once the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repository secrets are set.
+  They go to the preview, and also to talmolab.org once the cutover has been made.
 
 `CLAUDE.md` has the details.
 
