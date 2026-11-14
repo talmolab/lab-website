@@ -1,9 +1,11 @@
 ---
 name: "Phenotyping at scale"
 summary: "Continuous home-cage monitoring that turns months of video into measurements of development, aging and disease."
-order: 2
-lead: cages-zoom
-media: [homecage-neon, timelapse, motifs, gerbil-family, space-mouse]
+order: 4
+# Held back (2026-11-04): this area was written for the C build around new footage, and
+# its copy has not been reviewed by the owner. Its clips (cages-zoom, homecage-neon,
+# timelapse, motifs, gerbil-family, space-mouse) are not in this repo.
+draft: true
 ---
 
 We put cameras on home cages, record around the clock, and measure behavior from every

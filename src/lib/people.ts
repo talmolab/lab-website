@@ -19,6 +19,37 @@ export const rank = (p: Person): number => ROLE_ORDER.indexOf(latest(p).role);
  *  kept as separate fields rather than reconciled into one. */
 export const label = (a: Appointment): string => a.title ?? ROLE_LABEL[a.role];
 
+/** The one line under a portrait. A note that refines the label ("Postdoctoral Fellow
+ *  (Visiting)") replaces it rather than repeating it on a second line. */
+export const displayTitle = (a: Appointment): string => {
+  const l = label(a);
+  return a.note && a.note.startsWith(l) ? a.note : l;
+};
+
+/** How the team page groups current members: by kind of appointment, in ROLE_ORDER,
+ *  never by hand. Friends of the lab come last, as on the live site. */
+export const GROUPS: { name: string; roles: (typeof ROLE_ORDER)[number][] }[] = [
+  { name: 'Principal investigator', roles: ['pi'] },
+  {
+    name: 'Research staff',
+    roles: ['staff-scientist', 'postdoc', 'scientific-programmer', 'software-engineer', 'bioinformatics-analyst'],
+  },
+  { name: 'Graduate students', roles: ['phd-student', 'phd-rotation', 'ms-student'] },
+  { name: 'Research assistants', roles: ['research-assistant'] },
+  {
+    name: 'Interns',
+    roles: ['undergrad-intern', 'undergrad-summer-intern', 'highschool-intern', 'highschool-summer-intern'],
+  },
+  { name: 'Friends of the lab', roles: ['friend'] },
+];
+
+export function grouped(people: Person[]) {
+  return GROUPS.map((g) => ({
+    name: g.name,
+    people: people.filter((p) => g.roles.includes(latest(p).role)),
+  })).filter((g) => g.people.length > 0);
+}
+
 /** Every distinct role held, oldest first, deduped — "Undergraduate Research
  *  Intern, Master's Student" for someone who converted. */
 export function roleHistory(p: Person): string[] {
@@ -100,16 +131,4 @@ export async function team() {
     .filter((p) => !isCurrent(p))
     .sort((a, b) => lastYear(b) - lastYear(a) || a.data.name.localeCompare(b.data.name));
   return { current, alumni, all };
-}
-
-/** Group current members by role for the portrait sections. */
-export function byRole(people: Person[]) {
-  const groups = new Map<string, Person[]>();
-  for (const p of people) {
-    const k = latest(p).role;
-    (groups.get(k) ?? groups.set(k, []).get(k)!).push(p);
-  }
-  return [...groups.entries()].sort(
-    (a, b) => ROLE_ORDER.indexOf(a[0] as never) - ROLE_ORDER.indexOf(b[0] as never),
-  );
 }

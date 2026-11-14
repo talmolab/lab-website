@@ -7,7 +7,9 @@
 #         expectations, not popularity tiers. GitHub gives no signal here: none of
 #         these repos is flagged archived and all were pushed within weeks, so the
 #         grouping is a human call and nothing else.
-# media   Optional clip id from src/data/media.yaml, shown with the repo.
+# media   Optional list of figures or clips shown with the repo. Same shape as an
+#         area's media (see scripts/encode-clip.sh, which prints the block).
+# title   How the lab writes the name, when it is not the repo name (SLEAP, DREEM).
 # blurb   Lab-written, arbitrary length, overrides the GitHub description.
 #         Prefer adding a sentence here to adding a schema field.
 # links   Freeform. Docs, paper, project page — whatever is worth having.
@@ -17,8 +19,8 @@
 
 # ── maintained ───────────────────────────────────────────────────────────────
 - repo: talmolab/sleap
+  title: SLEAP
   group: maintained
-  media: sleap-mice
   blurb: >-
     A deep learning framework for multi-animal pose tracking. SLEAP is the lab's
     flagship tool and the basis of most of what follows: label a few frames, train
@@ -29,7 +31,6 @@
 
 - repo: talmolab/sleap-nn
   group: maintained
-  media: sleap-flies
   blurb: >-
     The neural network backend for training and inference, split out of SLEAP so
     the models can be developed and used independently of the labelling GUI.
@@ -51,8 +52,8 @@
     desktop install.
 
 - repo: talmolab/dreem
+  title: DREEM
   group: maintained
-  media: dreem-arena
   blurb: >-
     DREEM Relates Every Entity's Motion — global tracking that links detections
     into identities across a whole video rather than frame to frame.
@@ -61,7 +62,6 @@
 
 - repo: talmolab/sleap-roots
   group: maintained
-  media: rice-roots
   blurb: >-
     Analysis tools for SLEAP-based plant root phenotyping, built with the Busch lab
     and the Harnessing Plants Initiative.
@@ -80,7 +80,6 @@
 # ── research ─────────────────────────────────────────────────────────────────
 - repo: talmolab/track-mjx
   group: research
-  media: ai-vs-real
   blurb: >-
     Training control policies through motion imitation with deep reinforcement
     learning. Part of MIMIC-MJX, alongside STAC-MJX, and covers the rodent, fruit
@@ -90,16 +89,16 @@
     - { label: Dataset, url: https://huggingface.co/datasets/talmolab/MIMIC-MJX }
 
 - repo: talmolab/stac-mjx
+  title: STAC-MJX
   group: research
-  media: rat-model
   blurb: >-
     STAC implemented on MJX for GPU-accelerated inverse kinematics — fitting a
     physical body model to markerless motion tracking data. The other half of
     MIMIC-MJX.
 
 - repo: talmolab/luc3d
+  title: LUC3D
   group: research
-  media: luc3d-gui
   blurb: >-
     Label Unification and Correspondence in 3D — a multi-view pose annotation GUI
     that runs as static files in the browser, with DLT triangulation and

@@ -1,72 +1,91 @@
 ---
-import { getCollection, render } from 'astro:content';
-import Shell from '../../layouts/Shell.astro';
-import Clip from '../../components/Clip.astro';
-import Wall from '../../components/Wall.astro';
-import { clips, pack, shape } from '../../lib/media';
+import { getCollection, getEntries, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Media from '../../components/Media.astro';
+import { href } from '../../lib/pubs';
 
-const areas = (await getCollection('areas')).sort((a, b) => a.data.order - b.data.order);
+const areas = (await getCollection('areas', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
+const letters = 'abcdefghij';
+
 const rendered = await Promise.all(
   areas.map(async (a) => ({
     area: a,
     Content: (await render(a)).Content,
-    lead: (await clips([a.data.lead]))[0],
-    rest: await clips(a.data.media),
+    tools: (await getEntries(a.data.tools)).sort((x, y) => x.data.order - y.data.order),
+    papers: (await getEntries(a.data.papers)).sort((x, y) => (y.data.date ?? '').localeCompare(x.data.date ?? '')),
   })),
 );
-
-// Everything filed under an area that its page section has not already shown.
-const shown = new Set(rendered.flatMap((r) => [r.lead.id, ...r.rest.map((c) => c.id)]));
-const more = (await getCollection('media')).filter(
-  // Keypoint layers are halves of an overlay pair, not footage on their own.
-  (c) => !shown.has(c.id) && !c.id.endsWith('-kp') && c.id !== 'bees-raw',
-);
-
-const index = [
-  ...areas.map((a) => ({ href: `#${a.id}`, label: a.data.name })),
-  ...(more.length ? [{ href: '#more', label: 'More footage' }] : []),
-];
 ---
-<Shell title="Research" description="Research at the Talmo Pereira Lab: pose tracking, phenotyping at scale, plant roots and physics models of the body." index={index} indexLabel="Areas">
-  <header class="page-head">
-    <h1>Research</h1>
-    <p class="lede">
-      We use deep learning and computer vision to study complex biological systems, and we
-      build the tools to do it. Each area below leads with footage from the work.
-    </p>
-  </header>
+<Base title="Research" description="Research in the Talmo Pereira Lab: computational ethology, complex morphology phenotyping and neuro-AI modeling.">
+  <div class="wrap">
+    <header class="page-head">
+      <h1 class="title">Research</h1>
+      <p class="lede">
+        Our lab leverages <strong>deep learning</strong> and <strong>computer vision</strong> to
+        study complex biological systems by <strong>building novel computational tools</strong>.
+      </p>
+      <nav class="jump mono" aria-label="Research areas">
+        {areas.map((a, i) => <a href={`#${a.id}`}>{letters[i]}. {a.data.name}</a>)}
+      </nav>
+    </header>
 
-  {rendered.map(({ area, Content, lead, rest }, i) => (
-    <section class="area" id={area.id} aria-labelledby={`${area.id}-h`}>
-      <div class="section-head">
-        <h2 id={`${area.id}-h`}><span class="mono muted" style="margin-right: 14px">{String(i + 1).padStart(2, '0')}</span>{area.data.name}</h2>
-        <span class="mono muted">{1 + rest.length} clips</span>
-      </div>
-      <div class="area-top">
-        <figure class="photo">
-          <div style={shape(lead)}>
-            <Clip clip={lead} chip={`${lead.data.tool} · ${lead.data.title}`} />
+    {rendered.map(({ area: a, Content, tools, papers }, i) => {
+      const [lead] = a.data.media;
+      const small = lead && lead.width < 400;
+      return (
+        <section class="area" id={a.id} aria-labelledby={`${a.id}-h`}>
+          <div class="area-head">
+            <span class="fig-label" aria-hidden="true">{letters[i]}</span>
+            <h2 id={`${a.id}-h`}>{a.data.name}</h2>
           </div>
-          <figcaption>{lead.data.caption}</figcaption>
-        </figure>
-        <div class="prose"><Content /></div>
-      </div>
-      {rest.length > 0 && <Wall rows={pack(rest)} />}
-    </section>
-  ))}
+          <div class="area-body">
+            {lead && (
+              <figure class="area-fig">
+                <Media item={lead} eager={i === 0} class={small ? 'small' : undefined} />
+                {lead.caption && <figcaption>{lead.caption}{lead.credit && ` ${lead.credit}`}</figcaption>}
+              </figure>
+            )}
+            <div>
+              <div class="prose"><Content /></div>
+              {(tools.length > 0 || papers.length > 0) && (
+                <div class="area-refs">
+                  {tools.length > 0 && (
+                    <div>
+                      <h3 class="refs-label">Software</h3>
+                      <ul class="chips">
+                        {tools.map((t) => <li><a href={`/tools/#${t.data.name}`}>{t.data.title ?? t.data.name}</a></li>)}
+                      </ul>
+                    </div>
+                  )}
+                  {papers.length > 0 && (
+                    <div>
+                      <h3 class="refs-label">Selected papers</h3>
+                      <ul class="ref-list">
+                        {papers.map(({ data: p }) => (
+                          <li>
+                            <a class="plain" href={`/publications/#${p.key}`}>{p.title}</a>
+                            <span class="ref-meta">
+                              {p.venue && <i>{p.venue}</i>}{p.date && !p.venue?.includes(p.date.slice(0, 4)) && <>{p.venue ? ', ' : ''}{p.date.slice(0, 4)}</>}
+                              {href(p) && <> · <a href={href(p)}>paper</a></>}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+    })}
 
-  {more.length > 0 && (
-    <section class="section" id="more" aria-labelledby="more-h">
-      <div class="section-head">
-        <h2 id="more-h">More footage</h2>
-        <span class="mono muted">{more.length} clips</span>
-      </div>
-      <Wall rows={pack(more)} label="tool" />
+    <section class="band" aria-label="More">
+      <p class="lede">
+        See <a href="/publications/">Publications</a> for everything the lab has published,
+        and <a href="/tools/">Tools</a> for the software behind it.
+      </p>
     </section>
-  )}
-</Shell>
-
-<style>
-  /* The lead keeps its own shape: the frame takes the clip's ratio from --w/--h. */
-  .area-top .photo > div :global(.frame) { aspect-ratio: var(--w) / var(--h); max-height: 70vh; }
-</style>
+  </div>
+</Base>

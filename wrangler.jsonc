@@ -1,11 +1,35 @@
 {
-  // Preview deploy of the media-first redesign. No routes: it serves only at
-  // talmolab-redux.talmo-lab.workers.dev and cannot touch talmolab.org or the
-  // talmolab-site preview of the lab-website repo.
-  "name": "talmolab-redux",
+  // Default target: the preview of the rebuild. No routes, so it serves only at
+  // talmolab-next.talmo-lab.workers.dev and cannot touch talmolab.org, the
+  // talmolab-site preview of the lab-website repo, or the talmolab-redux (direction C)
+  // preview, which stays up for comparison. `wrangler deploy` and `npm run deploy`
+  // with no --env always land here.
+  "name": "talmolab-next",
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page"
+  },
+
+  "env": {
+    // PRODUCTION: talmolab.org itself. Reached only by `wrangler deploy --env production`,
+    // which CI runs only when the repository variable PRODUCTION_DOMAIN is set to
+    // `talmolab.org` (see .github/workflows/deploy.yaml and docs/cutover.md).
+    //
+    // Deploying this env IS the cutover: a custom domain makes Cloudflare point the
+    // hostname's DNS at this Worker, and outside a terminal wrangler replaces the
+    // existing record without asking. Build with SITE_URL=https://talmolab.org first,
+    // or the pages go out carrying noindex and a workers.dev canonical.
+    "production": {
+      "name": "talmolab-org",
+      "routes": [{ "pattern": "talmolab.org", "custom_domain": true }],
+      // The indexable build must have exactly one address.
+      "workers_dev": false,
+      "preview_urls": false,
+      "assets": {
+        "directory": "./dist",
+        "not_found_handling": "404-page"
+      }
+    }
   }
 }

@@ -1,5 +1,7 @@
-import { defineCollection, reference, z } from 'astro:content';
-import { file, glob } from 'astro/loaders';
+import { existsSync } from 'node:fs';
+import { defineCollection, reference } from 'astro:content';
+import { z } from 'astro/zod';
+import { glob } from 'astro/loaders';
 import { publications as publicationsLoader } from './loaders/openalex';
 import { repos as reposLoader } from './loaders/github';
 
@@ -48,6 +50,30 @@ export const ROLE_LABEL: Record<(typeof ROLE_ORDER)[number], string> = {
   'friend': 'Friend of the Lab',
 };
 
+/** A file under public/, named by its URL path. Checked at build time, so a typo in
+ *  a media reference fails the build instead of shipping a broken figure. */
+const publicFile = z
+  .string()
+  .regex(/^\/[^\s]+$/, 'expected a site path such as /media/clip.mp4')
+  .refine((p) => existsSync(`public${p}`), { message: 'no such file under public/' });
+
+/** One figure: a still image or a short muted loop. Clips are added by encoding with
+ *  scripts/encode-clip.sh (which prints this block) and referencing them from an
+ *  area's or a repo's `media:` list. A .webm beside an .mp4 is offered first. */
+export const mediaItem = z.object({
+  src: publicFile,
+  poster: publicFile.optional(),
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+  /** What is on screen, for screen readers. Required: these are content, not decoration. */
+  alt: z.string().min(1),
+  caption: z.string().optional(),
+  credit: z.string().optional(),
+  /** Paint a light plate behind the figure in dark mode, for transparent PNGs and
+   *  figures drawn for paper (black text, white ground). */
+  plate: z.boolean().default(false),
+});
+
 const appointment = z.object({
   /** Category. Drives sorting, grouping and filtering — never displayed raw. */
   role: z.enum(ROLE_ORDER),
@@ -90,6 +116,9 @@ const people = defineCollection({
        *  and the "everyone has a page" invariant was already broken for him on
        *  the live site. */
       page: z.boolean().default(true),
+      /** Other spellings of the name as it appears on papers ("Kaiwen Bian"). Used only
+       *  to list this person's publications on their page. Exact names, not patterns. */
+      aliases: z.array(z.string()).default([]),
       /** At least one. Sorted oldest-first by convention, not enforced. */
       appointments: z.array(appointment).min(1),
       next: z
@@ -153,10 +182,12 @@ const repos = defineCollection({
      *  stars or recency (§6.3). */
     order: z.number(),
     group: z.enum(['maintained', 'research', 'archived']),
+    /** How the lab writes the name, when it is not the repo name ("SLEAP", "DREEM"). */
+    title: z.string().optional(),
     blurb: z.string().optional(),
     image: z.string().optional(),
-    /** A clip from the media collection to show with this repo. */
-    media: reference('media').optional(),
+    /** Figures or clips to show with this repo. None today. */
+    media: z.array(mediaItem).default([]),
     links: z.array(z.object({ label: z.string(), url: z.string() })).default([]),
     // Enrichment from the GitHub API — all optional so a failed call degrades
     // to rendering from repos.yaml alone rather than breaking the build.
@@ -173,37 +204,24 @@ const repos = defineCollection({
 });
 
 /** §6.3b: the Research page is prose-first. These are authored, not derived, and
- *  the schema is deliberately minimal — associations to publications, repos and
- *  projects are all optional and will be revised once real content exists.
+ *  the schema is deliberately minimal: everything beyond the prose is optional.
  *  Resist adding required fields here. */
 const areas = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/areas' }),
   schema: z.object({
     name: z.string(),
-    /** One sentence for cards and the home page. */
+    /** One sentence for the home page. */
     summary: z.string(),
     /** Editorial order. Not alphabetical, not by output volume. */
     order: z.number().default(99),
-    /** The clip that stands for this area, then the rest of its footage. */
-    lead: reference('media'),
-    media: z.array(reference('media')).default([]),
-  }),
-});
-
-/** Web encodes in public/media/, written by scripts/encode-media.py. `source` is the
- *  catalogue ID in the lab-website repo's scratch/2026-10-03-redesign-redux/CATALOGUE.md,
- *  so every clip traces back to its original file. */
-const media = defineCollection({
-  loader: file('src/data/media.yaml'),
-  schema: z.object({
-    source: z.string(),
-    width: z.number().int().positive(),
-    height: z.number().int().positive(),
-    duration: z.number().positive(),
-    thread: reference('areas'),
-    tool: z.string(),
-    title: z.string(),
-    caption: z.string(),
+    /** The first item leads the area on Research and stands for it on Home. */
+    media: z.array(mediaItem).default([]),
+    /** Repos (ids from repos.yaml, "owner/name") and papers (overlay keys) that belong
+     *  to this area. reference() so a typo fails the build. */
+    tools: z.array(reference('repos')).default([]),
+    papers: z.array(reference('publications')).default([]),
+    /** Written but not shown. */
+    draft: z.boolean().default(false),
   }),
 });
 
@@ -238,4 +256,4 @@ const news = defineCollection({
   }),
 });
 
-export const collections = { people, publications, repos, areas, media, posts, news };
+export const collections = { people, publications, repos, areas, posts, news };

@@ -81,3 +81,97 @@
 /images/papers/prasad-2022.jpg
 /images/sleap_movie.gif
 /sitemap.xml
+
+# --- static files, added 2026-11-14 ---------------------------------------
+# Every file the live site serves from /images/, /images/papers/, /favicons/ and /f/
+# (lab-website @ 345c678, each confirmed 200 on talmolab.org). The pages above only
+# cover HTML; these are the addresses Google Images and outside pages point at.
+# Photos and portraits are republished byte for byte (src/pages/images/[file].ts);
+# the rest redirect (public/_redirects).
+#
+# Deliberately NOT here, so they 404 after cutover (docs/parity.md, "Static files"):
+#   /images/gregory-quach.jpg, neeraj-venna.jpg, ramiz-hajj.jpg, sungwook-min.jpg
+#       portraits of people removed from the site
+#   /images/background.jpg, banner.jpg, placeholder.svg   old theme art
+#   /css/*, /js/*, /auto-cite/*, /cite.sh, /start.sh, /CNAME, /CITATION.cff
+#       Jekyll theme and repo plumbing that GitHub Pages happened to publish
+/favicons/android.png
+/favicons/favicon.png
+/favicons/ios.png
+/favicons/share-thumbnail.jpg
+/favicons/site.webmanifest
+/images/2024-08-06.lab-group1.jpg
+/images/2024-08-06.lab-group2.jpg
+/images/2024-09-05.action.jpg
+/images/aaditiya-prasad.jpg
+/images/adam-lee.jpg
+/images/advaith-ravishankar.jpg
+/images/amick-licup.jpg
+/images/andrew-park.jpg
+/images/arlo-sheridan.jpg
+/images/benfica-xavier.jpg
+/images/carlos-robles.jpeg
+/images/ck.png
+/images/david-samy.jpg
+/images/dexter-tsin.png
+/images/divya-murali.jpg
+/images/elise-davis.jpg
+/images/elizabeth-berrigan.jpg
+/images/eric-leonardis.jpg
+/images/fabian-plum.jpg
+/images/frederico-kiffer.jpg
+/images/jason-foat.jpg
+/images/joshua-park.jpg
+/images/kaela-evans.jpg
+/images/kaii-bijlani.jpg
+/images/ketan-mittal.jpg
+/images/kevin-bian.jpg
+/images/keya-loding.jpg
+/images/lab-action.jpg
+/images/liezl-maree.jpg
+/images/lin-wang.png
+/images/logo.svg
+/images/logo_static.svg
+/images/logo_static_grey_bg.png
+/images/logo_static_grey_bg.svg
+/images/logo_static_outline.svg
+/images/marcus-intal.jpg
+/images/mariela-mendoza.jpg
+/images/max-weinberg.jpg
+/images/member.jpg
+/images/mustafa-shaikh.jpg
+/images/nancy-guo.jpg
+/images/nathaniel-nono.jpg
+/images/nick-andrews.png
+/images/nn_systems.png
+/images/papers/berrigan-2023.png
+/images/papers/charles-2020.png
+/images/papers/clemens-2018.png
+/images/papers/coley-2024.png
+/images/papers/deutsch-2020.png
+/images/papers/gall-2022.png
+/images/papers/hermsdorff-2018.png
+/images/papers/luxem-2022.png
+/images/papers/maree-2024.png
+/images/papers/mills-2022.jpg
+/images/papers/mitelut-2023.png
+/images/papers/patel-2023.png
+/images/papers/pereira-2019.png
+/images/papers/rose-2024.png
+/images/papers/wang-2021.png
+/images/papers/weinreb-2023.png
+/images/papers/zhang-2025.png
+/images/root_sleap.gif
+/images/salk_sunset.jpg
+/images/scott-yang.jpg
+/images/sean-afshar.jpg
+/images/shrivaths-shyam.jpg
+/images/talmo-pereira-2024-09-alt@1x.png
+/images/talmo-pereira-old.jpg
+/images/talmo-pereira.jpg
+/images/the-lab.jpg
+/images/the-team.jpg
+/images/theo-couris.jpg
+/images/tom-han.jpg
+/images/will-knickrehm.jpg
+/images/zaher-abbara.jpg

@@ -1,9 +1,16 @@
 ---
 name: "Neuro-AI modeling"
-summary: "Physics-simulated bodies that learn to move like the animals they were fitted to."
-order: 4
-lead: mimic-montage
-media: [ai-vs-real, mouse-arm, rat-model, neural-manifolds, emg-arm, rat-gaps]
+summary: "Artificial neural networks as models of biological neural circuits, constrained by motion capture."
+order: 3
+media:
+  - src: /media/nn-systems.png
+    width: 616
+    height: 289
+    alt: "Diagram: sensory stimuli feed a network of subsystems built with topological priors (deterministic) and probabilistic priors (continuous and discrete), whose outputs are postural dynamics."
+    caption: "Networks with topological and probabilistic priors, mapping sensory stimuli to postural dynamics."
+    plate: true
+tools: [talmolab/track-mjx, talmolab/stac-mjx]
+papers: [zhang-2025, prasad-2022]
 ---
 
 We are interested in exploring how artificial neural networks (**ANNs**) can be used as

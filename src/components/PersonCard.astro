@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+import type { Person } from '../lib/people';
+import { latest, displayTitle } from '../lib/people';
+
+interface Props {
+  person: Person;
+}
+const { person: p } = Astro.props;
+const a = latest(p);
+const initials = p.data.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
+const inner = { title: displayTitle(a) };
+---
+<li class="person">
+  {p.data.page ? (
+    <a href={`/members/${p.id}`}>
+      {p.data.image ? (
+        <Image src={p.data.image} alt="" width={320} height={320} class="portrait" />
+      ) : (
+        <span class="initials" aria-hidden="true">{initials}</span>
+      )}
+      <span class="person-name">{p.data.name}</span>
+      <span class="person-title">{inner.title}</span>
+    </a>
+  ) : (
+    <div>
+      {p.data.image ? (
+        <Image src={p.data.image} alt="" width={320} height={320} class="portrait" />
+      ) : (
+        <span class="initials" aria-hidden="true">{initials}</span>
+      )}
+      <span class="person-name">{p.data.name}</span>
+      <span class="person-title">{inner.title}</span>
+    </div>
+  )}
+</li>

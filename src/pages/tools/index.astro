@@ -1,68 +1,80 @@
 ---
 import { getCollection } from 'astro:content';
-import Shell from '../../layouts/Shell.astro';
-import Clip from '../../components/Clip.astro';
-import { clips } from '../../lib/media';
+import Base from '../../layouts/Base.astro';
+import Media from '../../components/Media.astro';
 
-const all = (await getCollection('repos')).sort((a, b) => a.data.order - b.data.order);
-const media = new Map(
-  (await clips(all.flatMap((r) => (r.data.media ? [r.data.media] : [])))).map((c) => [c.id, c]),
-);
-
-// Lifecycle states, in reading order. A group heading sets a support expectation; it
-// is not a popularity tier, and nothing here is ranked by stars.
+// The live /tools/ page is lorem ipsum (_data/tools.yaml); this is the real list, from
+// src/data/repos.yaml, in its editorial order. No usage statistics (§6.3).
+const repos = (await getCollection('repos')).sort((a, b) => a.data.order - b.data.order);
 const GROUPS = [
-  { key: 'maintained' as const, title: 'Maintained', note: 'Actively developed and supported. Issues and pull requests get looked at.' },
-  { key: 'research' as const, title: 'Research code', note: 'Real and usable, but built to answer a research question rather than to be a product. Expect rough edges and few guarantees.' },
-  { key: 'archived' as const, title: 'Archived', note: 'No longer maintained, kept available because published work depends on it.' },
-];
-const groups = GROUPS.map((g) => ({ ...g, items: all.filter((r) => r.data.group === g.key) })).filter((g) => g.items.length);
+  {
+    id: 'maintained',
+    name: 'Maintained',
+    note: 'Supported, documented and released. Issues and pull requests are welcome.',
+  },
+  {
+    id: 'research',
+    name: 'Research code',
+    note: 'Code that accompanies a paper or a project in progress. It moves with the research.',
+  },
+  { id: 'archived', name: 'Archived', note: 'Kept for reference; no longer developed.' },
+] as const;
 
-const fmt = (d?: string) =>
-  d ? new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }) : undefined;
-
-const index = groups.map((g) => ({ href: `#${g.key}`, label: g.title }));
+const fmtMonth = (d?: string) =>
+  d ? new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }) : '';
 ---
-<Shell title="Tools" description="Open-source software from the Talmo Pereira Lab: SLEAP, DREEM, LUC3D, sleap-roots, MIMIC-MJX and more." index={index} indexLabel="Groups">
-  <header class="page-head">
-    <h1>Tools</h1>
-    <p class="lede">
-      Software from the lab. Everything here is open source and on
-      <a href="https://github.com/talmolab">GitHub</a>.
-    </p>
-  </header>
+<Base title="Tools" description="Open-source software from the Talmo Pereira Lab: SLEAP and the tools around it for pose tracking, root phenotyping and motion imitation.">
+  <div class="wrap">
+    <header class="page-head">
+      <h1 class="title">Tools</h1>
+      <p class="lede">
+        Open-source software from the lab. Most of it grows out of
+        <a href="https://sleap.ai">SLEAP</a>, our framework for multi-animal pose tracking.
+      </p>
+      <nav class="jump mono" aria-label="Groups">
+        {GROUPS.filter((g) => repos.some((r) => r.data.group === g.id)).map((g) => <a href={`#${g.id}`}>{g.name}</a>)}
+        <a href="https://github.com/talmolab">All repositories on GitHub</a>
+      </nav>
+    </header>
 
-  {groups.map((g) => (
-    <section class="section" id={g.key} aria-labelledby={`${g.key}-h`}>
-      <div class="section-head">
-        <h2 id={`${g.key}-h`}>{g.title}</h2>
-      </div>
-      <p class="muted" style="max-width: 60ch; margin-top: -8px">{g.note}</p>
-      <ul class="rows">
-        {g.items.map(({ data: r }) => {
-          const clip = r.media ? media.get(r.media.id) : undefined;
-          return (
-            <li class:list={['repo', { 'no-media': !clip }]} id={r.name}>
-              {clip && <Clip clip={clip} chip={clip.data.title} />}
-              <div class="repo-body">
-                <div class="repo-head">
-                  <a class="repo-name" href={`https://github.com/${r.repo}`}>{r.name}</a>
-                  {r.archivedOnGitHub && <span class="mono muted">archived on GitHub</span>}
-                </div>
-                <p>{r.blurb ?? r.description}</p>
-                <p class="repo-meta mono">
-                  {r.language && <span>{r.language}</span>}
-                  {r.license && r.license !== 'NOASSERTION' && <span>{r.license}</span>}
-                  {r.pushedAt && <span>updated {fmt(r.pushedAt)}</span>}
-                </p>
-                {r.links.length > 0 && (
-                  <p class="links mono">{r.links.map((l) => <a href={l.url}>{l.label}</a>)}</p>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
-  ))}
-</Shell>
+    {GROUPS.map((g) => {
+      const items = repos.filter((r) => r.data.group === g.id);
+      if (!items.length) return null;
+      return (
+        <section class="ledger" id={g.id} aria-labelledby={`${g.id}-h`}>
+          <header class="ledger-head">
+            <h2 id={`${g.id}-h`}>{g.name}</h2>
+            <span class="count">{items.length} {items.length === 1 ? 'repository' : 'repositories'}</span>
+            <p>{g.note}</p>
+          </header>
+          <ul class:list={['tools', { two: items.length > 1 }]}>
+            {items.map(({ data: r }) => {
+              const docs = r.links.filter((l) => l.url !== `https://github.com/${r.repo}`);
+              const home = r.homepage && !docs.some((l) => l.url.replace(/\/$/, '') === r.homepage!.replace(/\/$/, '')) ? r.homepage : undefined;
+              return (
+                <li class="tool" id={r.name}>
+                  {r.media[0] && <Media item={r.media[0]} />}
+                  <div class="tool-head">
+                    <h3 class="tool-name"><a href={`https://github.com/${r.repo}`}>{r.title ?? r.name}</a></h3>
+                    <span class="mono muted">{r.repo}</span>
+                  </div>
+                  <p class="tool-blurb">{r.blurb ?? r.description}</p>
+                  <p class="tool-meta mono">
+                    {r.language && <span>{r.language}</span>}
+                    {r.license && r.license !== 'NOASSERTION' && <span>{r.license}</span>}
+                    {r.pushedAt && <span>updated {fmtMonth(r.pushedAt)}</span>}
+                  </p>
+                  <p class="tool-links">
+                    <a href={`https://github.com/${r.repo}`}>Source</a>
+                    {docs.map((l) => <a href={l.url}>{l.label}</a>)}
+                    {home && <a href={home}>Website</a>}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      );
+    })}
+  </div>
+</Base>

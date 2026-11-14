@@ -9,6 +9,7 @@ links:
   email: "talmo@salk.edu"
   github: "talmo"
   twitter: "talmop"
+  scholar: "tFrElIUAAAAJ"
 ---
 
 Hi, I'm Talmo. I'm an **Assistant Professor** and **Director of the Center for AI and Research Computing** at the [Salk Institute for Biological Studies](https://salk.edu), where my lab uses computer vision and deep learning to study animal behavior, neuroscience, and plants! I started the lab as a [Salk Fellow](https://www.salk.edu/news-release/salk-fellows-program-welcomes-talmo-pereira/) in 2021.

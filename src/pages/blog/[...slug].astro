@@ -1,6 +1,6 @@
 ---
-import { getCollection, render } from 'astro:content';
-import Shell from '../../layouts/Shell.astro';
+import { getCollection, getEntries, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -8,13 +8,22 @@ export async function getStaticPaths() {
 }
 const { post } = Astro.props;
 const { Content } = await render(post);
+const authors = await getEntries(post.data.authors);
+const date = post.data.date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
-<Shell title={post.data.title} description={post.data.description}>
-  <article class="section" style="gap: 28px">
-    <header class="page-head">
-      <p class="mono muted"><a href="/blog/">Blog</a> · {post.data.date.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</p>
-      <h1>{post.data.title}</h1>
-    </header>
-    <div class="prose"><Content /></div>
-  </article>
-</Shell>
+<Base title={post.data.title} description={post.data.description}>
+  <div class="wrap">
+    <article>
+      <header class="page-head">
+        <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/blog/">Blog</a><span aria-hidden="true">/</span><time datetime={post.data.date.toISOString()}>{date}</time></nav>
+        <h1 class="title">{post.data.title}</h1>
+        {authors.length > 0 && (
+          <p class="muted">
+            {authors.map((a, i) => <>{i > 0 && ', '}{a.data.page ? <a href={`/members/${a.id}`}>{a.data.name}</a> : a.data.name}</>)}
+          </p>
+        )}
+      </header>
+      <div class="prose" style="padding-bottom: var(--space)"><Content /></div>
+    </article>
+  </div>
+</Base>

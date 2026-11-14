@@ -1,0 +1,19 @@
+---
+// The v003 horizontal lockup, inlined so one SVG serves both themes: the ink parts
+// follow the theme (ink on paper, #e8e7eb on the dark ground) and the violet never
+// switches, as the brand README requires. The name is never set in live type.
+import lockup from '../../public/talmolab-lockup-h-light.svg?raw';
+
+interface Props {
+  class?: string;
+}
+const { class: cls } = Astro.props;
+
+const svg = lockup
+  .replace(/<\?xml[^>]*>\s*/, '')
+  .replace(/<title>.*?<\/title>\s*/, '')
+  .replaceAll('fill="#1e1a29"', 'class="ink"')
+  .replaceAll('fill="#8b6dd2"', 'class="acc"')
+  .replace('<svg ', `<svg class="lockup${cls ? ` ${cls}` : ''}" aria-hidden="true" focusable="false" `);
+---
+<Fragment set:html={svg} />

@@ -1,81 +1,198 @@
 ---
-import { existsSync } from 'node:fs';
 import { getCollection } from 'astro:content';
-import Shell from '../../layouts/Shell.astro';
+import Base from '../../layouts/Base.astro';
+import PubRow from '../../components/PubRow.astro';
+import { allPubs, byYear } from '../../lib/pubs';
+import { nameKey } from '../../lib/names';
 
-const pubs = (await getCollection('publications')).sort((a, b) =>
-  (b.data.date ?? '').localeCompare(a.data.date ?? ''),
-);
-
-const byYear = new Map<string, typeof pubs>();
-for (const p of pubs) {
-  const y = (p.data.date ?? '').slice(0, 4) || 'Undated';
-  byYear.set(y, [...(byYear.get(y) ?? []), p]);
-}
-
-// Thumbnails live in public/images/papers/ (scripts/paper-thumb.mjs makes them). The
-// overlay names a file; older entries name the original PNG, which was converted to
-// WebP, so try that first. No file, no thumbnail, never a broken image.
-function thumb(image?: string) {
-  if (!image || image.endsWith('.pdf')) return undefined;
-  if (/^https?:\/\//.test(image)) return image;
-  const candidates = [`/images/${image.replace(/\.(png|jpe?g)$/i, '.webp')}`, `/images/${image}`];
-  return candidates.find((rel) => existsSync(`public${rel}`));
-}
-const fmt = (d?: string) =>
-  d
-    ? new Date(d.length === 4 ? `${d}-01-01T00:00:00Z` : `${d}T00:00:00Z`).toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric',
-        timeZone: 'UTC',
-      })
-    : '';
-
-const index = [...byYear.keys()].map((y) => ({ href: `#y${y}`, label: y }));
+const pubs = await allPubs();
+const years = byYear(pubs);
+const people = await getCollection('people');
+const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(nameKey)));
 ---
-<Shell title="Publications" description="Publications from the Talmo Pereira Lab at the Salk Institute." index={index} indexLabel="Years">
-  <header class="page-head">
-    <h1>Publications</h1>
-    <p class="lede">{pubs.length} papers, preprints and proceedings, newest first. A preprint that has since been published is listed once, under the published version.</p>
-    <p class="links mono">
-      <a href="/publications.bib">BibTeX</a>
-      <a href="/publications.csl.json">CSL JSON</a>
-      <a href="/publications.json">JSON</a>
-    </p>
-  </header>
-
-  {[...byYear.entries()].map(([year, items]) => (
-    <section class="section" id={`y${year}`} aria-labelledby={`y${year}-h`}>
-      <div class="section-head">
-        <h2 id={`y${year}-h`}>{year}</h2>
-        <span class="mono muted">{items.length}</span>
+<Base title="Publications" description="Publications from the Talmo Pereira Lab at the Salk Institute: papers, preprints and proceedings, newest first.">
+  <div class="wrap">
+    <header class="page-head">
+      <h1 class="title">Publications</h1>
+      <p class="lede">
+        {pubs.length} papers, preprints and proceedings, newest first. A preprint that has
+        since been published is listed once, under the published version. Lab members are
+        in bold.
+      </p>
+      <div class="tools-row">
+        <form class="filter" role="search" data-filter hidden onsubmit="return false">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.5 4.5" /></svg>
+          <label for="filter-q" class="vh">Filter publications</label>
+          <input id="filter-q" name="search" type="search" autocomplete="off" spellcheck="false" placeholder='Filter: words, "a phrase", an author' data-filter-input />
+          <button type="button" data-filter-clear hidden>Clear</button>
+        </form>
+        <p class="exports mono" aria-label="Download the list">
+          <a href="/publications.bib">BibTeX</a>
+          <a href="/publications.csl.json">CSL JSON</a>
+          <a href="/publications.json">JSON</a>
+        </p>
       </div>
-      <ul class="rows">
-        {items.map(({ data: p }) => {
-          const t = thumb(p.image);
-          const href = p.url ?? (p.doi ? `https://doi.org/${p.doi}` : undefined);
-          return (
-            <li class:list={['pub', { 'no-thumb': !t }]}>
-              {t && <img class="thumb" src={t} alt="" loading="lazy" width="132" height="99" />}
-              <div>
-                {href ? <a class="t" href={href}>{p.title}</a> : <span class="t">{p.title}</span>}
-                <p class="a">{p.authors.join(', ')}</p>
-                <p class="m mono">
-                  {p.venue && <span class="venue">{p.venue}</span>}
-                  {p.date && <time datetime={p.date}>{fmt(p.date)}</time>}
-                  {p.doi && <a href={`https://doi.org/${p.doi}`}>doi:{p.doi}</a>}
-                  {p.preprint?.doi && (
-                    <a href={p.preprint.url ?? `https://doi.org/${p.preprint.doi}`}>
-                      Preprint{p.preprint.venue ? ` (${p.preprint.venue})` : ''}
-                    </a>
-                  )}
-                  {p.links.map((l) => <a href={l.url}>{l.label}</a>)}
-                </p>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
-  ))}
-</Shell>
+      <p class="filter-status mono" role="status" aria-live="polite" data-filter-status></p>
+    </header>
+
+    {years.map(([year, items]) => (
+      <section class="ledger tight year-block" id={`y${year}`} aria-labelledby={`y${year}-h`} data-year>
+        <header class="ledger-head">
+          <h2 id={`y${year}-h`} class="year-num">{year}</h2>
+          <span class="count" data-year-count data-total={items.length}>{items.length} {items.length === 1 ? 'entry' : 'entries'}</span>
+        </header>
+        <ul class="pubs">
+          {items.map((p) => <PubRow pub={p} lab={lab} filterable />)}
+        </ul>
+      </section>
+    ))}
+    <p class="empty" data-filter-empty hidden>
+      Nothing matches. <button type="button" class="linkish" data-filter-clear>Clear the filter</button> to see everything.
+    </p>
+  </div>
+</Base>
+
+<script>
+  // Hotlinked publisher figures (the live site's choice, kept) can start refusing at any
+  // time. A figure that fails becomes the venue placeholder, never a broken image.
+  for (const img of document.querySelectorAll<HTMLImageElement>('.pub-thumb.box img')) {
+    const fail = () => {
+      const box = img.parentElement!;
+      box.className = 'pub-thumb none';
+      box.setAttribute('aria-hidden', 'true');
+      box.textContent = box.dataset.venue ?? '';
+    };
+    if (img.complete && img.naturalWidth === 0) fail();
+    else img.addEventListener('error', fail);
+  }
+</script>
+
+<script>
+  // The Greene template's search, kept compatible: ?search= in the URL, words must all
+  // match, "quoted phrases" match any one, "tag: x" matches a tag. Additions: accents
+  // are ignored, "Talmo Pereira" also finds "Talmo D. Pereira", and the URL follows the
+  // box so a filtered list can be shared.
+  const fold = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  const form = document.querySelector<HTMLFormElement>('[data-filter]')!;
+  const input = document.querySelector<HTMLInputElement>('[data-filter-input]')!;
+  const status = document.querySelector<HTMLElement>('[data-filter-status]')!;
+  const empty = document.querySelector<HTMLElement>('[data-filter-empty]')!;
+  const clears = document.querySelectorAll<HTMLButtonElement>('[data-filter-clear]');
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-pub]')];
+  const blocks = [...document.querySelectorAll<HTMLElement>('[data-year]')];
+
+  // Searchable text per row, computed once: visible text plus first-last name forms.
+  const hay = new Map(rows.map((r) => [r, fold(`${r.textContent} ${r.dataset.names ?? ''}`)]));
+  const tagsOf = (r: HTMLElement) => (r.dataset.tags ?? '').split('|').filter(Boolean).map(cleanTag);
+  // Original markup of the parts that get highlighted, to restore between searches.
+  const targets = rows.flatMap((r) => [...r.querySelectorAll<HTMLElement>('.pub-title, .pub-authors')]);
+  const original = new Map(targets.map((t) => [t, t.innerHTML]));
+
+  function cleanTag(t: string) {
+    return fold(t).split(/\s|-|,|tag:/g).map((w) => w.trim()).filter(Boolean).join(' ');
+  }
+
+  function parse(q: string) {
+    const parts = (q.match(/("[^"]*"?|[^"\s]+)/g) ?? []).map((s) => s.trim()).filter(Boolean);
+    const terms: string[] = [], phrases: string[] = [], tags: string[] = [];
+    for (let part of parts) {
+      const quoted = part.includes('"');
+      part = fold(part.replaceAll('"', '')).trim();
+      if (!part) continue;
+      if (part.startsWith('tag:')) tags.push(cleanTag(part));
+      else if (quoted) phrases.push(part);
+      else terms.push(part);
+    }
+    return { terms, phrases, tags };
+  }
+
+  function highlight(words: string[]) {
+    const ws = words.filter((w) => w.length > 2);
+    if (!ws.length) return;
+    const re = new RegExp(`(${ws.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
+    for (const t of targets) {
+      if ((t.closest('[data-pub]') as HTMLElement).hidden) continue;
+      const walker = document.createTreeWalker(t, NodeFilter.SHOW_TEXT);
+      const nodes: Text[] = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode as Text);
+      for (const n of nodes) {
+        if (!re.test(n.data)) continue;
+        re.lastIndex = 0;
+        const frag = document.createDocumentFragment();
+        for (const piece of n.data.split(re)) {
+          if (!piece) continue;
+          if (re.test(piece)) {
+            const m = document.createElement('mark');
+            m.textContent = piece;
+            frag.append(m);
+          } else frag.append(piece);
+          re.lastIndex = 0;
+        }
+        n.replaceWith(frag);
+      }
+    }
+  }
+
+  const details = [...document.querySelectorAll<HTMLDetailsElement>('.all-authors')];
+
+  function run(q: string, push = true) {
+    for (const [t, html] of original) t.innerHTML = html;
+    // Close the author lists this filter opened (not the ones a reader opened).
+    for (const d of details) if (d.dataset.auto) { d.open = false; delete d.dataset.auto; }
+    const { terms, phrases, tags } = parse(q);
+    const active = terms.length + phrases.length + tags.length > 0;
+    let shown = 0;
+    for (const r of rows) {
+      const h = hay.get(r)!;
+      const ok =
+        terms.every((t) => h.includes(t)) &&
+        (!phrases.length || phrases.some((p) => h.includes(p))) &&
+        (!tags.length || tags.some((t) => tagsOf(r).includes(t)));
+      r.hidden = !ok;
+      if (ok) shown++;
+    }
+    for (const b of blocks) {
+      const visible = b.querySelectorAll('[data-pub]:not([hidden])').length;
+      b.hidden = visible === 0;
+      const c = b.querySelector<HTMLElement>('[data-year-count]')!;
+      const total = Number(c.dataset.total);
+      c.textContent = active ? `${visible} of ${total}` : `${total} ${total === 1 ? 'entry' : 'entries'}`;
+    }
+    if (active) highlight([...terms, ...phrases]);
+    // A match among the authors a long list hides: open that list so the match shows.
+    for (const d of details)
+      if (!d.open && d.querySelector('mark') && !d.previousElementSibling?.querySelector('mark')) {
+        d.open = true;
+        d.dataset.auto = '1';
+      }
+    status.textContent = active ? `Showing ${shown} of ${rows.length}` : '';
+    empty.hidden = shown > 0;
+    for (const c of clears) if (c.closest('[data-filter]')) c.hidden = !q;
+    if (push) {
+      const url = new URL(location.href);
+      if (q) url.searchParams.set('search', q);
+      else url.searchParams.delete('search');
+      history.replaceState(null, '', url);
+    }
+  }
+
+  let timer = 0;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = window.setTimeout(() => run(input.value), 120);
+  });
+  for (const c of clears)
+    c.addEventListener('click', () => {
+      input.value = '';
+      run('');
+      input.focus();
+    });
+
+  form.hidden = false;
+  const initial = new URLSearchParams(location.search).get('search') ?? '';
+  if (initial) {
+    input.value = initial;
+    run(initial, false);
+  }
+</script>
