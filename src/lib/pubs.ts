@@ -22,8 +22,9 @@ export function byYear(pubs: Pub[]): [string, Pub[]][] {
 
 /** Thumbnails live in public/images/papers/ (scripts/paper-thumb.mjs makes them). The
  *  overlay names a file; older entries name the original PNG or JPG, which was
- *  converted to WebP, so that is tried first. Absolute URLs are publisher figures the
- *  live site hotlinks. No file, no thumbnail: never a broken image. */
+ *  converted to WebP, so that is tried first. An absolute URL is still accepted, but
+ *  nothing uses one now: the publisher figures the live site hotlinked were copied in.
+ *  No file, no thumbnail: never a broken image. */
 export function thumb(image?: string): string | undefined {
   if (!image || image.endsWith('.pdf')) return undefined;
   if (/^https?:\/\//.test(image)) return image;

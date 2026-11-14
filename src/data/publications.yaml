@@ -117,7 +117,7 @@
 
 - key: bourrianne-2022
   published: { doi: "10.1115/1.4053386" }
-  image: "https://www.medrxiv.org/content/medrxiv/early/2021/06/14/2020.06.29.20141283/F1.medium.gif"
+  image: "papers/bourrianne-2022.webp"
 
 - key: deutsch-2020
   published: { doi: "10.7554/elife.59502" }
@@ -125,11 +125,11 @@
 
 - key: pereira-2020
   published: { doi: "10.1038/s41593-020-00734-z" }
-  image: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fs41593-020-00734-z/MediaObjects/41593_2020_734_Fig3_HTML.png?as=webp"
+  image: "papers/pereira-2020.webp"
 
 - key: jones-2020
   published: { doi: "10.7554/elife.57258" }
-  image: "https://iiif.elifesciences.org/lax/57258%2Felife-57258-fig2-v2.tif/full/617,/0/default.webp"
+  image: "papers/jones-2020.webp"
 
 - key: charles-2020
   published: { doi: "10.1146/annurev-neuro-100119-110036" }
@@ -141,7 +141,7 @@
 
 - key: badura-2018
   published: { doi: "10.7554/elife.36401" }
-  image: "https://iiif.elifesciences.org/lax/36401%2Felife-36401-fig9-v3.tif/full/617,/0/default.webp"
+  image: "papers/badura-2018.webp"
 
 - key: clemens-2018
   published: { doi: "10.1016/j.cub.2018.06.011" }
@@ -149,7 +149,7 @@
 
 - key: giovannucci-2018
   published: { doi: "10.1016/j.jneumeth.2017.07.014" }
-  image: "https://ars.els-cdn.com/content/image/1-s2.0-S0165027017302509-gr2.jpg"
+  image: "papers/giovannucci-2018.webp"
 
 - key: hermsdorff-2018
   published: { doi: "10.1007/978-3-319-96661-8_30" }
@@ -157,12 +157,16 @@
 
 - key: pereira-2017
   published: { doi: "10.1016/j.neuron.2017.08.029" }
-  image: "https://els-jbs-prod-cdn.jbs.elsevierhealth.com/cms/attachment/cc6b48f6-bbb3-47d7-9429-eeb7472861c4/gr1.jpg"
+  # No thumbnail: the live site hotlinked Cell Press's figure
+  # (els-jbs-prod-cdn.jbs.elsevierhealth.com/cms/attachment/cc6b48f6-…/gr1.jpg), which
+  # the publisher serves with Cross-Origin-Resource-Policy: same-origin, so no browser
+  # shows it (it is a broken image on the live site too). The row shows the venue tile.
+  # To give it one: node scripts/paper-thumb.mjs pereira-2017 <figure>
 
 - key: giovannucci-2017
   published: { doi: "10.1038/nn.4531" }
-  image: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1038%2Fnn.4531/MediaObjects/41593_2017_Article_BFnn4531_Fig2_HTML.jpg?as=webp"
+  image: "papers/giovannucci-2017.webp"
 
 - key: hobbs-2016
   published: { doi: "10.1186/s13015-016-0082-8" }
-  image: "https://media.springernature.com/lw685/springer-static/image/art%3A10.1186%2Fs13015-016-0082-8/MediaObjects/13015_2016_82_Fig4_HTML.gif?as=webp"
+  image: "papers/hobbs-2016.webp"
