@@ -13,8 +13,8 @@ preview deploys to a different Worker (`talmolab-site`). This repo deploys to
 https://talmolab-redux.talmo-lab.workers.dev for comparison.
 
 **Going live.** The site is ready to replace talmolab.org and the switch is off:
-[`docs/cutover.md`](docs/cutover.md) is the procedure (one repository variable and one
-workflow run) and the rollback. [`docs/parity.md`](docs/parity.md) maps every page,
+[`docs/cutover.md`](docs/cutover.md) is the procedure (two Cloudflare secrets, one
+repository variable, one workflow run) and the rollback. [`docs/parity.md`](docs/parity.md) maps every page,
 image and file of the live site to where it lands here.
 
 ## Commands

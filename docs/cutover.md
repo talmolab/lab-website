@@ -37,20 +37,26 @@ Use `--dry-run`, which uploads nothing.
 
 ## Before
 
-1. **Merge to `main`** and confirm the preview is right:
+1. **Give CI its Cloudflare credentials.** As of 2026-11-14 the repository has neither
+   secret, so CI builds but has never deployed: every preview so far was deployed by
+   hand. Repository → Settings → Secrets and variables → Actions → Secrets:
+   - `CLOUDFLARE_ACCOUNT_ID`: the account that holds the `talmolab.org` zone.
+   - `CLOUDFLARE_API_TOKEN`: able to deploy Workers on that account. The cutover also
+     attaches a custom domain, which touches the `talmolab.org` zone, so include that
+     zone. Cloudflare's custom-domain page does not list the scopes and this was not
+     tested against the real account: if the production deploy ends in an authorization
+     error, add Zone → Workers Routes → Edit and Zone → DNS → Edit on `talmolab.org`.
+2. **Deploy the preview from CI and check it.** Actions → **Deploy** → Run workflow, on
+   `main`. With the secrets in place the `build` job deploys `talmolab-next` and then
+   runs the URL gate against it; `production` is skipped. This is the rehearsal: the
+   same build, on Cloudflare, with nothing at stake. To run the gate yourself:
    ```bash
    ./scripts/check-urls.sh https://talmolab-next.talmo-lab.workers.dev
    ```
-2. **Write down the current DNS records** for `talmolab.org` and `www` (Cloudflare
+3. **Write down the current DNS records** for `talmolab.org` and `www` (Cloudflare
    dashboard → talmolab.org → DNS → Records). They are the rollback. Expect the apex
    to be `A` records for GitHub Pages (`185.199.108.153` … `111.153`) or a flattened
    `CNAME` to `talmolab.github.io`, proxied.
-3. **Check the API token.** The preview deploy only needs to upload a Worker. This one
-   also attaches a custom domain, which touches the `talmolab.org` zone, so
-   `CLOUDFLARE_API_TOKEN` must include that zone. Cloudflare's custom-domain page does
-   not list the scopes and this was not tested against the real account: if the deploy
-   step ends in an authorization error, give the token Zone → Workers Routes → Edit and
-   Zone → DNS → Edit on `talmolab.org` and re-run.
 4. **Decide the two open content questions** in PR 7 if you want them settled first
    (the mills-2022 association, the site name). Neither blocks the cutover.
 
@@ -64,7 +70,7 @@ Use `--dry-run`, which uploads nothing.
 
 If the deploy step fails because of the existing DNS record (Cloudflare's docs say a
 custom domain cannot be created on a hostname that has a CNAME): delete the apex record
-you wrote down in step 2 of *Before*, and re-run the job. The site is unreachable
+you wrote down in step 3 of *Before*, and re-run the job. The site is unreachable
 between those two actions, so do them back to back.
 
 From here on every push to `main`, and the Monday rebuild, deploys to talmolab.org.
