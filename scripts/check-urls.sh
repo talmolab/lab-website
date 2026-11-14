@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# §8 cutover gate. Asserts every URL the live site serves still resolves.
+# §8 cutover gate. Asserts every URL the live site serves still resolves: pages, and
+# the images and icons under /images/ and /favicons/ (test/live-urls.txt).
 #
 #   scripts/check-urls.sh https://talmolab-site.talmo-lab.workers.dev
 #

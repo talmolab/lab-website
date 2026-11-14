@@ -39,6 +39,30 @@
 /images/papers/:name.png  /images/papers/:name.webp  301
 /images/papers/:name.jpg  /images/papers/:name.webp  301
 
+# --- Live /images/ and /favicons/ files that moved --------------------------------
+# The photos and portraits keep their old URLs and bytes (src/pages/images/[file].ts).
+# These are the ones whose content changed address or was replaced by the v003 brand.
+/images/nn_systems.png  /media/nn-systems.png  301
+
+# Older portraits of Talmo, superseded on the live site itself but still served there.
+/images/talmo-pereira.jpg      /images/talmo-pereira-2024-09-alt%401x.png  301
+/images/talmo-pereira-old.jpg  /images/talmo-pereira-2024-09-alt%401x.png  301
+
+# The old flask logo. Anything still embedding it gets the current mark instead.
+/images/logo.svg                 /talmolab-mark-light.svg  301
+/images/logo_static.svg          /talmolab-mark-light.svg  301
+/images/logo_static_outline.svg  /talmolab-mark-light.svg  301
+/images/logo_static_grey_bg.svg  /talmolab-mark-dark.svg   301
+/images/logo_static_grey_bg.png  /icon-512.png             301
+
+# Jekyll kept its icons in /favicons/. Home-screen shortcuts and link unfurls made
+# before the cutover still ask for them.
+/favicons/favicon.png          /favicon-32.png        301
+/favicons/android.png          /icon-192.png          301
+/favicons/ios.png              /apple-touch-icon.png  301
+/favicons/share-thumbnail.jpg  /og-card.png           301
+/favicons/site.webmanifest     /site.webmanifest      301
+
 # @astrojs/sitemap emits sitemap-index.xml. The live site serves /sitemap.xml and
 # §8 requires it keep resolving, so bridge the old name. Search engines follow a
 # 301 on a sitemap without complaint.
