@@ -56,6 +56,13 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           # No --env: the action's default `deploy` targets the top-level (preview)
           # Worker. wrangler warns that environments exist; that is expected here.
+      - name: Every live URL resolves on the preview
+        if: github.event_name != 'pull_request' && steps.creds.outputs.ready == 'true'
+        # The same gate production runs, first on the preview: `production` needs this
+        # job, so a build that breaks an old URL stops here, before talmolab.org.
+        run: |
+          sleep 20
+          ./scripts/check-urls.sh https://talmolab-next.talmo-lab.workers.dev
 
   production:
     needs: build
@@ -70,6 +77,18 @@ jobs:
       group: production
       cancel-in-progress: false
     steps:
+      - name: Require deploy credentials
+        env:
+          HAS_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+          HAS_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+        # The preview deploy is skipped quietly without credentials. This one must not
+        # be: PRODUCTION_DOMAIN says the site should be live, so a silent skip would
+        # leave talmolab.org stale with a green run.
+        run: |
+          if [ "$HAS_TOKEN" != "true" ] || [ "$HAS_ACCOUNT" != "true" ]; then
+            echo "::error::PRODUCTION_DOMAIN is set, but the CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets are not both set. See docs/cutover.md."
+            exit 1
+          fi
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
