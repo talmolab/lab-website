@@ -6,9 +6,9 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "build:fast": "astro build",
-    "preview": "wrangler dev",
+    "preview": "wrangler dev --env=\"\"",
     "check": "astro check",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy --env=\"\""
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

@@ -8,10 +8,18 @@ The rebuild of [talmolab.org](https://talmolab.org) ("fresh start", branch `fres
 an **Astro 6** static site on **Cloudflare Workers**, live as a preview at
 https://talmolab-next.talmo-lab.workers.dev. It uses only the media the live site already
 has, and maps every live page to a page or a decided redirect (`docs/parity.md`).
-talmolab.org itself is still served from `talmolab/lab-website`; nothing here can affect
-it. This Worker (`talmolab-next`) declares no routes, and non-production builds are
-noindexed. The earlier direction-C build stays up at
-https://talmolab-redux.talmo-lab.workers.dev (Worker `talmolab-redux`) for comparison.
+talmolab.org itself is still served from `talmolab/lab-website`. The default Worker
+(`talmolab-next`) declares no routes, and non-production builds are noindexed. The
+earlier direction-C build stays up at https://talmolab-redux.talmo-lab.workers.dev
+(Worker `talmolab-redux`) for comparison.
+
+**The one thing here that can reach talmolab.org** is `env.production` in
+`wrangler.jsonc` (Worker `talmolab-org`, custom domain `talmolab.org`). Deploying it is
+the cutover, and wrangler replaces the hostname's DNS record without asking when it is
+not in a terminal. CI does it only while the repository variable `PRODUCTION_DOMAIN` is
+`talmolab.org`. Do not run `wrangler deploy --env production` yourself, for any reason,
+unless the owner has asked for the cutover in so many words; `--dry-run` is the way to
+check the config. The procedure and the rollback are in `docs/cutover.md`.
 
 ## Commands
 
@@ -19,8 +27,14 @@ https://talmolab-redux.talmo-lab.workers.dev (Worker `talmolab-redux`) for compa
 npm run dev        # astro dev on :4321
 npm run build      # astro check && astro build
 npm run preview    # wrangler dev over dist/: test routing and redirects here, not in dev
-npm run deploy     # build, then wrangler deploy
+npm run deploy     # build, then wrangler deploy to the PREVIEW (talmolab-next)
+
+./scripts/check-urls.sh <base>         # every URL the live site serves resolves (152)
+./scripts/check-production.sh <base>   # it is the production build: indexable, canonical
 ```
+
+For the second check locally: `SITE_URL=https://talmolab.org npm run build`, then
+`npm run preview -- --port 8790` and point both scripts at `http://127.0.0.1:8790`.
 
 Export `GITHUB_TOKEN` before building (`export GITHUB_TOKEN=$(gh auth token)`): the repos
 loader calls the GitHub API and runs out of unauthenticated quota fast.
@@ -31,7 +45,7 @@ loader calls the GitHub API and runs out of unauthenticated quota fast.
 |---|---|---|---|
 | `discover.yaml` | Mondays 07:00 UTC, or by hand | Stages new papers and preprint links in `src/data/publications.yaml`, draft news in `src/content/news/`; validates; opens a PR; rewrites the open "Discovery report" issue | commits to main, publishes |
 | `member.yaml` | a "Lab member update" issue (form in `.github/ISSUE_TEMPLATE/member.yml`) | `scripts/member-from-issue.mjs` edits `src/content/people/` and the portrait; validates; opens a PR closing the issue | processes issues from non-collaborators |
-| `deploy.yaml` | push to main, PRs, Mondays 09:00 UTC | builds; deploys when `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets exist | — |
+| `deploy.yaml` | push to main, PRs, Mondays 09:00 UTC | builds; deploys the preview when `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets exist; deploys talmolab.org, then runs both checks against it, only while the variable `PRODUCTION_DOMAIN` is `talmolab.org` | deploys production from a PR or a branch |
 
 PRs opened by these workflows use the Actions token, so they do not trigger CI
 themselves. That is why each one runs `astro check` before opening its PR.
@@ -51,7 +65,8 @@ guardrail on content.
 - **publications**: `src/data/publications.yaml` is an allowlist overlay over OpenAlex.
   Keys are permanent. Preprint and published version are one entry. Resolve via Crossref
   `is-preprint-of`, forward only, and never fuzzy-match. Thumbnails:
-  `node scripts/paper-thumb.mjs <key> <figure>`.
+  `node scripts/paper-thumb.mjs <key> <figure>`. Keep them local: `image:` accepts a URL,
+  but a hotlinked publisher figure breaks whenever the publisher says so.
 - **repos**: `src/data/repos.yaml`, array order is display order; optional `title`
   (display name) and `media:` list.
 - **areas**: `src/content/areas/*.md`: prose plus optional `media:` (the first item leads),
@@ -99,6 +114,15 @@ Clips with identifiable people need consent first.
 Cmd-K, the header button, the 404 page). `/publications/` also has an in-page filter that
 keeps the Greene template's `?search=` syntax: words AND, `"phrases"` OR, `"tag: x"`.
 Member pages link to `/publications/?search="Name"`, as the live site did.
+
+## Old URLs
+
+`test/live-urls.txt` is every address the live Jekyll site answers: pages, and the
+images and icons under `/images/` and `/favicons/`. All of them must keep resolving.
+Pages and redirects are in `public/_redirects` (first match wins; read its comments
+before reordering). The live site's photos and portraits are republished at their old
+`/images/<name>` paths by `src/pages/images/[file].ts`, straight from `src/assets/`;
+that list is closed, so a new portrait does not go in it.
 
 ## Things that will waste your time
 
