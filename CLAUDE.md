@@ -5,9 +5,13 @@ Guidance for Claude Code in this repository.
 ## What this is
 
 [talmolab.org](https://talmolab.org): an **Astro 6** static site on **Cloudflare
-Workers**, live since 2026-11-20. It replaced the Jekyll site in `talmolab/lab-website`,
+Workers**, live since 2026-11-20. It replaced the Jekyll site in `talmolab/lab-website-legacy`,
 which still serves on GitHub Pages as the rollback for now. Every URL the old site served
 keeps resolving: `docs/parity.md` maps each one, and `scripts/check-urls.sh` enforces it.
+
+**Repositories** (renamed 2026-11-20): this one is `talmolab/lab-website`, public, named
+`lab-website-redux` until then (local checkouts may keep that folder name; GitHub
+redirects the old URL). The old Jekyll site is `talmolab/lab-website-legacy`.
 
 **Every merge to `main` deploys to talmolab.org.** `.github/workflows/deploy.yaml` builds,
 deploys the noindexed preview Worker `talmolab-next`
@@ -86,7 +90,7 @@ guardrail on content.
 2. Paste it into an area's or a repo's `media:` list and write a real `alt`.
 3. Build. A missing file or a typo fails `astro check`.
 
-New footage is catalogued in `lab-website/scratch/2026-10-03-redesign-redux/CATALOGUE.md`.
+New footage is catalogued in `lab-website-legacy`'s local `scratch/2026-10-03-redesign-redux/CATALOGUE.md` (gitignored, not on GitHub).
 Clips with identifiable people need consent first.
 - **posts / news**: empty today; news arrives as `draft: true`.
 

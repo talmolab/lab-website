@@ -26,7 +26,7 @@ Since then every merge to `main` deploys, and `main` requires a PR with a green 
 
 | | Live site | This rebuild |
 |---|---|---|
-| Source | `talmolab/lab-website`, `main` | this repo, `main` |
+| Source | `talmolab/lab-website` (now `lab-website-legacy`), `main` | this repo (then `lab-website-redux`), `main` |
 | Host | GitHub Pages, behind Cloudflare's proxy (`server: cloudflare`, `x-github-request-id`) | Cloudflare Workers static assets |
 | Address | `talmolab.org`; `www` and `http://` 301 to `https://talmolab.org/` | `talmolab-next.talmo-lab.workers.dev` (noindexed) |
 
@@ -131,7 +131,7 @@ Status as of 2026-11-20.
   `https://talmolab.org/sitemap-index.xml`. The old `/sitemap.xml` 301s to it.
 - **Link unfurls.** Slack, X and LinkedIn cache the old card. Each has a debugger that
   refetches; the new card is `/og-card.png`.
-- **The old site.** Leave `lab-website` and its Pages deployment alone for a few weeks:
+- **The old site.** Leave `lab-website-legacy` and its Pages deployment alone for a few weeks:
   it is the rollback. Then switch Pages off, archive the repo, and revoke its Cloudflare
   API token (Account API Tokens: "lab-website deploy - GitHub Actions (2026-08)").
 - **The previews.** Done: `talmolab-next` keeps deploying from `main` as the noindexed
