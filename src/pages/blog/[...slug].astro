@@ -15,7 +15,7 @@ const date = post.data.date.toLocaleDateString('en-US', { day: 'numeric', month:
   <div class="wrap">
     <article>
       <header class="page-head">
-        <nav class="crumbs mono" aria-label="Breadcrumb"><a href="/blog/">Blog</a><span aria-hidden="true">/</span><time datetime={post.data.date.toISOString()}>{date}</time></nav>
+        <nav class="crumbs meta" aria-label="Breadcrumb"><a href="/blog/">Blog</a><span aria-hidden="true">/</span><time datetime={post.data.date.toISOString()}>{date}</time></nav>
         <h1 class="title">{post.data.title}</h1>
         {authors.length > 0 && (
           <p class="muted">

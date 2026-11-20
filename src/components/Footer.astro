@@ -36,7 +36,7 @@ const updated = built.toLocaleDateString('en-US', { day: 'numeric', month: 'long
         </ul>
       </nav>
     </div>
-    <p class="foot-meta mono">
+    <p class="foot-meta meta">
       <span>&copy; {built.getFullYear()} {LAB} at the {INSTITUTE}</span>
       <span>Last updated <time datetime={built.toISOString().slice(0, 10)}>{updated}</time></span>
     </p>

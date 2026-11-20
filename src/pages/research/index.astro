@@ -16,7 +16,7 @@ const rendered = await Promise.all(
   })),
 );
 ---
-<Base title="Research" description="Research in the Talmo Pereira Lab: computational ethology, complex morphology phenotyping and neuro-AI modeling.">
+<Base title="Research" description="Research in the Talmo Lab: computational ethology, complex morphology phenotyping and neuro-AI modeling.">
   <div class="wrap">
     <header class="page-head">
       <h1 class="title">Research</h1>
@@ -24,7 +24,7 @@ const rendered = await Promise.all(
         Our lab leverages <strong>deep learning</strong> and <strong>computer vision</strong> to
         study complex biological systems by <strong>building novel computational tools</strong>.
       </p>
-      <nav class="jump mono" aria-label="Research areas">
+      <nav class="jump meta" aria-label="Research areas">
         {areas.map((a, i) => <a href={`#${a.id}`}>{letters[i]}. {a.data.name}</a>)}
       </nav>
     </header>

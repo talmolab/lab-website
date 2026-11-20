@@ -49,7 +49,7 @@ const links = [
 // this name, with the same ?search= URL.
 const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
 ---
-<Base title={d.name} description={`${d.name}, ${roles.join(', ')} in the Talmo Pereira Lab at the Salk Institute.`}>
+<Base title={d.name} description={`${d.name}, ${roles.join(', ')} in the Talmo Lab at the Salk Institute.`}>
   <div class="wrap">
     <article class="member">
       <div class="member-side">
@@ -61,14 +61,14 @@ const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
         {links.length > 0 && (
           <ul class="member-links" aria-label="Links">
             {links.map((x) => (
-              <li><a href={x.href}><span>{x.label}</span>{x.show && <span class="mono">{x.show}</span>}</a></li>
+              <li><a href={x.href}><span>{x.label}</span>{x.show && <span class="meta">{x.show}</span>}</a></li>
             ))}
           </ul>
         )}
       </div>
 
       <div class="member-main">
-        <nav class="crumbs mono" aria-label="Breadcrumb">
+        <nav class="crumbs meta" aria-label="Breadcrumb">
           <a href="/team/">Team</a>
           <span aria-hidden="true">/</span>
           {current ? <a href="/team/#current">In the lab</a> : <a href="/team/#alumni">Alumni</a>}
@@ -76,7 +76,7 @@ const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
         <h1 class="title">{d.name}</h1>
         <div class="member-role">
           <p class="roles">{roles.join(', ')}</p>
-          <p class="mono muted">
+          <p class="meta muted">
             {current ? `Since ${d.appointments[0].start?.slice(0, 4) ?? '—'}` : years(person)}
             {earlier.length > 0 && <> · previously {earlier.join(', ')}</>}
             {coAdvisors.length > 0 && <> · co-advised by {coAdvisors.join(' and ')}</>}

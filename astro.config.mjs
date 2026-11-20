@@ -31,8 +31,9 @@ export default defineConfig({
   ],
 
   fonts: [
-    // Source Sans 3 + JetBrains Mono, self-hosted. Subsets include Vietnamese and
-    // Greek: coverage of real author names and titles is why these faces were chosen.
+    // Source Sans 3, self-hosted, and the only face: there is no monospace. Subsets
+    // include Vietnamese and Greek: coverage of real author names and titles is why
+    // it was chosen.
     {
       provider: fontProviders.google(),
       name: 'Source Sans 3',
@@ -42,15 +43,6 @@ export default defineConfig({
       styles: ['normal', 'italic'],
       subsets: ['latin', 'latin-ext', 'vietnamese', 'greek'],
       fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
-    },
-    {
-      provider: fontProviders.google(),
-      name: 'JetBrains Mono',
-      cssVariable: '--font-mono-src',
-      // Mono is for small metadata only, always at 400.
-      weights: [400],
-      subsets: ['latin', 'latin-ext', 'vietnamese', 'greek'],
-      fallbacks: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
     },
   ],
 });
