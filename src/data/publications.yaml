@@ -20,21 +20,105 @@
 # Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
 # API at build time; anything written here overrides them.
 
-# Added 2026-11-20 from the Google Scholar profile and the discovery report: lab-led
-# preprints (a lab member first, Talmo last). No thumbnails yet, so they show the venue
-# tile; add one with scripts/paper-thumb.mjs.
+# Added 2026-11-20 from the Google Scholar profile and the discovery report. No
+# thumbnails yet, so they show the venue tile; add one with scripts/paper-thumb.mjs.
+#
+# Conference papers (NeurIPS and its workshops) have no DOI. Their version of record is
+# a manual block linking OpenReview or the venue, and the arXiv version is the preprint.
+# Dates are when OpenReview published the accepted paper.
 - key: leonardis-2026
   # LUC3D. bioRxiv's new DOI prefix (10.64898) since late 2026.
   published: { doi: "10.64898/2026.11.17.767188" }
 
 - key: bian-2026
-  published: { doi: "10.48550/arxiv.2611.00688" }
+  # NeurReps 2026 Proceedings Track (arXiv comment: "Accepted to NeurReps 2026"). The
+  #   proceedings are not public on OpenReview yet
+  #   (openreview.net/group?id=NeurIPS.cc/2026/Workshop/NeurReps_Proceedings); link the
+  #   paper's forum there, or its PMLR page, once it appears. Date: arXiv v1.
+  manual:
+    title: "Shaped by What's Missing: Topological Invariance Simplification Discovers Behavioral Transitions"
+    authors:
+      - "Kaiwen Bian"
+      - "Eric J. Leonardis"
+      - "Yuanjia Yang"
+      - "Charles Zhang"
+      - "Yusu Wang"
+      - "Talmo D. Pereira"
+    venue: "NeurIPS 2026 Workshop: NeurReps"
+    date: "2026-10-31"
+    link: "https://neurreps.org/"
+  preprint: { doi: "10.48550/arxiv.2611.00688" }
+
+- key: bian-2026b
+  # NeurIPS 2026 Workshop on Neuro-Symbolic Embodied Intelligence (NEmo), oral. No arXiv
+  #   version. Google Scholar's entry links this same OpenReview forum.
+  manual:
+    title: "Discrete Actions for Naturalistic Behavior in Embodied Biomechanical Animal Models"
+    authors:
+      - "Kaiwen Bian"
+      - "Charles Y. Zhang"
+      - "Yuanjia Yang"
+      - "Aidan Sirbu"
+      - "Eric Leonardis"
+      - "Blake Aaron Richards"
+      - "Bence Olveczky"
+      - "Talmo Pereira"
+    venue: "NeurIPS 2026 Workshop: Neuro-Symbolic Embodied Intelligence"
+    date: "2026-09-30"
+    link: "https://openreview.net/forum?id=FBEAYXac4j"
+
+- key: sirbu-2026
+  # NeurIPS 2026 (main conference, poster)
+  manual:
+    title: "A latent control model for realistic rodent motion"
+    authors:
+      - "Aidan Sirbu"
+      - "Charles Y. Zhang"
+      - "Yuanjia Yang"
+      - "Bence Olveczky"
+      - "Talmo Pereira"
+      - "Blake Aaron Richards"
+    venue: "NeurIPS 2026"
+    date: "2026-09-24"
+    link: "https://openreview.net/forum?id=zebI1xXFB1"
+  preprint: { doi: "10.48550/arxiv.2610.27279" }
+  links:
+    - { label: "Project page", url: "https://aidansirbu.com/SCAMPER-site/" }
+
+- key: marks-2026
+  # Days of our Mice consortium benchmark
+  published: { doi: "10.64898/2026.10.18.758876" }
 
 - key: kiffer-2026
   published: { doi: "10.64898/2026.04.30.721950" }
 
+- key: liu-2026
+  published: { doi: "10.64898/2026.05.04.721738" }
+
 - key: leonardis-2025
-  published: { doi: "10.48550/arxiv.2511.21848" }
+  # NeurIPS 2025 Workshop: Data on the Brain & Mind (Findings track, poster)
+  manual:
+    title: "Massively Parallel Imitation Learning of Mouse Forelimb Musculoskeletal Reaching Dynamics"
+    authors:
+      - "Eric Leonardis"
+      - "Akira Nagamori"
+      - "Ayesha Thanawalla"
+      - "Yuanjia Yang"
+      - "Joshua Park"
+      - "Hutton Saunders"
+      - "Eiman Azim"
+      - "Talmo Pereira"
+    venue: "NeurIPS 2025 Workshop: Data on the Brain & Mind"
+    date: "2025-12-05"
+    link: "https://openreview.net/forum?id=jJS0ZT0F8x"
+  preprint: { doi: "10.48550/arxiv.2511.21848" }
+
+- key: jia-2025
+  # Tye lab. The Research Square copy (10.21203/rs.3.rs-6615222/v1) is the same work.
+  published: { doi: "10.1101/2025.05.09.653162" }
+
+- key: haspel-2023
+  published: { doi: "10.48550/arxiv.2308.06578" }
 
 # DISCOVERED 2026-08-31 — review before merging.
 # Quantifying Behavior Using Deep Learning
@@ -43,10 +127,11 @@
   published: { doi: "10.1016/j.biopsych.2023.02.038" }
 
 - key: cheng-2026
+  # associated BY HAND, confirmed by Talmo (2026-11-20): neither Crossref nor bioRxiv
+  #   records the relation; the title changed ("Asymmetric Social Representations in the
+  #   Prefrontal Cortex for Cooperative Behavior"), all 16 authors match in order
+  preprint: { doi: "10.1101/2025.08.27.672249" }
   published: { doi: "10.1038/s41586-026-10900-1" }
-
-- key: mitelut-2025
-  published: { doi: "10.1371/journal.pbio.3003348" }
 
 - key: duporge-2025
   published: { doi: "10.1038/s41526-025-00460-5" }
@@ -95,7 +180,14 @@
   image: "papers/berrigan-2023.png"
 
 - key: mitelut-2023
-  published: { doi: "10.1101/2023.11.10.566632" }
+  # associated BY HAND, confirmed by Talmo (2026-11-20): the PLoS Biology paper is the
+  #   published version of this preprint, though the title changed entirely (bioRxiv v1
+  #   "Distinct developmental trajectories of autonomous behaviors and agency in rodents",
+  #   v2 "A behavioral roadmap for the development of agency in the rodent"). All 9
+  #   authors match in order; neither Crossref nor bioRxiv records the relation. This
+  #   replaces the separate mitelut-2025 row; the key is the earliest version's year.
+  preprint: { doi: "10.1101/2023.11.10.566632" }
+  published: { doi: "10.1371/journal.pbio.3003348" }
   image: "papers/mitelut-2023.png"
 
 - key: patel-2023
@@ -107,6 +199,10 @@
   image: "papers/patel-2023.png"
 
 - key: luxem-2023
+  # associated BY HAND, confirmed by Talmo (2026-11-20): arXiv carries no journal DOI;
+  #   all 8 authors match in order, the title's end changed ("Setup, Methods, and
+  #   Development" became "Setup, methods, and best practices")
+  preprint: { doi: "10.48550/arxiv.2204.02842" }
   published: { doi: "10.7554/elife.79305" }
   image: "papers/luxem-2022.png"
 
@@ -138,6 +234,10 @@
   image: "papers/wang-2021.png"
 
 - key: pereira-2022
+  # associated BY HAND, confirmed by Talmo (2026-11-20): neither Crossref nor bioRxiv
+  #   records the relation; the preprint was "SLEAP: Multi-animal pose tracking", and all
+  #   12 of its authors are among the paper's 21
+  preprint: { doi: "10.1101/2020.08.31.276246" }
   published: { doi: "10.1038/s41592-022-01426-1" }
   image: "papers/pereira-2022.webp"
 
