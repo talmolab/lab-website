@@ -30,6 +30,54 @@ type Meta = {
   citations?: number;
 };
 
+/** Statuses worth asking again: throttling and server-side failures. A 404 is an
+ *  answer (Crossref has no arXiv DOIs, by design) and is returned at once. */
+const RETRYABLE = new Set([408, 425, 429, 500, 502, 503, 504]);
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * `fetch` that retries network errors and RETRYABLE statuses with backoff (1 s, 2 s,
+ * 4 s, plus jitter; a Retry-After header wins, capped at 30 s). Every overlay entry is
+ * resolved on every build and a single failed lookup fails the build, so a one-off 429
+ * or 503 from OpenAlex used to block a production deploy until someone re-ran it (twice
+ * on 2026-11-20, for entries that resolved on the job before and after).
+ *
+ * Gives back the last response once retries run out, so callers keep their `!res.ok`
+ * handling; throws only if the network never answered. `label` names the request in
+ * logs, so the URL (with its api_key) is never printed.
+ */
+export async function fetchWithRetry(
+  url: string | URL,
+  label: string,
+  logger?: { warn(msg: string): void },
+  { tries = 4, baseMs = 1000 } = {},
+): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= tries; attempt++) {
+    let res: Response | undefined;
+    try {
+      res = await fetch(url);
+      if (!RETRYABLE.has(res.status)) return res;
+    } catch (e) {
+      lastError = e;
+    }
+    if (attempt === tries) {
+      if (res) {
+        logger?.warn(`${label}: HTTP ${res.status} after ${tries} attempts`);
+        return res;
+      }
+      throw new Error(`${label}: no response after ${tries} attempts (${String(lastError)})`);
+    }
+    const retryAfter = Number(res?.headers.get('retry-after'));
+    const wait = Number.isFinite(retryAfter) && retryAfter > 0
+      ? Math.min(retryAfter * 1000, 30_000)
+      : baseMs * 2 ** (attempt - 1) + Math.random() * 250;
+    logger?.warn(`${label}: ${res ? `HTTP ${res.status}` : 'network error'}, retrying in ${Math.round(wait)} ms`);
+    await sleep(wait);
+  }
+  throw new Error('unreachable');
+}
+
 function key() {
   // A key raises the daily budget but is not required for these calls: filter and
   // singleton lookups both answer unauthenticated (verified 2026-08-30). Singleton
@@ -42,8 +90,11 @@ async function openalexByDoi(doi: string, logger: any): Promise<Meta | null> {
   url.searchParams.set('mailto', MAILTO);
   const k = key();
   if (k) url.searchParams.set('api_key', k);
-  const res = await fetch(url);
-  if (!res.ok) return null;
+  const res = await fetchWithRetry(url, `OpenAlex ${doi}`, logger);
+  if (!res.ok) {
+    if (res.status !== 404) logger.warn(`OpenAlex ${doi}: HTTP ${res.status}`);
+    return null;
+  }
   const w: any = await res.json();
   const cost = w?.meta?.cost_usd;
   if (cost) logger.info(`openalex cost ${cost} for ${doi}`);
@@ -61,8 +112,8 @@ async function openalexByDoi(doi: string, logger: any): Promise<Meta | null> {
   };
 }
 
-async function crossrefByDoi(doi: string): Promise<Meta | null> {
-  const res = await fetch(`${CROSSREF}/works/${doi}?mailto=${MAILTO}`);
+async function crossrefByDoi(doi: string, logger?: any): Promise<Meta | null> {
+  const res = await fetchWithRetry(`${CROSSREF}/works/${doi}?mailto=${MAILTO}`, `Crossref ${doi}`, logger);
   if (!res.ok) return null;
   const m: any = (await res.json()).message;
   const parts = m.issued?.['date-parts']?.[0] ?? [];
@@ -81,7 +132,7 @@ async function crossrefByDoi(doi: string): Promise<Meta | null> {
 /** Follow `is-preprint-of` forward from a preprint. §6.1: only ever forward — the
  *  reverse direction points at a Research Square DOI rather than the bioRxiv one. */
 export async function publishedVersionOf(doi: string): Promise<string | null> {
-  const res = await fetch(`${CROSSREF}/works/${doi}?mailto=${MAILTO}`);
+  const res = await fetchWithRetry(`${CROSSREF}/works/${doi}?mailto=${MAILTO}`, `Crossref ${doi}`);
   if (!res.ok) return null;
   const rel = (await res.json()).message?.relation?.['is-preprint-of'];
   return rel?.[0]?.id ?? null;
@@ -119,7 +170,7 @@ async function resolve(ref: Ref, logger: any): Promise<Meta | null> {
   // would associate the two without Crossref's is-preprint-of, which is exactly the
   // fuzzy match the overlay forbids (and it mislabelled preprint links as journals).
   // So a different DOI in the answer means: get the exact record from Crossref.
-  const cr = await crossrefByDoi(ref.doi);
+  const cr = await crossrefByDoi(ref.doi, logger);
   if (cr) return cr;
   if (oa) {
     logger.warn(`${ref.doi}: OpenAlex answered with ${oa.doi} and Crossref has no record; keeping the requested DOI`);
