@@ -7,7 +7,7 @@ The website of the lab of Talmo Pereira at the Salk Institute.
 search indexes.
 
 This site replaced the Jekyll site in
-[`talmolab/lab-website`](https://github.com/talmolab/lab-website) on 2026-11-20. That repo
+[`talmolab/lab-website-legacy`](https://github.com/talmolab/lab-website-legacy) (named `lab-website` until then) on 2026-11-20. That repo
 still serves the old site on GitHub Pages as the rollback for a few weeks;
 [`docs/cutover.md`](docs/cutover.md) records how the switch was made and how to undo it.
 [`docs/parity.md`](docs/parity.md) maps every page, image and file of the old site to
@@ -45,7 +45,7 @@ quickly. Publications come from OpenAlex and need no key.
 
 ## What came from where
 
-Content, schemas and loaders are carried over from `lab-website` (branch `astro-migration`),
+Content, schemas and loaders are carried over from `lab-website-legacy` (branch `astro-migration`),
 so the rules in its `CLAUDE.md` still hold: alumni status is derived from `end`, the
 publications overlay is an allowlist, keys are permanent. `docs/parity.md` maps every page
 of the live site to this one.
