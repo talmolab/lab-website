@@ -175,3 +175,35 @@
 /images/tom-han.jpg
 /images/will-knickrehm.jpg
 /images/zaher-abbara.jpg
+
+# Other shapes of the same pages, found 2026-11-20 by crawling talmolab.org, listing the
+# lab-website tree and querying the Wayback Machine for every archived talmolab.org URL.
+# GitHub Pages answers each one; they must resolve here too, by a 301 (the gate rejects
+# 302 and 307, which do not move a search index).
+/index.html
+/research
+/research/index.html
+/publications
+/publications/index.html
+/team
+/join
+/join/index.html
+/tools
+/tools/index.html
+/blog
+/blog/index.html
+/contact
+/contact/index.html
+/members/talmo-pereira
+/members/gregory-quach
+/members/neeraj-venna
+/members/ramiz-hajj
+/2019/01/07/example-post-1
+/2019/12/14/example-post-2
+/2020/07/02/example-post-3
+/CLAUDE
+/CLAUDE.md
+# Archived at 200 before the page was removed in Oct 2024; may be linked from elsewhere.
+/members/sungwook-min.html
+# Never a page, but the obvious address to try for the people index.
+/members/
