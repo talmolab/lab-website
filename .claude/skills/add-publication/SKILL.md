@@ -39,7 +39,39 @@ bug.
    build fails loudly rather than shipping a blank entry.
 
 Optional fields: `image` (relative to `public/images/`, or an absolute URL),
-`tags`, `highlight: true`, and `links: [{ label, url }]`.
+`tags`, `highlight: true`, `links: [{ label, url }]`, and `equal` / `corresponding`
+(next section).
+
+### Co-first and corresponding authors
+
+No API reports these, so the overlay does. Copy them from the version of record (the
+publisher's page or PDF), never from memory or a preprint, and leave them out when you
+cannot check:
+
+```yaml
+- key: doe-2027                                  # an example, not a real entry
+  published: { doi: "10.1234/example" }
+  equal: ["Jane Doe", "Wei Zhang"]                # "These authors contributed equally"
+  corresponding: ["Ana Ruiz"]
+```
+
+They go at the top level of the entry, beside `published:` or `manual:`, and apply to
+the version the site shows. Each name is matched to the author list with `nameKey`
+(first and last name; case, accents, middle names and initials ignored), so "Talmo
+Pereira" finds "Talmo D. Pereira". Write the name **as the paper prints it**: an alias
+in the people collection does not count here, so Kevin Bian's papers need "Kaiwen
+Bian". A name that matches no author, or two, fails the build and prints the paper's
+author list. That is the typo guard; do not loosen it.
+
+The site marks them `*` (equal contribution) and `†` (corresponding author) wherever a
+paper is listed, with a legend on `/publications/` and a tooltip on each mark.
+`/publications.json` carries both lists as printed in `authors`; `/publications.bib`
+carries them as a biblatex data annotation, `author+an = {1=equal; 4=corresponding}`.
+CSL-JSON has no field for either, so `/publications.csl.json` leaves them out.
+
+One mark covers co-first authors. A paper whose last authors also "contributed
+equally" or "jointly supervised" would need a third mark; ask before folding them into
+`equal`.
 
 ### Thumbnail
 

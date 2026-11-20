@@ -16,6 +16,9 @@
 # preprint      The earlier version. Linked secondarily, never listed separately.
 # manual        Everything, for works no API knows about (no DOI at all).
 # image         Thumbnail, relative to public/images/ or an absolute URL.
+# equal         Co-first (equal-contribution) authors, as the paper prints them.
+# corresponding Corresponding authors, likewise. A name not in the author list fails
+#               the build. Copy both from the publisher's page; never guess.
 #
 # Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
 # API at build time; anything written here overrides them.

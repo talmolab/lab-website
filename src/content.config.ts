@@ -148,6 +148,11 @@ const publications = defineCollection({
     key: z.string(),
     title: z.string(),
     authors: z.array(z.string()),
+    /** Authors who contributed equally (co-first) and corresponding authors, from the
+     *  overlay's `equal:` and `corresponding:`. Each is one of `authors`, as printed
+     *  there: the loader fails the build on a name it cannot find. */
+    equal: z.array(z.string()).default([]),
+    corresponding: z.array(z.string()).default([]),
     venue: z.string().optional(),
     date: z.string().optional(),
     doi: z.string().optional(),
