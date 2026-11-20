@@ -125,10 +125,10 @@ Status as of 2026-11-20.
 - **`www`.** Done: handled by the Redirect Rule from step 4 of *Before*, not by GitHub,
   so it does not depend on the old site. `check-production.sh` tests it, so the Monday
   deploy fails loudly if it ever stops.
-- **Search Console.** Not done: no Search Console property exists for talmolab.org yet
-  (the `google-site-verification` TXT record belongs to Google Workspace). Add a domain
-  property, verify it with the TXT record Search Console gives, then submit
-  `https://talmolab.org/sitemap-index.xml`. The old `/sitemap.xml` 301s to it.
+- **Search Console.** Done: domain property `talmolab.org` added on 2026-11-20 (verified
+  automatically by the existing `google-site-verification` record, which belongs to the
+  same Google account) and `https://talmolab.org/sitemap-index.xml` submitted. The old
+  `/sitemap.xml` 301s to it.
 - **Link unfurls.** Slack, X and LinkedIn cache the old card. Each has a debugger that
   refetches; the new card is `/og-card.png`.
 - **The old site.** Leave `lab-website-legacy` and its Pages deployment alone for a few weeks:
