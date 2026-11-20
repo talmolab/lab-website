@@ -4,22 +4,28 @@ Guidance for Claude Code in this repository.
 
 ## What this is
 
-The rebuild of [talmolab.org](https://talmolab.org) ("fresh start", branch `fresh-start`):
-an **Astro 6** static site on **Cloudflare Workers**, live as a preview at
-https://talmolab-next.talmo-lab.workers.dev. It uses only the media the live site already
-has, and maps every live page to a page or a decided redirect (`docs/parity.md`).
-talmolab.org itself is still served from `talmolab/lab-website`. The default Worker
-(`talmolab-next`) declares no routes, and non-production builds are noindexed. The
-earlier direction-C build stays up at https://talmolab-redux.talmo-lab.workers.dev
-(Worker `talmolab-redux`) for comparison.
+[talmolab.org](https://talmolab.org): an **Astro 6** static site on **Cloudflare
+Workers**, live since 2026-11-20. It replaced the Jekyll site in `talmolab/lab-website-legacy`,
+which still serves on GitHub Pages as the rollback for now. Every URL the old site served
+keeps resolving: `docs/parity.md` maps each one, and `scripts/check-urls.sh` enforces it.
 
-**The one thing here that can reach talmolab.org** is `env.production` in
-`wrangler.jsonc` (Worker `talmolab-org`, custom domain `talmolab.org`). Deploying it is
-the cutover, and wrangler replaces the hostname's DNS record without asking when it is
-not in a terminal. CI does it only while the repository variable `PRODUCTION_DOMAIN` is
-`talmolab.org`. Do not run `wrangler deploy --env production` yourself, for any reason,
-unless the owner has asked for the cutover in so many words; `--dry-run` is the way to
-check the config. The procedure and the rollback are in `docs/cutover.md`.
+**Repositories** (renamed 2026-11-20): this one is `talmolab/lab-website`, public, named
+`lab-website-redux` until then (local checkouts may keep that folder name; GitHub
+redirects the old URL). The old Jekyll site is `talmolab/lab-website-legacy`.
+
+**Every merge to `main` deploys to talmolab.org.** `.github/workflows/deploy.yaml` builds,
+deploys the noindexed preview Worker `talmolab-next`
+(https://talmolab-next.talmo-lab.workers.dev) and checks it, then, because the repository
+variable `PRODUCTION_DOMAIN` is `talmolab.org`, rebuilds with `SITE_URL` set, deploys
+`env.production` (Worker `talmolab-org`, custom domain `talmolab.org`) and runs both URL
+checks against the live domain. So `main` takes changes only through a PR with a green
+`build` check; open PRs and leave merging to the owner. Unsetting `PRODUCTION_DOMAIN`
+stops production deploys; the rollback is in `docs/cutover.md`.
+
+Do not run `wrangler deploy --env production` by hand: CI is the path, and `--dry-run`
+checks the config. The custom domain is attached, so a deploy only uploads a new version.
+(Attaching it the first time did not replace the apex records: Cloudflare refuses a
+custom domain over existing A records, code 100117. They had to be deleted first.)
 
 ## Commands
 
@@ -84,7 +90,7 @@ guardrail on content.
 2. Paste it into an area's or a repo's `media:` list and write a real `alt`.
 3. Build. A missing file or a typo fails `astro check`.
 
-New footage is catalogued in `lab-website/scratch/2026-10-03-redesign-redux/CATALOGUE.md`.
+New footage is catalogued in `lab-website-legacy`'s local `scratch/2026-10-03-redesign-redux/CATALOGUE.md` (gitignored, not on GitHub).
 Clips with identifiable people need consent first.
 - **posts / news**: empty today; news arrives as `draft: true`.
 
@@ -131,9 +137,10 @@ that list is closed, so a new portrait does not go in it.
 - npm 11 blocks install scripts; `esbuild`, `sharp` and `workerd` are allowed in
   `package.json` `allowScripts`. A new native dependency needs `npm approve-scripts`.
 - `output: 'static'` throughout. If something seems to need SSR, reconsider.
-- A green Deploy run does not mean anything was deployed. Without the
-  `CLOUDFLARE_API_TOKEN` secret the preview deploy step is skipped (true of every run up
-  to 2026-11-14; the previews were deployed by hand). Look at the step, not the run.
+- A green Deploy run does not by itself mean anything was deployed: without the
+  `CLOUDFLARE_API_TOKEN` secret the preview deploy step is skipped quietly (every run up
+  to 2026-11-20 was like that). The production job fails loudly instead. The secrets are
+  set now; if they ever go, look at the steps, not the run.
 - `npm run preview` (wrangler dev) can reload while `astro build` is emptying `dist/`
   and then 404 everything. Restart it after a rebuild.
 - OpenAlex merges preprints with their published versions and answers a preprint DOI with

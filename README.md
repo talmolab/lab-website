@@ -1,21 +1,17 @@
-# talmolab redux
+# talmolab.org
 
-The rebuild of [talmolab.org](https://talmolab.org), the website of Talmo Pereira's lab at
-the Salk Institute: full parity with the live site, the old site's media only, and a
-fresh design on the v003 brand.
+The website of the lab of Talmo Pereira at the Salk Institute.
 
-**Preview:** https://talmolab-next.talmo-lab.workers.dev (kept out of search indexes).
+**Live:** https://talmolab.org, deployed from `main` on every merge.
+**Preview:** https://talmolab-next.talmo-lab.workers.dev, the same build kept out of
+search indexes.
 
-talmolab.org is still served from
-[`talmolab/lab-website`](https://github.com/talmolab/lab-website), and that repo's own Astro
-preview deploys to a different Worker (`talmolab-site`). This repo deploys to
-`talmolab-next`, which declares no routes. The earlier direction-C build is still at
-https://talmolab-redux.talmo-lab.workers.dev for comparison.
-
-**Going live.** The site is ready to replace talmolab.org and the switch is off:
-[`docs/cutover.md`](docs/cutover.md) is the procedure (two Cloudflare secrets, one
-repository variable, one workflow run) and the rollback. [`docs/parity.md`](docs/parity.md) maps every page,
-image and file of the live site to where it lands here.
+This site replaced the Jekyll site in
+[`talmolab/lab-website-legacy`](https://github.com/talmolab/lab-website-legacy) (named `lab-website` until then) on 2026-11-20. That repo
+still serves the old site on GitHub Pages as the rollback for a few weeks;
+[`docs/cutover.md`](docs/cutover.md) records how the switch was made and how to undo it.
+[`docs/parity.md`](docs/parity.md) maps every page, image and file of the old site to
+where it lands here, and `scripts/check-urls.sh` holds every old URL to it.
 
 ## Commands
 
@@ -41,15 +37,15 @@ quickly. Publications come from OpenAlex and need no key.
 - **Publications** are discovered weekly from OpenAlex and Crossref. New papers and
   preprint links arrive as a pull request; anything that needs a decision is listed in
   the standing "Discovery report" issue.
-- **Deploys** happen on every merge to `main`, and weekly to refresh citation counts,
-  once the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repository secrets are set.
-  They go to the preview, and also to talmolab.org once the cutover has been made.
+- **Deploys** happen on every merge to `main`, and on Mondays to refresh citation counts:
+  to the preview, then to talmolab.org, each followed by the URL checks. A merge is a
+  release, so `main` takes changes only through pull requests with a passing build.
 
 `CLAUDE.md` has the details.
 
 ## What came from where
 
-Content, schemas and loaders are carried over from `lab-website` (branch `astro-migration`),
+Content, schemas and loaders are carried over from `lab-website-legacy` (branch `astro-migration`),
 so the rules in its `CLAUDE.md` still hold: alumni status is derived from `end`, the
 publications overlay is an allowlist, keys are permanent. `docs/parity.md` maps every page
 of the live site to this one.

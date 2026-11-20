@@ -2,7 +2,7 @@
 
 What the live Jekyll site serves today, and where each piece lands in this rebuild.
 Crawled 2026-11-04 from https://talmolab.org (sitemap: 69 URLs, plus the three paths in
-`test/live-urls.txt` that the sitemap omits). The live source is `talmolab/lab-website`
+`test/live-urls.txt` that the sitemap omits). The live source is `talmolab/lab-website` (since renamed `lab-website-legacy`)
 `main` @ `345c678`, read with `git show` only.
 
 **Status key:** **kept** = same content, new design · **moved** = same content, different
