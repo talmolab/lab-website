@@ -8,6 +8,21 @@
 /members/gregory-quach.html  /team/  301
 /members/neeraj-venna.html   /team/  301
 /members/ramiz-hajj.html     /team/  301
+# GitHub Pages also answers every .html file without its extension, so the same
+# three pages are live at /members/<slug> too. Those are the new site's member URLs,
+# where no page exists for these three.
+/members/gregory-quach  /team/  301
+/members/neeraj-venna   /team/  301
+/members/ramiz-hajj     /team/  301
+# Removed from the live site in Oct 2024 (lab-website 371d51e, "Big team update").
+# The page was live from 2024 until then and the Wayback Machine has it at 200, so
+# links to it may still be out there.
+/members/sungwook-min.html  /team/  301
+/members/sungwook-min       /team/  301
+
+# No page has ever lived at /members/ itself; the people index is the Team page.
+/members   /team/  301
+/members/  /team/  301
 
 # Jekyll served member pages at /members/<slug>.html and everything else at a
 # trailing slash. Workers' default html_handling (auto-trailing-slash) already
@@ -15,7 +30,24 @@
 # These rules pre-empt it with a real 301. _redirects is evaluated BEFORE
 # html_handling, and :slug binds correctly against the .html suffix (verified).
 /members/:slug.html  /members/:slug  301
-/team/index.html     /team/          301
+
+# Jekyll's other two shapes for every section page: /<section> (GitHub Pages 301s it
+# to the slash) and /<section>/index.html (GitHub Pages serves it at 200). Workers
+# would answer both with a 307 to the slash, so these make them real 301s.
+# Listed one by one: a /:section placeholder would also catch /feed.xml and friends.
+/index.html                /               301
+/research                  /research/      301
+/research/index.html       /research/      301
+/publications              /publications/  301
+/publications/index.html   /publications/  301
+/team                      /team/          301
+/team/index.html           /team/          301
+/join                      /join/          301
+/join/index.html           /join/          301
+/tools                     /tools/         301
+/tools/index.html          /tools/         301
+/blog                      /blog/          301
+/blog/index.html           /blog/          301
 
 # --- Jekyll-era paths that must not 404 (§8, from the live sitemap) ----------
 # The three template example posts. Lorem ipsum with invented authors, so they
@@ -24,15 +56,24 @@
 /2019/01/07/example-post-1.html  /blog/  301
 /2019/12/14/example-post-2.html  /blog/  301
 /2020/07/02/example-post-3.html  /blog/  301
+# The same three without .html, which GitHub Pages also serves.
+/2019/01/07/example-post-1  /blog/  301
+/2019/12/14/example-post-2  /blog/  301
+/2020/07/02/example-post-3  /blog/  301
 
 # CLAUDE.md is rendered and indexed as a public page by Jekyll — internal notes
 # on a public site. Astro does not publish it; redirect the indexed URL home.
+# GitHub Pages also serves the raw file and the extensionless form.
 /CLAUDE.html  /  301
+/CLAUDE       /  301
+/CLAUDE.md    /  301
 
 # The live /contact/ page is unmodified Greene template placeholder content —
 # "Department of Metaphor", scrooge@mcduck.com, a phone number and a Google Maps
 # pin in Nova Scotia. It is not migrated; the real contact route is the Team page.
-/contact/  /team/#join  301
+/contact/            /team/#join  301
+/contact             /team/#join  301
+/contact/index.html  /team/#join  301
 
 # Paper thumbnails were PNG and JPG on the live site and are WebP here, under the same
 # names. /images/papers/prasad-2022.jpg is linked from outside the site.

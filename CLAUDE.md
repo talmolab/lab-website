@@ -29,7 +29,7 @@ npm run build      # astro check && astro build
 npm run preview    # wrangler dev over dist/: test routing and redirects here, not in dev
 npm run deploy     # build, then wrangler deploy to the PREVIEW (talmolab-next)
 
-./scripts/check-urls.sh <base>         # every URL the live site serves resolves (152)
+./scripts/check-urls.sh <base>         # every URL the live site serves resolves (177), by 200 or 301
 ./scripts/check-production.sh <base>   # it is the production build: indexable, canonical
 ```
 
