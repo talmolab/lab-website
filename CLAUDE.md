@@ -45,6 +45,12 @@ For the second check locally: `SITE_URL=https://talmolab.org npm run build`, the
 Export `GITHUB_TOKEN` before building (`export GITHUB_TOKEN=$(gh auth token)`): the repos
 loader calls the GitHub API and runs out of unauthenticated quota fast.
 
+OpenAlex works without a key but throttles unauthenticated traffic: on 2026-11-20, a day
+of many builds, it answered 429 with long Retry-After waits and a deploy spent 8 minutes
+in the loader's retries. CI passes the `OPENALEX_API_KEY` secret to every step that loads
+publications. Locally, set `OPENALEX_API_KEY` if you rebuild often, and don't clear
+`node_modules/.astro/data-store.json` without a reason: it saves refetching every entry.
+
 ## Keeping it current: the three workflows
 
 | Workflow | Trigger | Does | Never |
