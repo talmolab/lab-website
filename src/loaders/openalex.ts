@@ -146,6 +146,13 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
 
         if (entry.manual) {
           meta = entry.manual as unknown as Meta;
+          // A conference paper (NeurIPS, a NeurIPS workshop) has no DOI, so its version
+          // of record is a manual block, but it often has an arXiv preprint: link it the
+          // same way a journal article links its bioRxiv version.
+          if (entry.preprint) {
+            preprintMeta = await resolve(entry.preprint, logger);
+            fetched++;
+          }
         } else {
           const primary = entry.published ?? entry.preprint;
           if (!primary) throw new Error(`${entry.key}: needs published, preprint or manual`);

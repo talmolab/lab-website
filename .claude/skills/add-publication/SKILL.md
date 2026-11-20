@@ -130,6 +130,29 @@ everything:
 thumbnail. If it 404s, a published citation becomes unreachable — it is in
 `public/images/papers/` and in the §8 URL fixture for that reason.
 
+### Conference papers with an arXiv preprint (NeurIPS and its workshops)
+
+A NeurIPS paper has no DOI, but its arXiv version does, and OpenAlex lists only the
+arXiv record, so it looks like a preprint. Check the arXiv comment ("Accepted at
+NeurIPS…") and OpenReview. If it was accepted, the conference version is the record: a
+`manual:` block linking the OpenReview forum (or the venue page until the forum is
+public), with the arXiv DOI as `preprint:`. The loader resolves that preprint and the
+row shows "Preprint (arXiv)", exactly like a journal article with a bioRxiv version.
+
+```yaml
+- key: sirbu-2026
+  manual:
+    title: "A latent control model for realistic rodent motion"
+    authors: ["Aidan Sirbu", "…", "Blake Aaron Richards"]   # as on OpenReview
+    venue: "NeurIPS 2026"            # workshops: "NeurIPS 2026 Workshop: <name>"
+    date: "2026-09-24"               # when OpenReview published the accepted paper
+    link: "https://openreview.net/forum?id=zebI1xXFB1"
+  preprint: { doi: "10.48550/arxiv.2610.27279" }
+```
+
+A workshop paper with no arXiv version is a `manual:` block alone. A trailing
+parenthetical in `venue` is stripped for display, so leave out "(Proceedings Track)".
+
 Also note MIMIC-MJX: OpenAlex has it with `doi: null`, indexed via PubMed only,
 while the overlay tracks its arXiv DOI. One work, two identifiers — which is why
 keys are lab-assigned slugs rather than DOIs.
