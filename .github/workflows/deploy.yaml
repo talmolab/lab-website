@@ -38,6 +38,8 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Raises OpenAlex's budget for the publications loader; empty (unauthenticated) without the secret.
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
         run: npm run build
       - name: Check for deploy credentials
         id: creds
@@ -101,6 +103,8 @@ jobs:
           # Canonical URLs, the sitemap and robots.txt all follow this. Without it the
           # pages would go out noindexed, pointing at the preview.
           SITE_URL: https://talmolab.org
+          # Raises OpenAlex's budget for the publications loader; empty (unauthenticated) without the secret.
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
         run: npm run build
       - name: Refuse to ship a preview build
         run: |
