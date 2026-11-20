@@ -20,6 +20,22 @@
 # Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
 # API at build time; anything written here overrides them.
 
+# Added 2026-11-20 from the Google Scholar profile and the discovery report: lab-led
+# preprints (a lab member first, Talmo last). No thumbnails yet, so they show the venue
+# tile; add one with scripts/paper-thumb.mjs.
+- key: leonardis-2026
+  # LUC3D. bioRxiv's new DOI prefix (10.64898) since late 2026.
+  published: { doi: "10.64898/2026.11.17.767188" }
+
+- key: bian-2026
+  published: { doi: "10.48550/arxiv.2611.00688" }
+
+- key: kiffer-2026
+  published: { doi: "10.64898/2026.04.30.721950" }
+
+- key: leonardis-2025
+  published: { doi: "10.48550/arxiv.2511.21848" }
+
 # DISCOVERED 2026-08-31 — review before merging.
 # Quantifying Behavior Using Deep Learning
 # Biological Psychiatry · 2023-04-10
@@ -44,6 +60,10 @@
   image: "papers/coley-2024.png"
 
 - key: weinreb-2024
+  # associated BY HAND (2026-11-20): neither Crossref nor bioRxiv records the relation,
+  #   but the titles are identical and all 17 authors match in order (the only
+  #   difference is "R. Hoffman" vs "Red Hoffmann", one spelling of one name)
+  preprint: { doi: "10.1101/2023.03.16.532307" }
   published: { doi: "10.1038/s41592-024-02318-2" }
   image: "papers/weinreb-2023.png"
 
@@ -69,6 +89,8 @@
   image: "papers/rose-2024.png"
 
 - key: berrigan-2024
+  # Crossref is-preprint-of; bioRxiv's own record agrees
+  preprint: { doi: "10.1101/2023.11.20.567949" }
   published: { doi: "10.34133/plantphenomics.0175" }
   image: "papers/berrigan-2023.png"
 
@@ -78,7 +100,8 @@
 
 - key: patel-2023
   # associated BY HAND: Crossref carries no relation for this preprint,
-  #   but the two records share all 24 authors and a title differing only by an en-dash
+  #   but the two records share all 24 authors and a title differing only by an en-dash.
+  #   Since confirmed: bioRxiv's own record names this published DOI (checked 2026-11-20).
   preprint: { doi: "10.1101/2023.11.09.566421" }
   published: { doi: "10.1038/s41593-026-02413-x" }
   image: "papers/patel-2023.png"
@@ -88,7 +111,12 @@
   image: "papers/luxem-2022.png"
 
 - key: mills-2022
-  published: { doi: "10.1101/2022.10.28.514263" }
+  # Published in Neuron (2026). bioRxiv's own record names this published DOI and the
+  #   preprint's latest version carries the Neuron title; Crossref has no relation yet.
+  #   The v1 title ("...encode sustained valence to direct conditioned behaviors") is why
+  #   discovery saw two papers. Supersedes the separate mills-2026 entry staged in PR 11.
+  preprint: { doi: "10.1101/2022.10.28.514263" }
+  published: { doi: "10.1016/j.neuron.2026.08.012" }
   image: "papers/mills-2022.jpg"
 
 - key: prasad-2022
@@ -104,6 +132,8 @@
   image: "papers/prasad-2022.jpg"
 
 - key: wang-2022
+  # Crossref is-preprint-of; bioRxiv agrees
+  preprint: { doi: "10.1101/2021.12.16.472962" }
   published: { doi: "10.1016/j.cub.2022.04.066" }
   image: "papers/wang-2021.png"
 
@@ -116,10 +146,14 @@
   image: "papers/gall-2022.png"
 
 - key: bourrianne-2022
+  # medRxiv. Crossref is-preprint-of; medRxiv agrees
+  preprint: { doi: "10.1101/2020.06.29.20141283" }
   published: { doi: "10.1115/1.4053386" }
   image: "papers/bourrianne-2022.webp"
 
 - key: deutsch-2020
+  # bioRxiv's own record names this published DOI (Crossref has no relation)
+  preprint: { doi: "10.1101/2020.02.13.947952" }
   published: { doi: "10.7554/elife.59502" }
   image: "papers/deutsch-2020.png"
 
@@ -128,6 +162,8 @@
   image: "papers/pereira-2020.webp"
 
 - key: jones-2020
+  # bioRxiv's own record names this published DOI (Crossref has no relation)
+  preprint: { doi: "10.1101/2020.02.18.955070" }
   published: { doi: "10.7554/elife.57258" }
   image: "papers/jones-2020.webp"
 
@@ -136,6 +172,8 @@
   image: "papers/charles-2020.png"
 
 - key: pereira-2018
+  # Crossref is-preprint-of; bioRxiv agrees
+  preprint: { doi: "10.1101/331181" }
   published: { doi: "10.1038/s41592-018-0234-5" }
   image: "papers/pereira-2019.png"
 
@@ -144,6 +182,8 @@
   image: "papers/badura-2018.webp"
 
 - key: clemens-2018
+  # Crossref is-preprint-of; bioRxiv agrees
+  preprint: { doi: "10.1101/221044" }
   published: { doi: "10.1016/j.cub.2018.06.011" }
   image: "papers/clemens-2018.png"
 
