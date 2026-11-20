@@ -1,9 +1,28 @@
 # Cutover: putting this site on talmolab.org
 
-Everything needed to replace the live Jekyll site is in this repo and is switched off.
-This page is the switch, and how to undo it.
+**Done on 2026-11-20, about 22:10 UTC.** talmolab.org is served by the Worker
+`talmolab-org` from this repo's `main`; the Jekyll site still runs on GitHub Pages as the
+rollback (see *Rollback*). The rest of this page is the procedure as written beforehand,
+corrected where reality differed, so it can be followed again or undone.
 
-## How the two sites are served today
+## What actually happened
+
+1. Both Cloudflare secrets added; a CI deploy of the preview passed the URL gate.
+2. The `www` Redirect Rule added (zero visible change: GitHub had been doing the same 301).
+3. `PRODUCTION_DOMAIN` set and Deploy run. The production build passed its checks and
+   uploaded `talmolab-org`, but attaching the custom domain failed: *"Hostname
+   'talmolab.org' already has externally managed DNS records (A, CNAME, etc). Delete them
+   first"* (code 100117). Wrangler does not replace existing records, contrary to the note
+   below as first written. Nothing changed for visitors.
+4. The four apex A records were deleted and `talmolab.org` attached to `talmolab-org` in
+   the dashboard right after (Workers & Pages → talmolab-org → Domains → Add domain). The
+   new site answered on the first request: a gap of seconds.
+5. The failed job re-run: the deploy (now only a version upload) and both checks passed,
+   177/177 URLs and 23/23 production checks.
+
+Since then every merge to `main` deploys, and `main` requires a PR with a green `build`.
+
+## How the two sites were served before
 
 | | Live site | This rebuild |
 |---|---|---|
@@ -30,10 +49,11 @@ account: `talmolab.org` stops pointing at GitHub Pages and starts pointing at a 
   301; hashed assets are immutable; and, on the real domain, `www` and `http` redirect.
 
 **One thing to know before touching anything.** Deploying `--env production` *is* the
-cutover. A custom domain tells Cloudflare to point the hostname at the Worker, and when
-wrangler is not attached to a terminal (CI, a script, an agent) it replaces the existing
-DNS record without asking. Never run `wrangler deploy --env production` to "test" it.
-Use `--dry-run`, which uploads nothing.
+cutover: a custom domain tells Cloudflare to point the hostname at the Worker. Never run
+`wrangler deploy --env production` to "test" it; use `--dry-run`, which uploads nothing.
+(This note first said wrangler would replace the hostname's existing DNS records when not
+in a terminal. It does not: Cloudflare refused while the A records existed, error
+100117, and they had to be deleted first. See *What actually happened*.)
 
 ## Before
 
@@ -100,24 +120,29 @@ From here on every push to `main`, and the Monday rebuild, deploys to talmolab.o
 
 ## After
 
-- **`www`.** Handled by the Redirect Rule from step 4 of *Before*, not by GitHub, so it
-  does not depend on the old site. `check-production.sh` tests it, so the Monday deploy
-  fails loudly if it ever stops.
-- **Search Console.** Submit `https://talmolab.org/sitemap-index.xml`. The old
-  `/sitemap.xml` 301s to it.
+Status as of 2026-11-20.
+
+- **`www`.** Done: handled by the Redirect Rule from step 4 of *Before*, not by GitHub,
+  so it does not depend on the old site. `check-production.sh` tests it, so the Monday
+  deploy fails loudly if it ever stops.
+- **Search Console.** Not done: no Search Console property exists for talmolab.org yet
+  (the `google-site-verification` TXT record belongs to Google Workspace). Add a domain
+  property, verify it with the TXT record Search Console gives, then submit
+  `https://talmolab.org/sitemap-index.xml`. The old `/sitemap.xml` 301s to it.
 - **Link unfurls.** Slack, X and LinkedIn cache the old card. Each has a debugger that
   refetches; the new card is `/og-card.png`.
 - **The old site.** Leave `lab-website` and its Pages deployment alone for a few weeks:
-  it is the rollback. Then switch Pages off and archive the repo.
-- **The previews.** `talmolab-next` keeps deploying from `main` as the noindexed
-  preview. `talmolab-redux` (direction C) can be deleted when nobody needs the
-  comparison.
-- Update `CLAUDE.md` and `README.md`, which still describe the site as a preview.
+  it is the rollback. Then switch Pages off, archive the repo, and revoke its Cloudflare
+  API token (Account API Tokens: "lab-website deploy - GitHub Actions (2026-08)").
+- **The previews.** Done: `talmolab-next` keeps deploying from `main` as the noindexed
+  preview; `talmolab-site` (lab-website's first Astro build) and `talmolab-redux`
+  (direction C) were deleted on 2026-11-20. Their code is in git history.
+- **Docs.** Done: `CLAUDE.md` and `README.md` describe the live site.
 
 ## Rollback
 
 1. Delete the repository variable `PRODUCTION_DOMAIN` (stops further production deploys).
-2. Cloudflare → Workers & Pages → `talmolab-org` → Settings → Domains & Routes →
+2. Cloudflare → Workers & Pages → `talmolab-org` → Domains →
    remove `talmolab.org`.
 3. Recreate the four apex A records from step 3 of *Before* (`185.199.108.153` to
    `185.199.111.153`, proxied). GitHub Pages is still serving the old site and picks up
