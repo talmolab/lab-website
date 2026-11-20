@@ -131,6 +131,9 @@ that list is closed, so a new portrait does not go in it.
 - npm 11 blocks install scripts; `esbuild`, `sharp` and `workerd` are allowed in
   `package.json` `allowScripts`. A new native dependency needs `npm approve-scripts`.
 - `output: 'static'` throughout. If something seems to need SSR, reconsider.
+- A green Deploy run does not mean anything was deployed. Without the
+  `CLOUDFLARE_API_TOKEN` secret the preview deploy step is skipped (true of every run up
+  to 2026-11-14; the previews were deployed by hand). Look at the step, not the run.
 - `npm run preview` (wrangler dev) can reload while `astro build` is emptying `dist/`
   and then 404 everything. Restart it after a rebuild.
 - OpenAlex merges preprints with their published versions and answers a preprint DOI with
