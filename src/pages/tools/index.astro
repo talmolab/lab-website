@@ -23,7 +23,7 @@ const GROUPS = [
 const fmtMonth = (d?: string) =>
   d ? new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }) : '';
 ---
-<Base title="Tools" description="Open-source software from the Talmo Pereira Lab: SLEAP and the tools around it for pose tracking, root phenotyping and motion imitation.">
+<Base title="Tools" description="Open-source software from the Talmo Lab: SLEAP and the tools around it for pose tracking, root phenotyping and motion imitation.">
   <div class="wrap">
     <header class="page-head">
       <h1 class="title">Tools</h1>
@@ -31,7 +31,7 @@ const fmtMonth = (d?: string) =>
         Open-source software from the lab. Most of it grows out of
         <a href="https://sleap.ai">SLEAP</a>, our framework for multi-animal pose tracking.
       </p>
-      <nav class="jump mono" aria-label="Groups">
+      <nav class="jump meta" aria-label="Groups">
         {GROUPS.filter((g) => repos.some((r) => r.data.group === g.id)).map((g) => <a href={`#${g.id}`}>{g.name}</a>)}
         <a href="https://github.com/talmolab">All repositories on GitHub</a>
       </nav>
@@ -56,10 +56,10 @@ const fmtMonth = (d?: string) =>
                   {r.media[0] && <Media item={r.media[0]} />}
                   <div class="tool-head">
                     <h3 class="tool-name"><a href={`https://github.com/${r.repo}`}>{r.title ?? r.name}</a></h3>
-                    <span class="mono muted">{r.repo}</span>
+                    <span class="meta muted">{r.repo}</span>
                   </div>
                   <p class="tool-blurb">{r.blurb ?? r.description}</p>
-                  <p class="tool-meta mono">
+                  <p class="tool-meta meta">
                     {r.language && <span>{r.language}</span>}
                     {r.license && r.license !== 'NOASSERTION' && <span>{r.license}</span>}
                     {r.pushedAt && <span>updated {fmtMonth(r.pushedAt)}</span>}

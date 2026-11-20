@@ -10,7 +10,7 @@ const years = byYear(pubs);
 const people = await getCollection('people');
 const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(nameKey)));
 ---
-<Base title="Publications" description="Publications from the Talmo Pereira Lab at the Salk Institute: papers, preprints and proceedings, newest first.">
+<Base title="Publications" description="Publications from the Talmo Lab at the Salk Institute: papers, preprints and proceedings, newest first.">
   <div class="wrap">
     <header class="page-head">
       <h1 class="title">Publications</h1>
@@ -26,13 +26,13 @@ const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(n
           <input id="filter-q" name="search" type="search" autocomplete="off" spellcheck="false" placeholder='Filter: words, "a phrase", an author' data-filter-input />
           <button type="button" data-filter-clear hidden>Clear</button>
         </form>
-        <p class="exports mono" aria-label="Download the list">
+        <p class="exports meta" aria-label="Download the list">
           <a href="/publications.bib">BibTeX</a>
           <a href="/publications.csl.json">CSL JSON</a>
           <a href="/publications.json">JSON</a>
         </p>
       </div>
-      <p class="filter-status mono" role="status" aria-live="polite" data-filter-status></p>
+      <p class="filter-status meta" role="status" aria-live="polite" data-filter-status></p>
     </header>
 
     {years.map(([year, items]) => (

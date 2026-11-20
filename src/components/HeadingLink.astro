@@ -1,0 +1,22 @@
+---
+// A heading with a link to its own section ("#"), for sections people link to. The
+// link sits beside the heading, not inside it, so the heading's name stays its text.
+// It shows while the heading is hovered or the link has focus, and always on touch
+// screens (see .anchored in global.css).
+interface Props {
+  /** The heading's text, also used in the link's accessible name. */
+  text: string;
+  /** The id the link points to: the section's (or subsection's) own id. */
+  target: string;
+  level?: 2 | 3;
+  /** The heading's own id, when a section is labelled by it. */
+  id?: string;
+}
+
+const { text, target, level = 2, id } = Astro.props;
+const Tag = `h${level}` as 'h2' | 'h3';
+---
+<div class="anchored">
+  <Tag id={id}>{text}</Tag>
+  <a class="anchor" href={`#${target}`} aria-label={`Link to this section: ${text}`}>#</a>
+</div>

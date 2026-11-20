@@ -1,7 +1,7 @@
 ---
 // The short version, at the foot of Team. /contact/ redirects to this anchor
 // (public/_redirects); the full text, with its photos, is /join/.
-import { EMAIL, INSTITUTE, ADDRESS } from '../lib/site';
+import { LAB, EMAIL, INSTITUTE, ADDRESS } from '../lib/site';
 ---
 <section class="ledger" id="join" aria-labelledby="join-h">
   <header class="ledger-head">
@@ -21,7 +21,7 @@ import { EMAIL, INSTITUTE, ADDRESS } from '../lib/site';
       <p><a class="more" href="/join/">Opportunities, philosophy and location</a></p>
     </div>
     <address class="note" style="font-style: normal">
-      <strong style="color: var(--text)">Talmo Pereira Lab</strong><br />
+      <strong style="color: var(--text)">{LAB}</strong><br />
       {INSTITUTE}<br />
       {ADDRESS.map((l) => <>{l}<br /></>)}
       <a href={`mailto:${EMAIL}`}>{EMAIL}</a>

@@ -1,6 +1,6 @@
 /** Site-wide facts, in one place so the header, footer and pages agree. */
 
-export const LAB = 'Talmo Pereira Lab';
+export const LAB = 'Talmo Lab';
 export const INSTITUTE = 'Salk Institute for Biological Studies';
 export const EMAIL = 'talmo@salk.edu';
 export const ADDRESS = ['10010 North Torrey Pines Road', 'La Jolla, California 92037'];

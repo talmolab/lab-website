@@ -107,8 +107,10 @@ Clips with identifiable people need consent first.
   `#2c2a31`, links `#8c6bd6`). The theme follows the system until the header switch
   sets it (stored in `localStorage.theme`). The brand violet `#8b6dd2` is for the logo
   and non-text marks only: it is 3.80:1 on paper.
-- Source Sans 3 (400/500/600, italic) + JetBrains Mono (400), self-hosted via Astro's
-  Fonts API with Greek and Vietnamese subsets. No serif.
+- Source Sans 3 (400/500/600, italic), self-hosted via Astro's Fonts API with Greek and
+  Vietnamese subsets, is the only face: no serif and no monospace, anywhere. Small
+  metadata uses `.meta`; figures that line up (years, DOIs, counts) use
+  `font-variant-numeric: tabular-nums`.
 - Never set "talmolab" in type: `src/components/Logo.astro` inlines the lockup so its ink
   follows the theme and its violet never changes. Clear space is 2b (0.232 × height).
 - One accent. Structure comes from weight, rules and position. The recurring layout is
