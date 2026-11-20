@@ -108,6 +108,11 @@ body:
       label: X / Twitter
       description: Handle, without the @.
   - type: input
+    id: bluesky
+    attributes:
+      label: Bluesky
+      description: Handle, e.g. name.bsky.social, or your bsky.app profile URL.
+  - type: input
     id: website
     attributes:
       label: Website
