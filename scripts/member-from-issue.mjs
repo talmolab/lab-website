@@ -80,6 +80,16 @@ const handle = (s, what, re = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}$/) => {
   if (!re.test(v)) reject(`${what} "${s}" does not look like a username.`);
   return v;
 };
+// A Bluesky handle is a domain name: name.bsky.social, or a custom domain. A bsky.app
+// profile URL or a leading @ is accepted and reduced to the bare handle.
+const bluesky = (s) => {
+  if (!s) return undefined;
+  const v = s.trim().replace(/^https?:\/\/(www\.)?bsky\.app\/profile\//i, '').replace(/[/?#].*$/, '').replace(/^@/, '');
+  if (!/^(?=.{1,253}$)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/.test(v)) {
+    reject(`Bluesky "${s}" does not look like a handle such as name.bsky.social.`);
+  }
+  return v.toLowerCase();
+};
 
 function slugify(name) {
   return name
@@ -185,6 +195,7 @@ async function apply(body) {
       email: f['Email'] ? (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f['Email']) ? f['Email'].trim() : reject(`"${f['Email']}" is not an email address.`)) : undefined,
       github: handle(f['GitHub username'], 'GitHub username', /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/),
       linkedin: f['LinkedIn'] ? (/^https?:/.test(f['LinkedIn']) ? url(f['LinkedIn'], 'LinkedIn') : handle(f['LinkedIn'], 'LinkedIn')) : undefined,
+      bluesky: bluesky(f['Bluesky']),
       twitter: handle(f['X / Twitter'], 'X / Twitter', /^[A-Za-z0-9_]{1,15}$/),
       'home-page': url(f['Website'], 'Website'),
       orcid: f['ORCID'] ? (/^(https:\/\/orcid\.org\/)?\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/.test(f['ORCID']) ? f['ORCID'].trim() : reject(`"${f['ORCID']}" is not an ORCID iD.`)) : undefined,

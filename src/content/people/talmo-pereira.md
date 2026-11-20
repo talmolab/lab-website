@@ -8,6 +8,8 @@ links:
   "home-page": "https://talmopereira.com"
   email: "talmo@salk.edu"
   github: "talmo"
+  linkedin: "talmo"
+  bluesky: "talmo.bsky.social"
   twitter: "talmop"
   scholar: "tFrElIUAAAAJ"
 ---

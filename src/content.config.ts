@@ -133,6 +133,8 @@ const people = defineCollection({
           email: z.string().optional(),
           github: z.string().optional(),
           linkedin: z.string().optional(),
+          /** A Bluesky handle ("talmo.bsky.social", or a custom domain), without the @. */
+          bluesky: z.string().optional(),
           twitter: z.string().optional(),
           orcid: z.string().optional(),
           scholar: z.string().optional(),
