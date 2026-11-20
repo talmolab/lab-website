@@ -100,15 +100,19 @@ onto talmolab.org once the gate passes.
 | Live | New site | Status |
 |---|---|---|
 | `/members/<slug>.html`: name, portrait (or placeholder), role, links (home page, email, GitHub, Twitter, ORCID, Scholar, LinkedIn), bio, button "<Name>'s papers" → `/publications/?search="<Name>"` | 52 pages, served at `/members/<slug>` (the `.html` URL 301s there). Name, portrait, every role held with years, co-advisor, where they went next, links, bio, then the lab papers they are an author on (matched at build time on first and last name, never fuzzy beyond dropping middle initials), and a "search publications" link with the same `?search=` URL as live. | improved |
-| Gregory Quach, Neeraj Venna, Ramiz Hajj (`role: alumni`, unlinked on live) | 301 → `/team/` (owner decision, astro-migration §13) | 301 |
+| Gregory Quach, Neeraj Venna, Ramiz Hajj (`role: alumni`, unlinked on live) | 301 → `/team/` (owner decision, astro-migration §13), from both `/members/<slug>.html` and the extensionless `/members/<slug>` that GitHub Pages also serves | 301 |
+| Sungwook Min: `/members/sungwook-min.html`, live from 2024 until removed in Oct 2024 (`lab-website` 371d51e); 404 on live today, but archived at 200 by the Wayback Machine | 301 → `/team/`, like the three above | 301 |
+| `/members/`: never a page (404 on live) | 301 → `/team/` | new |
 | Pranav Sankar | Never had a page; alumni row only, as live | kept |
 
 ## Other URLs
 
 | Live | New site | Status |
 |---|---|---|
-| `/contact/`: Greene filler ("Department of Metaphor", scrooge@mcduck.com, a Nova Scotia map pin, `images/photo.jpg`) | 301 → `/team/#join`; the real address and email are in the footer and on `/join/` | 301 |
-| `/CLAUDE.html`: internal notes rendered as a page | 301 → `/` | 301 |
+| `/contact/`, `/contact`, `/contact/index.html`: Greene filler ("Department of Metaphor", scrooge@mcduck.com, a Nova Scotia map pin, `images/photo.jpg`) | 301 → `/team/#join`; the real address and email are in the footer and on `/join/` | 301 |
+| `/CLAUDE.html`, `/CLAUDE`, `/CLAUDE.md`: internal notes, rendered as a page and served raw | 301 → `/` | 301 |
+| Every section page's other two shapes: `/<section>` (GitHub Pages 301s it to the slash) and `/<section>/index.html` (200), for research, publications, team, join, tools and blog; and `/index.html` | 301 → `/<section>/` and `/`. Workers' own answer for these is a 307, which does not move a search index. | 301 |
+| The three example posts without `.html` (GitHub Pages serves them) | 301 → `/blog/` | 301 |
 | `/images/sleap_movie.gif` (externally referenced) | Same file at the same path | kept |
 | `/404.html`: "Page Not Found" + Google `site:` search | Custom 404 with the site search and the main sections | improved |
 | `/feed.xml`: 404 on live | RSS feed | new |
@@ -132,7 +136,7 @@ requested on talmolab.org (2026-11-14, `lab-website` @ `345c678`); the 105 that 
 | `/favicons/favicon.png`, `android.png`, `ios.png`, `share-thumbnail.jpg`, `site.webmanifest` | 301 → `/favicon-32.png`, `/icon-192.png`, `/apple-touch-icon.png`, `/og-card.png`, `/site.webmanifest` | 301 |
 | `/images/gregory-quach.jpg`, `neeraj-venna.jpg`, `ramiz-hajj.jpg`, `sungwook-min.jpg` | 404. These people were removed from the site (owner decision); their portraits go with them. | dropped |
 | `/images/background.jpg`, `/images/banner.jpg`, `/images/placeholder.svg` | 404. Header and footer art of the old theme, and its placeholder. | dropped |
-| `/css/*.css`, `/js/*.js`, `/auto-cite/*`, `/cite.sh`, `/start.sh`, `/CNAME`, `/CITATION.cff` | 404. The Jekyll theme's own assets and repo plumbing that Pages happened to publish. | dropped |
+| `/css/*.css`, `/js/*.js`, `/auto-cite/*`, `/cite.sh`, `/start.sh`, `/CNAME`, `/CITATION.cff`, `/README.md`, `/LICENSE.md` | 404. The Jekyll theme's own assets and repo plumbing that Pages happened to publish. No page links to them and the Wayback Machine has never archived them. | dropped |
 
 ## Old-site media: where each file went
 
@@ -152,6 +156,23 @@ requested on talmolab.org (2026-11-14, `lab-website` @ `345c678`); the 105 that 
 | Portraits | Team, member pages |
 | `banner.jpg`, `background.jpg` | not used: old header/footer art, 141 px and 101 px strips |
 | `logo*.svg`, `placeholder.svg` | not used: the v003 lockup replaces the logo |
+
+## Verification (2026-11-20): every legacy URL, not just the sitemap
+
+The legacy address space was rebuilt from three sources: a crawl of talmolab.org
+following every same-host `href`, `src`, `srcset` and CSS `url()` from the sitemap and
+the fixture (289 paths), every file `lab-website` @ `345c678` publishes, and every
+talmolab.org URL the Wayback Machine has archived (first capture 2021-12; the site has
+had this URL scheme throughout). 312 distinct paths, each requested on the live site and
+on the preview, plus the other URL shapes GitHub Pages answers (`/<section>`,
+`/<section>/index.html`, extensionless `.html` files).
+
+- 24 live addresses were missing or answered with a temporary 307; they are now 301s and
+  in `test/live-urls.txt` (177 paths). `check-urls.sh` now fails on a 302 or 307.
+- What still 404s is exactly the "dropped" rows above: the old theme's CSS and JS, repo
+  plumbing, the old header art and placeholder, and the portraits of people removed
+  from the site.
+- `./scripts/check-urls.sh` against a local build under `wrangler dev`: **177 passed, 0 failed**.
 
 ## Verification (2026-11-14)
 

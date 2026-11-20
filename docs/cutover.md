@@ -22,7 +22,7 @@ account: `talmolab.org` stops pointing at GitHub Pages and starts pointing at a 
   while the repository variable `PRODUCTION_DOMAIN` is `talmolab.org`. It builds with
   `SITE_URL=https://talmolab.org`, refuses to ship a build that is noindexed, deploys,
   then runs both checks below against the live domain.
-- `scripts/check-urls.sh <base>`: all 152 paths in `test/live-urls.txt` (every page in
+- `scripts/check-urls.sh <base>`: all 177 paths in `test/live-urls.txt` (every page in
   the live sitemap, and every image and icon the live site serves) return 200 or
   redirect to a 200.
 - `scripts/check-production.sh <base>`: the pages are the rebuild, indexable, canonical

@@ -4,7 +4,8 @@
 #
 #   scripts/check-urls.sh https://talmolab-site.talmo-lab.workers.dev
 #
-# Pass = every path returns 200, or redirects to something that returns 200.
+# Pass = every path returns 200, or permanently redirects (301/308) to something that
+# returns 200. A 302/307 fails: it resolves for a visitor but does not move the index.
 # A 404 anywhere is a blocker: the URLs that break silently are the external
 # ones — CVs, the SLEAP docs, other lab sites, and Google's index of the .html
 # member pages. Nobody reports those.
@@ -17,7 +18,19 @@ pass=0; fail=0
 while IFS= read -r path; do
   [[ -z "$path" || "$path" == \#* ]] && continue
   # Follow redirects and report the final status, plus the first hop for context.
-  read -r first final <<<"$(curl -s -o /dev/null -w '%{http_code} ' "$BASE$path"; curl -sL -o /dev/null -w '%{http_code}' "$BASE$path")"
+  read -r first loc <<<"$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$BASE$path")"
+  final="$(curl -sL -o /dev/null -w '%{http_code}' "$BASE$path")"
+  # A temporary redirect (302/307) resolves but does not move a search index, so it
+  # fails. One exception: Workers answers a path containing `@` with a 307 to the same
+  # path percent-encoded (`%40`). That is the same file, not a moved page.
+  if [[ "$first" == "302" || "$first" == "307" ]]; then
+    target="${loc#"$BASE"}"
+    if [[ "${target//%40/@}" != "$path" ]]; then
+      fail=$((fail+1))
+      printf '  FAIL %-45s %s (temporary) -> %s\n' "$path" "$first" "${target:-?}"
+      continue
+    fi
+  fi
   if [[ "$final" == "200" ]]; then
     pass=$((pass+1))
     [[ "$first" != "200" ]] && printf '  ok  %-46s %s -> 200\n' "$path" "$first"
