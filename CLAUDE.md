@@ -148,6 +148,11 @@ that list is closed, so a new portrait does not go in it.
 - npm 11 blocks install scripts; `esbuild`, `sharp` and `workerd` are allowed in
   `package.json` `allowScripts`. A new native dependency needs `npm approve-scripts`.
 - `output: 'static'` throughout. If something seems to need SSR, reconsider.
+- After back-to-back merges, some Deploy runs show `production` as **cancelled**. That
+  is expected: one production deploy runs and one waits, and a newer arrival replaces
+  the waiting one. Each production job deploys the tip of `main` when it starts, not its
+  own commit, so the last one to run ships the newest `main`. Its step summary says
+  which commit it deployed.
 - A green Deploy run does not by itself mean anything was deployed: without the
   `CLOUDFLARE_API_TOKEN` secret the preview deploy step is skipped quietly (every run up
   to 2026-11-20 was like that). The production job fails loudly instead. The secrets are

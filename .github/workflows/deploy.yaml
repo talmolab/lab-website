@@ -77,6 +77,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # Never two production deploys at once, and never cancel one halfway.
+    #
+    # The group holds one running job and one pending; a job that arrives while another
+    # is pending cancels that pending one. Arrival order is when each run's `build`
+    # finishes, not commit order. So after back-to-back merges, an older commit's job
+    # can be the last one standing (2026-11-21: #17's deploy cancelled #20's). That is
+    # why the checkout below takes the tip of `main` when the job starts, not the commit
+    # that triggered the run. Whichever job runs last started after the last push, so it
+    # deploys the newest `main`.
     concurrency:
       group: production
       cancel-in-progress: false
@@ -94,6 +102,18 @@ jobs:
             exit 1
           fi
       - uses: actions/checkout@v7
+        with:
+          # The tip of main, not github.sha: see the concurrency note above.
+          ref: main
+      - name: Say which commit is being deployed
+        env:
+          TRIGGER_SHA: ${{ github.sha }}
+        run: |
+          deployed=$(git rev-parse HEAD)
+          echo "Deploying main at ${deployed:0:7} (this run was triggered by ${TRIGGER_SHA:0:7})." | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$deployed" != "$TRIGGER_SHA" ]; then
+            echo "::notice::main has moved since this run started; deploying its tip, ${deployed:0:7}."
+          fi
       - uses: actions/setup-node@v6
         with:
           node-version: 24
