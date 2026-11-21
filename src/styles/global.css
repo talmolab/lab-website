@@ -1517,8 +1517,9 @@ figcaption {
   .flow > .person.starts::before {
     content: '';
     position: absolute;
-    top: 0;
-    bottom: var(--gap-y);
+    /* 30% of the card's height (the box minus the row gap), centred on it. */
+    top: calc((100% - var(--gap-y)) * 0.35);
+    bottom: calc(var(--gap-y) + (100% - var(--gap-y)) * 0.35);
     left: calc(var(--gap-x) / -2);
     border-left: 1px solid var(--rule);
     opacity: min(1, mod(var(--i), var(--cols)));
@@ -1745,6 +1746,12 @@ figcaption {
   gap: 28px;
   align-content: start;
   min-width: 0;
+}
+
+/* The bio spans the column like the role block above it and the papers below, rather
+   than the 68ch measure `.prose` uses elsewhere. */
+.member-main .prose {
+  max-width: none;
 }
 
 .member-role {
