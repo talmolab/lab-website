@@ -28,15 +28,15 @@ const firstPara = (md?: string) =>
 ---
 <Base title="Team" description="The people of the Talmo Lab at the Salk Institute, and the alumni who came before them.">
   <div class="wrap">
-    <header class="page-head">
+    <header class="page-head joined">
       <h1 class="title">Team</h1>
       <p class="lede">
-        {members.length} people <a href="#current">in the lab today</a>, and {alumni.length}{' '}
+        {members.length} people <a href="#current">in the lab today</a> and {alumni.length}{' '}
         <a href="#alumni">alumni</a>.
       </p>
     </header>
 
-    <section class="ledger" id="current" aria-labelledby="current-h">
+    <section class="ledger narrow" id="current" aria-labelledby="current-h">
       <header class="ledger-head">
         <h2 id="current-h">In the lab</h2>
         <span class="count">{members.length} people</span>
@@ -101,7 +101,7 @@ const firstPara = (md?: string) =>
       <figcaption>The lab, ca. 2022. Photo credit: Chris Keeney.</figcaption>
     </figure>
 
-    <section class="ledger" id="alumni" aria-labelledby="alumni-h">
+    <section class="ledger narrow" id="alumni" aria-labelledby="alumni-h">
       <header class="ledger-head">
         <h2 id="alumni-h">Alumni</h2>
         <span class="count">{alumni.length} people</span>
