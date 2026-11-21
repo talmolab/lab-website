@@ -2,7 +2,7 @@
 name: "Max Weinberg"
 image: ../../assets/people/max-weinberg.jpg
 appointments:
-  - role: phd-student
+  - role: phd-rotation  # a rotation, not a PhD student in the lab (Talmo, 2026-11-21)
     start: "2024-10"
     end: "2024-12"
 ---
