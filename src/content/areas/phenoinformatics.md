@@ -4,7 +4,15 @@ summary: "Systems for phenotyping at scale, from home cages recorded around the 
 goal: "Develop and implement systems for large-scale phenotyping experiments."
 order: 2
 media:
+  - src: /media/home-cage-cycles.mp4
+    poster: /media/home-cage-cycles.jpg
+    width: 1280
+    height: 960
+    alt: "An infrared video of three mice in a home cage, each with its SLEAP skeleton, tilts away while the animals' tracked trajectories pile up behind it along a time axis."
+    caption: "Three mice tracked in their home cage, their trajectories stacked over time behind the video."
+    plate: true
   - src: /media/root-sleap.mp4
+    thread: plant-roots
     poster: /media/root-sleap.jpg
     width: 240
     height: 180

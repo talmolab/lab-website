@@ -1471,32 +1471,74 @@ figcaption {
   scroll-margin-top: 24px;
 }
 
+/* An area's prose is cut into its intro and its `###` threads (see research/index.astro).
+ * Stacked, it reads: lead figure, intro, then each thread followed by its figures, then
+ * the references. From 960 px the figures take the right column, each group beside the
+ * block it belongs to and sticky until the next group's block begins. */
 .area-body {
   display: grid;
   gap: 32px 56px;
 }
 
+.area-figs-in {
+  display: grid;
+  gap: 32px;
+}
+
+/* The space above a thread is the grid's, not its heading's. */
+.area-body > .prose.thread > h3:first-child {
+  margin-top: 0;
+}
+
 @media (min-width: 960px) {
   .area-body {
     grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    row-gap: 0;
     align-items: start;
   }
 
-  .area-body .area-fig {
-    order: 2;
+  .area-body > .prose,
+  .area-body > .area-refs {
+    grid-column: 1;
+    grid-row: var(--row);
+  }
+
+  /* A thread begins as it would inside one prose block (1.8em above an h3 of
+   * 1.1875rem), and its figures line up with its heading. */
+  .area-body > .prose.thread {
+    padding-top: calc(1.8 * 1.1875rem);
+  }
+
+  /* The group fills its rows so that its figures stick within them: browsers bound a
+   * sticky box by its parent, not by its grid area. */
+  .area-body > .area-figs {
+    grid-column: 2;
+    grid-row: var(--rows);
+    align-self: stretch;
+  }
+
+  .area-figs-in {
     position: sticky;
     top: 28px;
   }
+
+  .area-body > .prose.thread + .area-figs {
+    padding-top: calc(1.8 * 1.1875rem);
+  }
+
+  .area-body > .area-refs {
+    margin-top: 36px;
+  }
 }
 
-.area-fig .media.small {
+.area-body .media.small {
   max-width: 420px;
 }
 
 .area-refs {
   display: grid;
   gap: 28px;
-  margin-top: 36px;
+  margin-top: 4px;
 }
 
 .refs-label {
