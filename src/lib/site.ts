@@ -17,8 +17,9 @@ export const NAV = [
 
 /** The live site's footer links (email, Google Scholar, GitHub, Twitter). The live
  *  Scholar link passed a name where Scholar expects a profile id; this is the id.
- *  Bluesky and LinkedIn were added after the move (2026-11). */
+ *  Bluesky, LinkedIn and the Salk faculty page were added after the move (2026-11). */
 export const ELSEWHERE = [
+  { href: 'https://www.salk.edu/scientist/talmo-pereira/', label: 'Salk faculty page' },
   { href: 'https://github.com/talmolab', label: 'GitHub' },
   { href: 'https://scholar.google.com/citations?user=tFrElIUAAAAJ', label: 'Google Scholar' },
   { href: 'https://bsky.app/profile/talmo.bsky.social', label: 'Bluesky' },
