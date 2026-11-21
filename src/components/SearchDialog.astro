@@ -8,10 +8,10 @@
     <label id="search-label" for="search-q" class="vh">Search the site</label>
     <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.75" /><path d="m13 13 4.5 4.5" /></svg>
     <input id="search-q" type="search" autocomplete="off" spellcheck="false" placeholder="People, papers, tools, pages" data-search-input />
-    <button type="button" class="search-close mono" data-search-close aria-label="Close search">Esc</button>
+    <button type="button" class="search-close meta" data-search-close aria-label="Close search">Esc</button>
   </form>
   <div class="search-body">
-    <p class="search-status mono" role="status" aria-live="polite" data-search-status></p>
+    <p class="search-status meta" role="status" aria-live="polite" data-search-status></p>
     <div data-search-results></div>
   </div>
 </dialog>
@@ -77,7 +77,7 @@
     for (const { d } of hits.slice(0, 40)) groups.set(d.type, [...(groups.get(d.type) ?? []), d]);
     out.innerHTML = [...groups.keys()]
       .map(
-        (t) => `<section class="search-group"><h2 class="search-type mono">${PLURAL[t]}</h2><ul>${groups
+        (t) => `<section class="search-group"><h2 class="search-type meta">${PLURAL[t]}</h2><ul>${groups
           .get(t)!
           .map(
             (d) =>

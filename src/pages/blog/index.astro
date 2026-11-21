@@ -13,7 +13,7 @@ const news = (await getCollection('news', ({ data }) => !data.draft)).map((n) =>
 const stream = [...posts, ...news].sort((a, b) => b.date.getTime() - a.date.getTime());
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 ---
-<Base title="Blog" description="Posts and news from the Talmo Pereira Lab.">
+<Base title="Blog" description="Posts and news from the Talmo Lab.">
   <div class="wrap">
     <header class="page-head">
       <h1 class="title">Blog</h1>
@@ -22,7 +22,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { day: 'numeric', month: 
           ? 'Posts and lab news will appear here. Nothing is published yet.'
           : 'Posts and lab news, newest first.'}
       </p>
-      <p class="mono"><a href="/feed.xml">RSS feed</a></p>
+      <p class="meta"><a href="/feed.xml">RSS feed</a></p>
     </header>
     {stream.length > 0 && (
       <section class="ledger" aria-label="Posts and news">
@@ -33,7 +33,7 @@ const fmt = (d: Date) => d.toLocaleDateString('en-US', { day: 'numeric', month: 
               <div>
                 <h2 class="pub-title">{it.href ? <a href={it.href}>{it.title}</a> : it.title}</h2>
                 {it.description && <p class="pub-authors">{it.description}</p>}
-                <p class="pub-venue"><span class="mono muted">{it.kind} · <time datetime={it.date.toISOString()}>{fmt(it.date)}</time></span></p>
+                <p class="pub-venue"><span class="meta muted">{it.kind} · <time datetime={it.date.toISOString()}>{fmt(it.date)}</time></span></p>
               </div>
             </li>
           ))}
