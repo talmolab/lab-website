@@ -1,12 +1,13 @@
 ---
 name: "Divya Seshadri Murali"
 image: ../../assets/people/divya-seshari-murali.jpg
+projects: ["sleap"]
 appointments:
   - role: ms-student
     start: "2023-06"
     end: "2024-09"
-  - role: scientific-programmer
-    title: "Bioinformatics Analyst"
+  - role: software-engineer
+    salkTitle: "Bioinformatics Analyst"
     start: "2024-10"
 ---
 

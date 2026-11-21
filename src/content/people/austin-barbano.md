@@ -1,5 +1,5 @@
 ---
-name: "Ava Barbano"
+name: "Austin Barbano"
 appointments:
   - role: undergrad-summer-intern
     title: "Undergraduate Research Intern"
@@ -7,6 +7,6 @@ appointments:
     end: "2024-09"
 ---
 
-Ava is an undergraduate pursuing her B.S. in Computational and Neural Systems at Caltech.
-She joined the lab in summer 2024 as a Caltech Summer Undergraduate Research Fellowship
-(SURF) intern and worked on biomechanically-grounded models of motor control.
+Austin joined the lab in summer 2024 as a Caltech Summer Undergraduate Research Fellowship
+(SURF) intern, while pursuing his B.S. in Computational and Neural Systems at Caltech, and
+worked on biomechanically-grounded models of motor control.

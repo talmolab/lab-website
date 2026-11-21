@@ -1,6 +1,7 @@
 ---
 name: "Kaii Bijlani"
 image: ../../assets/people/kaii-bijlani.jpg
+projects: ["pheno"]
 appointments:
   - role: undergrad-intern
     start: "2025-03"

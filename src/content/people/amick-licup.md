@@ -1,6 +1,7 @@
 ---
 name: "Amick Licup"
 image: ../../assets/people/amick-licup.jpg
+projects: ["sleap"]
 appointments:
   - role: undergrad-intern
     start: "2025-01"

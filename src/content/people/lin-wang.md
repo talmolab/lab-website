@@ -5,6 +5,7 @@ appointments:
   - role: friend
     title: "Bioinformatics Analyst"
     start: "2022-09"
+    end: "2026-10"
     note: "Bioinformatics Analyst"
 links:
   github: "linwang9926"

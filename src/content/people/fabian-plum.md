@@ -2,15 +2,23 @@
 name: "Fabian Plum"
 image: ../../assets/people/fabian-plum.jpg
 appointments:
+  # Two visits. The first one's end is not recorded beyond the year.
   - role: friend
     title: "Postdoctoral Fellow"
+    start: "2024-08"
+    end: "2025"
+    note: "Postdoctoral Fellow (Visiting)"
+  - role: friend
+    title: "Postdoctoral Fellow"
+    start: "2026-04"
+    end: "2026-09"
     note: "Postdoctoral Fellow (Visiting)"
 links:
   github: "FabianPlum"
   twitter: "fabian_plum"
 ---
 
-Fabi is a postdoctoral fellow who is visiting the lab in 2024-2025 through a
+Fabi is a postdoctoral fellow who visited the lab in 2024–2025 and again in 2026, the first time through a
 Biotechnology and Biological Sciences Research Council International Partnering Awards
 Plus on AI for Bioscience fellowship. He received his Ph.D. in Computer Vision and Deep
 Learning from Imperial College (advised by David Labonte and Anil Bharath), his M.Sc.
