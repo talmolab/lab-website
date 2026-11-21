@@ -1,0 +1,20 @@
+# Project groups, referenced from people as `projects: [<id>, ...]`. `name` is what the
+# team card shows; `title` spells it out for the member page; `url` links it.
+vnl:
+  name: VNL
+  title: Virtual Neuroscience Lab
+  url: /research/#neuro-ai
+pheno:
+  name: Pheno
+  title: Phenotyping
+3d:
+  name: 3D
+sleap:
+  name: SLEAP
+  url: https://sleap.ai
+plants:
+  name: Plants
+  url: /research/#complex-morphology
+mot:
+  name: MOT
+  title: Multi-object tracking

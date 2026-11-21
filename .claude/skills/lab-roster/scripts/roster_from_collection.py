@@ -26,7 +26,7 @@ PEOPLE = os.path.join(ROOT, 'src', 'content', 'people')
 
 FIELDS = [
     'name', 'slug', 'role', 'title', 'salk_title',
-    'start_date', 'end_date', 'status', 'co_advisor', 'note',
+    'start_date', 'end_date', 'status', 'co_advisor', 'program', 'note',
     'next_org', 'next_what', 'has_page',
 ]
 
@@ -54,6 +54,9 @@ def main():
         data, _ = read(path)
         slug = os.path.basename(path)[:-3]
         appts = data.get('appointments') or []
+        # Robots are on the team page for fun; they are not lab members.
+        if appts and appts[-1].get('role') == 'robot':
+            continue
         # Current iff the LAST appointment has no end at all. end: "unknown" is a
         # departure whose date was never recorded, and must not read as still-here.
         current = bool(appts) and appts[-1].get('end') is None
@@ -74,6 +77,7 @@ def main():
                 'status': 'current' if end is None else ('departed' if end != 'unknown'
                                                           else 'departed, date unrecorded'),
                 'co_advisor': a.get('coAdvisor', ''),
+                'program': a.get('program', ''),
                 'note': a.get('note', ''),
                 # Only on the last row, since it describes the person, not the role.
                 'next_org': nxt.get('org', '') if i == len(appts) - 1 else '',

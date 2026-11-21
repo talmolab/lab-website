@@ -13,11 +13,13 @@ guardrail, since there is no CMS. The slug is the file name and the page address
 name: "Full Name"
 image: ../../assets/people/full-name.jpg   # optional; portraits live in src/assets/people/
 page: true                                 # optional, default true; false = listed, no page
+projects: ["pheno", "mot"]                 # optional: current project groups, src/data/projects.yaml
 appointments:                              # at least one, oldest first
   - role: phd-student                      # category: sorts, groups, filters; never shown raw
     title: "PhD Candidate"                 # optional: what the site shows, if not the role label
     salkTitle: "Graduate Student"          # optional: official HR title, kept separately
-    coAdvisor: "Eiman Azim"                # optional
+    coAdvisor: "Eiman Azim"                # optional: genuine co-advising only (see below)
+    program: ngp                           # optional, students: an id in src/data/programs.yaml
     start: "2024-09"                       # YYYY-MM, or YYYY if the month is not known
     end: "2026-06"                         # absent = still here; "unknown" = left, date not recorded
     note: "TRELS Scholar"                  # optional free text
@@ -45,12 +47,27 @@ Quote every string. A bare `2024` is read as a number and fails the schema.
 The order of `ROLE_ORDER` in `src/content.config.ts` is the sort order of the team
 page. Never hand-order people.
 
-`pi`, `staff-scientist`, `postdoc`, `scientific-programmer`, `software-engineer`,
-`bioinformatics-analyst`, `phd-student`, `phd-rotation`, `ms-student`,
+`pi`, `admin`, `software-engineer`, `scientific-programmer`, `bioinformatics-analyst`,
+`staff-scientist`, `postdoc`, `phd-student`, `phd-rotation`, `ms-student`,
 `research-assistant`, `undergrad-intern`, `undergrad-summer-intern`,
-`highschool-intern`, `highschool-summer-intern`, `friend`
+`highschool-intern`, `highschool-summer-intern`, `friend`, `robot`
 
-There is **no `alumni` role**.
+There is **no `alumni` role**. `admin` is the lab administrator. `robot` is for the lab's
+robots: they get a group on the team page but are never counted as people, and the roster
+CSV skips them.
+
+## Co-advisors, programs and projects
+
+- **`coAdvisor`** is for a PI who genuinely co-advises or jointly supervises the
+  appointment. It shows on the member page ("co-advised with" for trainees, "jointly
+  with" for staff) and under the title on the team card. It is NOT the lab that holds
+  someone's appointment on paper (a grad program's PI of record while Talmo had no UCSD
+  adjunct appointment, an HR home department): that is an HR fact and stays out of this
+  public repository. Add the PI's lab page to `src/data/pis.yaml` to link the name.
+- **`program`** names a graduate program in `src/data/programs.yaml` (`ngp`,
+  `ucsd-bioengineering`). Add a program there first; a typo fails the build.
+- **`projects`** lists current project groups from `src/data/projects.yaml` (`vnl`,
+  `pheno`, `3d`, `sleap`, `plants`, `mot`). Shown on the card and the member page.
 
 ## The rules that matter
 

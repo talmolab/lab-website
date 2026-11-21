@@ -1,7 +1,8 @@
 ---
 import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
 import type { Person } from '../lib/people';
-import { latest, displayTitle } from '../lib/people';
+import { latest, displayTitle, coAdvisorsOf } from '../lib/people';
 
 interface Props {
   person: Person;
@@ -10,6 +11,10 @@ const { person: p } = Astro.props;
 const a = latest(p);
 const initials = p.data.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
 const inner = { title: displayTitle(a) };
+// A genuine co-advisor of the current appointment, and the project groups, as on the
+// lab's own roster: "Lara Scaria (w/ Eiman Azim) [Pheno]".
+const withWhom = coAdvisorsOf(p);
+const tags = (await Promise.all(p.data.projects.map((r) => getEntry(r)))).filter((x) => !!x).map((x) => x.data.name);
 ---
 <li class="person">
   {p.data.page ? (
@@ -21,6 +26,8 @@ const inner = { title: displayTitle(a) };
       )}
       <span class="person-name">{p.data.name}</span>
       <span class="person-title">{inner.title}</span>
+      {withWhom.length > 0 && <span class="person-with">with {withWhom.join(' and ')}</span>}
+      {tags.length > 0 && <span class="person-tags"><span class="vh">Projects: </span>{tags.join(' · ')}</span>}
     </a>
   ) : (
     <div>
@@ -31,6 +38,27 @@ const inner = { title: displayTitle(a) };
       )}
       <span class="person-name">{p.data.name}</span>
       <span class="person-title">{inner.title}</span>
+      {withWhom.length > 0 && <span class="person-with">with {withWhom.join(' and ')}</span>}
+      {tags.length > 0 && <span class="person-tags"><span class="vh">Projects: </span>{tags.join(' · ')}</span>}
     </div>
   )}
 </li>
+
+<style>
+  /* Both sit in the card's 10px grid; pulled up so name, title and these read as one block. */
+  .person-with {
+    margin-top: -8px;
+    color: var(--muted);
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+  .person-tags {
+    margin-top: -4px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+</style>

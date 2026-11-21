@@ -29,7 +29,7 @@ export const GET: APIRoute = async () => {
     docs.push({
       type: 'Person',
       title: p.data.name,
-      url: p.data.page ? `/members/${p.id}` : '/team/#alumni',
+      url: p.data.page ? `/members/${p.id}` : cur ? '/team/#current' : '/team/#alumni',
       detail,
       text: [p.data.aliases.join(' '), p.data.next?.org ?? '', cur ? 'current' : 'alumni'].join(' '),
     });
