@@ -76,10 +76,10 @@
 
 # The live /contact/ page is unmodified Greene template placeholder content —
 # "Department of Metaphor", scrooge@mcduck.com, a phone number and a Google Maps
-# pin in Nova Scotia. It is not migrated; the real contact route is the Team page.
-/contact/            /team/#join  301
-/contact             /team/#join  301
-/contact/index.html  /team/#join  301
+# pin in Nova Scotia. It is not migrated; the real contact route is the Join page.
+/contact/            /join/       301
+/contact             /join/       301
+/contact/index.html  /join/       301
 
 # Paper thumbnails were PNG and JPG on the live site and are WebP here, under the same
 # names. /images/papers/prasad-2022.jpg is linked from outside the site.

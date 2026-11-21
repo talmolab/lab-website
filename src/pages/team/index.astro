@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import PersonCard from '../../components/PersonCard.astro';
-import Join from '../../components/Join.astro';
 import { team, grouped, blocks, roleHistory, years, latest, displayTitle } from '../../lib/people';
 import labPhoto from '../../assets/pages/the-lab.jpg';
 
@@ -31,12 +30,10 @@ const firstPara = (md?: string) =>
   <div class="wrap">
     <header class="page-head">
       <h1 class="title">Team</h1>
-      <p class="lede">{members.length} people in the lab today, and {alumni.length} alumni.</p>
-      <nav class="jump meta" aria-label="On this page">
-        <a href="#current">In the lab</a>
-        <a href="#alumni">Alumni</a>
-        <a href="#join">Join the team</a>
-      </nav>
+      <p class="lede">
+        {members.length} people <a href="#current">in the lab today</a>, and {alumni.length}{' '}
+        <a href="#alumni">alumni</a>.
+      </p>
     </header>
 
     <section class="ledger" id="current" aria-labelledby="current-h">
@@ -142,6 +139,5 @@ const firstPara = (md?: string) =>
       </table>
     </section>
 
-    <Join />
   </div>
 </Base>
