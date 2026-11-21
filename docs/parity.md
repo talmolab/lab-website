@@ -36,19 +36,19 @@ onto talmolab.org once the gate passes.
 | Buttons "Learn about our work", "Join us" | — | `/research`, `/join` | Text links under the lede, plus the research panel and the join block below | kept |
 | Figure: "The lab, ca. 2024. Photo credit: Chris Keeney" | `2024-08-06.lab-group1.jpg` | → `/team` | Home, lab section, same caption and credit, links to Team | kept |
 | Figure: "The lab, ca. 2022. Photo credit: Chris Keeney" | `the-lab.jpg` | → `/team` | Team page, beside the alumni list, same caption and credit | moved |
-| — | `sleap_movie.gif`, `root_sleap.gif`, `nn_systems.png` | → research | Home "Research" panel: three figures, one per area, each linking to its section on `/research/` | new (old media) |
+| — | `sleap_movie.gif`, `root_sleap.gif`, `nn_systems.png` | → research | Home "Research" panel: three figures, one per research direction, each linking to its section on `/research/` | new (old media) |
 | — | — | — | Home: recent publications, maintained tools, join block | new |
 
 ## `/research/`
 
 | Block | Media | Links | New site | Status |
 |---|---|---|---|---|
-| Intro: deep learning and computer vision, building novel computational tools | — | — | Research page lede | kept |
-| Computational ethology: pose estimation and tracking; SLEAP | `sleap_movie.gif` (600×279, 8.6 s) | talmopereira.com review PDF, sleap.ai | Area 1, live copy verbatim plus the DREEM / LUC3D paragraph from the C build. Figure re-encoded to muted looping MP4 + WebM with a poster; the GIF stays at its old URL. | kept |
-| Complex morphology phenotyping: plant roots, Harnessing Plants Initiative | `root_sleap.gif` (240×180) | salk.edu power-of-plants, HPI | Area 2, live copy plus the sleap-roots sentence. MP4 + WebM. | kept |
-| Neuro-AI modeling: ANNs as models of neural circuits, imitation learning | `nn_systems.png` (transparent) | — | Area 3, live copy plus the MIMIC-MJX paragraph. PNG on a light plate so its black text survives dark mode. | kept |
-| "See Publications for a list of recent published works" | — | `/publications/` | Each area lists its tools and selected papers; page ends with a link to Publications | improved |
-| — | — | — | "Phenotyping at scale" (an area the C build added) has no old-site media and unreviewed copy; kept in the repo as `draft: true`, not rendered | held back |
+| Intro: deep learning and computer vision, building novel computational tools | — | — | Rewritten from the 2025 research statement: the lab's goal, approach and core interests, then an overview of the three directions, each with its threads linked | rewritten |
+| Computational ethology: pose estimation and tracking; SLEAP | `sleap_movie.gif` (600×279, 8.6 s) | talmopereira.com review PDF, sleap.ai | Direction a, "Biological motion capture" (the statement's "scientific software engineering", renamed): pose estimation, identity tracking, 3D pose, foundation models. The review is linked by DOI. Same figure, re-encoded to muted looping MP4 + WebM with a poster; the GIF stays at its old URL. | rewritten |
+| Complex morphology phenotyping: plant roots, Harnessing Plants Initiative | `root_sleap.gif` (240×180) | salk.edu power-of-plants, HPI | Folded into direction b, "Phenoinformatics", as its plant roots thread, beside home cage monitoring, neurodegenerative disease, spaceflight and human movement. Same figure, MP4 + WebM. The HPI link is kept; the power-of-plants link is not. | rewritten |
+| Neuro-AI modeling: ANNs as models of neural circuits, imitation learning | `nn_systems.png` (transparent) | — | Direction c, "Virtual biology": embodied neuromechanics (MIMIC-MJX), sensorimotor control, neural networks as models of brains, genotype to phenotype. Same figure, on a light plate so its black text survives dark mode. | rewritten |
+| "See Publications for a list of recent published works" | — | `/publications/` | Each direction lists its tools and selected papers; page ends with a link to Publications | improved |
+| — | — | — | The C build's draft area "Phenotyping at scale" is gone: its subject is now part of Phenoinformatics. The old section anchors (`#computational-ethology`, `#complex-morphology`, `#neuro-ai`) were live for less than a day and are not kept. | removed |
 
 ## `/publications/`
 

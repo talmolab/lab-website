@@ -10,7 +10,7 @@ export const GET: APIRoute = async () => {
 
   const pages = [
     ['Home', '/', 'Computational tools for studying complex biological systems'],
-    ['Research', '/research/', 'Computational ethology, complex morphology phenotyping, neuro-AI modeling'],
+    ['Research', '/research/', 'Biological motion capture, phenoinformatics, virtual biology'],
     ['Publications', '/publications/', 'Papers, preprints and proceedings; BibTeX, CSL JSON'],
     ['Tools', '/tools/', 'Open-source software: SLEAP and related tools'],
     ['Team', '/team/', 'Current members and alumni'],

@@ -8,26 +8,64 @@ const areas = (await getCollection('areas', ({ data }) => !data.draft)).sort((a,
 const letters = 'abcdefghij';
 
 const rendered = await Promise.all(
-  areas.map(async (a) => ({
-    area: a,
-    Content: (await render(a)).Content,
-    tools: (await getEntries(a.data.tools)).sort((x, y) => x.data.order - y.data.order),
-    papers: (await getEntries(a.data.papers)).sort((x, y) => (y.data.date ?? '').localeCompare(x.data.date ?? '')),
-  })),
+  areas.map(async (a) => {
+    const { Content, headings } = await render(a);
+    return {
+      area: a,
+      Content,
+      /** The area's threads: the `###` headings of its prose. */
+      threads: headings.filter((h) => h.depth === 3),
+      tools: (await getEntries(a.data.tools)).sort((x, y) => x.data.order - y.data.order),
+      papers: (await getEntries(a.data.papers)).sort((x, y) => (y.data.date ?? '').localeCompare(x.data.date ?? '')),
+    };
+  }),
 );
 ---
-<Base title="Research" description="Research in the Talmo Lab: computational ethology, complex morphology phenotyping and neuro-AI modeling.">
+<Base title="Research" description="Research in the Talmo Lab: biological motion capture, phenoinformatics and virtual biology.">
   <div class="wrap">
     <header class="page-head">
       <h1 class="title">Research</h1>
       <p class="lede">
-        Our lab leverages <strong>deep learning</strong> and <strong>computer vision</strong> to
-        study complex biological systems by <strong>building novel computational tools</strong>.
+        We advance the frontier of how <strong>AI</strong> and other technologies can be
+        adapted to tackle foundational biological problems that would not be tractable
+        otherwise.
       </p>
-      <nav class="jump meta" aria-label="Research areas">
-        {areas.map((a, i) => <a href={`#${a.id}`}>{letters[i]}. {a.data.name}</a>)}
-      </nav>
+      <div class="head-cols">
+        <p>
+          Our approach combines technical expertise in deep learning, software engineering
+          and computational modeling with deep biological domain knowledge and tight
+          integration with experimental research programs. Our core interests are
+          neuroethology (natural behavior and its neural mechanisms), degenerative
+          diseases (especially ALS and Alzheimer's disease) and systems biology
+          (connecting genotype to phenotype).
+        </p>
+        <p>
+          The lab works in three directions, each with its own workflow, methods and
+          measures of success. Motion capture feeds the other two: better data and
+          analytics for phenoinformatics, and better models and theories for virtual
+          biology.
+        </p>
+      </div>
     </header>
+
+    <nav class="directions" aria-label="Research directions">
+      <ol role="list">
+        {rendered.map(({ area: a, threads }, i) => (
+          <li>
+            <a class="dir-name" href={`#${a.id}`}>
+              <span class="fig-label" aria-hidden="true">{letters[i]}</span>
+              {a.data.name}
+            </a>
+            <p class="dir-sum">{a.data.summary}</p>
+            {threads.length > 0 && (
+              <ul class="dir-threads meta" role="list">
+                {threads.map((t) => <li><a href={`#${t.slug}`}>{t.text}</a></li>)}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
 
     {rendered.map(({ area: a, Content, tools, papers }, i) => {
       const [lead] = a.data.media;
@@ -38,6 +76,12 @@ const rendered = await Promise.all(
             <span class="fig-label" aria-hidden="true">{letters[i]}</span>
             <h2 id={`${a.id}-h`}>{a.data.name}</h2>
           </div>
+          {a.data.goal && (
+            <p class="area-goal">
+              <span class="meta">Goal</span>
+              {a.data.goal}
+            </p>
+          )}
           <div class="area-body">
             {lead && (
               <figure class="area-fig">

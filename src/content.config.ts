@@ -258,13 +258,20 @@ const repos = defineCollection({
 
 /** §6.3b: the Research page is prose-first. These are authored, not derived, and
  *  the schema is deliberately minimal: everything beyond the prose is optional.
- *  Resist adding required fields here. */
+ *  Resist adding required fields here.
+ *
+ *  The three areas are the lab's research directions (biological motion capture,
+ *  phenoinformatics, virtual biology). The `###` headings in an area's prose are its
+ *  threads: the Research page lists them in its overview and links to each, so keep
+ *  them short and unique across areas. */
 const areas = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/areas' }),
   schema: z.object({
     name: z.string(),
-    /** One sentence for the home page. */
+    /** One sentence for the home page and the Research overview. */
     summary: z.string(),
+    /** What the direction sets out to do, shown under its heading on Research. */
+    goal: z.string().optional(),
     /** Editorial order. Not alphabetical, not by output volume. */
     order: z.number().default(99),
     /** The first item leads the area on Research and stands for it on Home. */
