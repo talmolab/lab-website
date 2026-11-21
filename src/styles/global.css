@@ -573,10 +573,15 @@ h3,
     grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
   }
 
-  /* Half the label column, for a label that is one short heading (Team's "In the
-   * lab"), but never narrower than that heading, so it does not wrap. */
+  /* Half the label column, for labels that are short headings (Team's "In the lab"
+   * and "Alumni"), but never narrower than the heading, so it does not wrap. */
   .ledger.narrow {
     grid-template-columns: minmax(max-content, 1.5fr) minmax(0, 10.5fr);
+  }
+
+  /* A note under the heading wraps to the column instead of widening it. */
+  .ledger.narrow .ledger-head p {
+    contain: inline-size;
   }
 
   .ledger-head {
