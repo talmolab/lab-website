@@ -411,8 +411,11 @@ button {
     gap: 8px 12px;
   }
 
+  /* The lockup is 5.72 times as wide as it is tall. Below about 370 px it shrinks with the
+   * viewport so it stays on one row with the three buttons: two 16 px gutters, 136 px of
+   * buttons and the 12 px gap leave 100vw - 180px, less 4 px for rounding. */
   .lockup {
-    height: 32px;
+    height: min(32px, max(24px, (100vw - 184px) / 5.72));
   }
 
   .brand {
