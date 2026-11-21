@@ -81,9 +81,18 @@ guardrail on content.
   but a hotlinked publisher figure breaks whenever the publisher says so.
 - **repos**: `src/data/repos.yaml`, array order is display order; optional `title`
   (display name) and `media:` list.
-- **areas**: `src/content/areas/*.md`: prose plus optional `media:` (the first item leads),
-  `tools:` (repo ids) and `papers:` (overlay keys). Both are `reference()`s, so a typo
-  fails the build. `draft: true` keeps an area out of the site (phenotyping.md).
+- **areas**: `src/content/areas/*.md`, the lab's three research directions, after the
+  2025 research statement: biological motion capture (the statement's "scientific
+  software engineering", renamed), phenoinformatics and virtual biology. Prose plus
+  optional `goal:` (the line under the heading on Research), `media:` (the first item
+  leads), `tools:` (repo ids) and `papers:` (overlay keys). Both are `reference()`s, so a
+  typo fails the build. The `###` headings in the prose are the direction's threads: the
+  Research overview lists and links them, so keep them short and unique across areas.
+  Cite a paper inline as `([Last et al., *Venue*, YYYY](https://doi.org/...))`: first
+  author, venue in italics and year, as the publications data has them, never a link on
+  a phrase.
+  The file name is the section's anchor (`/research/#virtual-biology`), which
+  `src/data/projects.yaml` links to. `draft: true` keeps an area out of the site.
 - **media**: inline, not a collection. Each item is `{ src, poster?, width, height, alt,
   caption?, credit?, plate? }`, and `src`/`poster` must exist under `public/` or the build
   fails. Today: the old site's `sleap_movie.gif` and `root_sleap.gif` (as MP4 + WebM in
