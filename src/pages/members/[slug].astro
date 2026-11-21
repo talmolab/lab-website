@@ -87,6 +87,11 @@ const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
             {earlier.length > 0 && <> · previously {earlier.join(', ')}</>}
             {coAdvisors.length > 0 && <> · {`${coAdvisorVerb(person)} `}{coAdvisors.map((c, i) => <>{i > 0 && ' and '}{c.url ? <a href={c.url}>{c.name}</a> : c.name}</>)}</>}
           </p>
+          {d.aliases.length > 0 && (
+            // Aliases are how papers credit the person (Yuanjia Yang for Scott Yang), so
+            // say so here: otherwise their own papers look like someone else's.
+            <p class="meta muted member-aka">Also known as {d.aliases.join(', ')}</p>
+          )}
           {program && (
             <p class="member-program"><a href={program.url}>{program.name}</a>, {program.school}</p>
           )}
@@ -110,7 +115,7 @@ const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
           </div>
           {papers.length > 0 ? (
             <ul class="pubs compact">
-              {papers.map((p) => <PubRow pub={p} lab={lab} compact level="h3" />)}
+              {papers.map((p) => <PubRow pub={p} lab={lab} compact level="h3" collapseAt={60} />)}
             </ul>
           ) : (
             <p class="muted">No papers from the lab's publication list yet.</p>
