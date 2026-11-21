@@ -1,416 +1,293 @@
-# talmolab brand kit (v003)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="svg/talmolab-lockup-h-dark.svg">
+    <img src="svg/talmolab-lockup-h-light.svg" alt="talmolab" width="440">
+  </picture>
+</p>
 
-The logo, its colours and the scripts that make every file here, in one place. The site's
-footer links to this folder.
+# Talmo Lab brand kit
 
-- **Logo files**: `svg/` (any size), `png/` (512 and 1024 px wide), `favicon/`, `og/`.
-  Read the [usage rules](#usage-rules) first.
-- **Colours**: `palette.css`, and the tables under [Palette](#palette).
-- **Type**: `type.css`, and [Type](#type).
-- **Sources**: `talmolab-logo.v003.ai` (Illustrator) and `talmolab-logo.v003.svg` (the
-  normalised export every script reads).
+The lab's logo in every shape and colour, its palette and typeface, and the scripts that
+generate all of it. If you need a logo for a poster, a slide, a lab T-shirt or a profile
+picture, start with the table below.
 
-**Status.** v003 is the v002 mark recoloured **Ink & Violet** (2026-09-09), in use on
-talmolab.org. It was not put to a lab vote the way v002's blue was. The horizontal lockup
-was redrawn on 2026-11-20 so the wordmark is as tall as the mark's `l`
-([below](#the-horizontal-lockup)). Until then this kit lived only in the old site's
-gitignored `scratch/` folder; it moved here, into `talmolab/lab-website`, on 2026-11-20.
+- [Which file do I need?](#which-file-do-i-need)
+- [The logo](#the-logo): what it is, its shapes and colourways
+- [Rules](#rules): clear space, minimum sizes, what not to do
+- [Colours](#colours) and [type](#type)
+- [Working on the kit](#working-on-the-kit): regenerating files, the site's copies
 
 ---
 
-## Usage rules
+## Which file do I need?
 
-1. **Never set “talmolab” in type.** Not in a heading, a slide title or a sign. Use a
-   lockup from `svg/`: its letters are outlines from the master, not a font. In running
-   text the lab is “Talmo Lab”.
-2. **Keep clear space**: `2b` on every side, which is 0.232 × the logo's height
-   (9 px around a 38 px logo). Details under [Clear space](#clear-space).
-3. **Stay above the minimum sizes** below.
-4. **One accent.** Violet is the only colour beside ink and paper. Structure comes from
-   weight, rules and position, not from a second hue, a gradient or a tint of the violet.
-5. **The violet is for the logo and non-text marks.** It is 3.80:1 on paper, under AA.
-   Text and links use `#805fc9` on paper (4.50:1) and `#8c6bd6` on the dark ground
-   (4.56:1). The logo's violet is `#8b6dd2` in both themes; only its ink reverses.
-6. **Match the colourway to the ground**: `-light` on light grounds, `-dark` on dark ones,
-   `-on-paper` or `-on-ground` where transparency is not available, `-mono-ink` for
-   one-colour printing, `-mono-white` over photographs. See [Colourways](#colourways).
-7. **Do not alter it.** No other colours, no stretching, rotating, outlines, shadows or
-   effects, no rearranging the mark and the wordmark, no redrawn letters. The layouts are
-   the shapes in `svg/`; the only other cut is the favicon's.
+**Prefer the SVG** whenever the app takes it (Illustrator, Inkscape, Figma, PowerPoint,
+Keynote, the web): it is sharp at any size. Use a PNG only when
+it doesn't (Google Slides, Word on some platforms, most upload forms).
+
+| I'm making… | Use | Why |
+|---|---|---|
+| A poster or printed handout on white | [`svg/talmolab-lockup-light.svg`](svg/talmolab-lockup-light.svg) | Stacked lockup, vector, any size |
+| A poster header band or a page footer | [`svg/talmolab-lockup-h-light.svg`](svg/talmolab-lockup-h-light.svg) | Horizontal, fits a strip |
+| Slides with a light background | [`svg/talmolab-lockup-h-light.svg`](svg/talmolab-lockup-h-light.svg) · PNG: [`png/talmolab-lockup-h-light-1024.png`](png/talmolab-lockup-h-light-1024.png) | Transparent, ink and violet |
+| Slides with a dark background | [`svg/talmolab-lockup-h-dark.svg`](svg/talmolab-lockup-h-dark.svg) · PNG: [`png/talmolab-lockup-h-dark-1024.png`](png/talmolab-lockup-h-dark-1024.png) | Light ink, same violet |
+| A logo over a photo or a coloured background | [`svg/talmolab-lockup-mono-white.svg`](svg/talmolab-lockup-mono-white.svg) | All white, reads on anything dark or busy |
+| One-colour printing: T-shirts, embroidery, stamps, engraving | [`svg/talmolab-lockup-mono-ink.svg`](svg/talmolab-lockup-mono-ink.svg) | All ink, one spot colour |
+| A Word or Google Doc letterhead | [`png/talmolab-lockup-h-light-512.png`](png/talmolab-lockup-h-light-512.png) | Small, transparent |
+| An email signature | [`png/talmolab-lockup-h-on-paper-512.png`](png/talmolab-lockup-h-on-paper-512.png) | Opaque, so dark-mode mail clients don't swallow the ink |
+| A profile picture (GitHub, Slack, Zenodo, ORCID, Bluesky) | [`png/talmolab-lockup-square-on-paper-1024.png`](png/talmolab-lockup-square-on-paper-1024.png) | Padded to a true square so circular crops keep the whole name |
+| A tiny square icon (under ~64 px) | [`favicon/talmolab-favicon-on-paper-512.png`](favicon/talmolab-favicon-on-paper-512.png) | The simplified `tl` cut, built to survive small sizes |
+| An app icon or a larger square tile | [`og/talmolab-icon-512.png`](og/talmolab-icon-512.png) | Full mark on paper |
+| A link preview / social card | [`og/talmolab-og-light-1200x630.png`](og/talmolab-og-light-1200x630.png) | 1200 × 630, what the website itself uses |
+| A print shop that wants PDF or EPS | Open the SVG in Illustrator or Inkscape and save as PDF, or send [`talmolab-logo.v003.ai`](talmolab-logo.v003.ai) | The SVGs are the vector source of truth |
+
+Every file is named `talmolab-<shape>-<colourway>[-<width>].<ext>`, so once you know the
+shape and colourway below you can find any other combination in `svg/` or `png/`.
+
+<p align="center">
+  <a href="contact-sheet.png"><img src="contact-sheet.png" alt="Every shape (rows) in every colourway (columns): light, dark, on paper, on ground, mono ink, mono white" width="100%"></a>
+  <br><sub>Every shape in every colourway. Checkerboard = transparent. Also on <a href="contact-sheet-white.png">plain white</a>.</sub>
+</p>
+
+---
+
+## The logo
+
+The mark is built from the two letters of the lab's initials, **t** and **l**, and from the
+two things the lab studies:
+
+- the **t** grows a neuron's **dendritic arbor**, drawn in ink;
+- the **l** is a solid violet bar carrying a **pose skeleton**, the keypoint graph that
+  behaviour-tracking software draws over an animal, plus the violet **soma** dot where the
+  arbor meets the t.
+
+The wordmark repeats the split: “talmo” in ink, “lab” in violet. That is the whole system:
+**two colours, ink and violet, and nothing else.**
+
+### Shapes
+
+| Shape | What it is | Use it for |
+|---|---|---|
+| `lockup` | mark above wordmark | posters, title slides, anything with room |
+| `lockup-h` | mark beside wordmark | headers, footers, slide corners, letterheads (the website's header) |
+| `lockup-square` | stacked lockup padded to 1:1 | **avatars only**: uploaders that crop to a square or circle |
+| `mark` | mark alone | where the name is already nearby; not below 32 px |
+| `wordmark` | “talmolab” alone | rare; where the mark would be too detailed |
+| `favicon` | simplified `tl`, no arbor or skeleton | browser tabs and anything under 32 px |
+
+In the horizontal lockup the wordmark is scaled so its `l` exactly matches the mark's
+violet bar, top and baseline, which is why the two read as one unit.
+
+### Colourways
+
+The violet is the same `#8b6dd2` in every colourway; only the ink changes.
+
+| Suffix | Ink | Violet | Background | Use on |
+|---|---|---|---|---|
+| `-light` | `#1e1a29` | `#8b6dd2` | transparent | white or light backgrounds (the default) |
+| `-dark` | `#e8e7eb` | `#8b6dd2` | transparent | black or dark backgrounds |
+| `-on-paper` | `#1e1a29` | `#8b6dd2` | `#f8f8fb` | anywhere transparency is lost or unreliable |
+| `-on-ground` | `#e8e7eb` | `#8b6dd2` | `#141319` | the same, dark |
+| `-mono-ink` | `#1e1a29` | `#1e1a29` | transparent | one-colour print, fax, embroidery |
+| `-mono-white` | `#ffffff` | `#ffffff` | transparent | photographs and coloured backgrounds |
+
+### Sizes on disk
+
+- **SVG** (`svg/`): every shape × colourway, tightly cropped, no margin.
+- **PNG** (`png/`): 512 and 1024 px wide (the mark also at 256). For anything larger, use
+  the SVG; `scripts/raster.py` also makes 2048 px versions on demand.
+- **Favicons** (`favicon/`): the simplified cut at 16–512 px square, plus `favicon.ico`.
+- **Cards and app icons** (`og/`): see [Link previews and app icons](#link-previews-and-app-icons).
+
+---
+
+## Rules
+
+1. **Never type “talmolab”.** Not in a heading, a slide title or on a sign. Place the
+   logo file: its letters are drawn outlines, not a font. In running text, the lab is
+   **Talmo Lab**.
+2. **Leave clear space** of at least 23% of the logo's height on every side (below).
+3. **Respect the minimum sizes** (below).
+4. **Match the colourway to the background**: `-light` on light, `-dark` on dark,
+   `-mono-white` on photos. If the logo looks faint, you have the wrong one.
+5. **Don't alter it.** No other colours, gradients, outlines, shadows or glows; no
+   stretching, rotating or rearranging the mark and the wordmark; no redrawn letters.
+6. **Don't add a second accent colour** next to it. Violet is the only colour beside ink
+   and paper.
+
+### Clear space
+
+The unit is **`b`, the width of the violet bar**. Keep **`2b` clear on all four sides**,
+which works out to **0.232 × the logo's height**.
+
+| Logo height | Clear space each side |
+|---|---|
+| 38 px (website header) | 9 px |
+| 80 px | 19 px |
+| 120 px | 28 px |
+| 2 cm | 4.6 mm |
+| 5 cm | 11.6 mm |
+
+The SVGs and transparent PNGs are cropped tight, so the clear space has to come from your
+layout. The `-on-paper` and `-on-ground` tiles include a small margin, but less than `2b`.
+[`clear-space.png`](clear-space.png) shows the rule and the common mistakes.
 
 ### Minimum sizes
 
-Height on screen, judged from renders at 1× pixel density, where detail goes first. On 2×
-screens these hold with room to spare.
+Measured as on-screen height at normal (1×) pixel density.
 
-| Shape | Smallest | Below that | What fails first |
+| Shape | Smallest | Smaller than that? |
+|---|---|---|
+| `lockup` | 64 px tall | switch to `lockup-h` |
+| `lockup-h` | 24 px tall | switch to the favicon cut |
+| `mark` | 32 px tall | switch to the favicon cut |
+| `wordmark` | 12 px tall | switch to `lockup-h` |
+| `favicon` | 16 px | nothing smaller |
+
+Below 32 px the arbor and skeleton blur into noise, which is why the favicon keeps only
+the `t` and the bar ([`favicon-simplified.png`](favicon-simplified.png) compares them).
+
+---
+
+## Colours
+
+### Brand colours
+
+| Name | Hex | RGB | Used for |
 |---|---|---|---|
-| `lockup-h` | 24 px tall | the favicon cut | the arbor and the skeleton blur together |
-| `lockup` (stacked) | 64 px tall | `lockup-h` | the mark above, then the small wordmark |
-| `mark` | 32 px tall | the favicon cut | the arbor and the skeleton turn to noise |
-| `wordmark` | 12 px tall | `lockup-h` | the counters of a, o and b close |
-| `favicon` | 16 px | nothing smaller | drawn for 16 px |
+| **Ink** | `#1e1a29` | 30 26 41 | the `t`, the arbor, “talmo”; body text |
+| **Violet** | `#8b6dd2` | 139 109 210 | the bar, the skeleton, the soma, “lab” |
+| **Paper** | `#f8f8fb` | 248 248 251 | light background |
+| **Ground** | `#141319` | 20 19 25 | dark background |
+| **Light ink** | `#e8e7eb` | 232 231 235 | the logo's ink and body text on dark |
 
-The site's header uses `lockup-h` at 38 px, 32 px on phones, and never below 24 px.
+Ink and violet share a hue (about 295°), so the logo reads as one colour family at two
+lightnesses rather than two competing colours.
+
+### Violet is not a text colour
+
+The logo violet `#8b6dd2` is only **3.8 : 1** against paper, below the 4.5 : 1 that
+accessible text needs. So:
+
+- use **`#8b6dd2`** for the logo and for non-text marks (rules, dots, chart accents);
+- use **`#805fc9`** for violet **text and links on light** backgrounds (4.50 : 1);
+- use **`#8c6bd6`** for violet text and links on dark backgrounds (4.56 : 1).
+
+The logo itself never switches: it is `#8b6dd2` on both light and dark.
+
+### Full palette
+
+These are the website's colours, also in [`palette.css`](palette.css) as CSS custom
+properties. Contrast is against that theme's background.
+
+| Token | Light | Dark | Used for |
+|---|---|---|---|
+| `paper` | `#f8f8fb` | `#141319` | page background |
+| `sunk` | `#f0eff4` | `#1c1b22` | recessed panels |
+| `rule` | `#dedde3` | `#2c2a31` | dividers and borders |
+| `text` | `#1e1a29` (16.0 : 1) | `#e8e7eb` (15.0 : 1) | body text |
+| `muted` | `#5c5965` (6.5 : 1) | `#abaab1` (8.0 : 1) | captions, metadata |
+| `link` | `#805fc9` (4.5 : 1) | `#8c6bd6` (4.6 : 1) | links and accent text |
+| `mark` | `#8b6dd2` (3.8 : 1) | `#8b6dd2` (4.6 : 1) | logo and non-text marks only |
 
 ---
 
 ## Type
 
-**Source Sans 3 only**, weights 400, 500 and 600 with italics, self-hosted with Latin,
-Latin-ext, Vietnamese and Greek subsets. No serif and no monospace. `type.css` has the face
-and the site's scale. It was chosen on coverage of the site's real content (Vietnamese
-names, Greek, maths); `og/type-system.css` is the record of that decision from 2026-08-30,
-which also chose JetBrains Mono, since dropped.
+**[Source Sans 3](https://fonts.google.com/specimen/Source+Sans+3)**, and nothing else:
+weights 400, 500 and 600 with italics. No serif, no monospace. Use 600 for headings (there
+is no bold 700 in the system) and tabular figures where numbers line up in columns.
+
+It was chosen for coverage of what the lab actually writes: Vietnamese names, Greek and
+mathematical symbols. [`type.css`](type.css) has the face and the website's type scale.
+
+On slides and posters, set titles and body in Source Sans 3 and let the logo file supply
+“talmolab”.
 
 ---
 
-## What's here
+## Working on the kit
+
+Everything here is generated from one master, so change the master and rerun the scripts;
+never hand-edit an export.
 
 ```
 brand/
   talmolab-logo.v003.ai        Illustrator source
-  talmolab-logo.v003.svg       master: the .ai export, transforms baked out
-  talmolab-logo.v003.svg.orig  the raw export, before normalize-svg.py
-  palette.css                  colour tokens, named as on the site
-  type.css                     the typeface and the site's type scale
-  scripts/                     the generators (Python 3, headless Chrome, ImageMagick)
-  svg/        36   every shape in every colourway, tight-cropped
-  png/        66   512 and 1024 px (and 256 for the mark); the 2048 px renders are gitignored
-  favicon/    49   simplified cut, 16 to 512 px, plus favicon.ico
-  og/              link-unfurl cards, app icons, meta-tags.html, type-system.css
-  contact-sheet*.png           every variant in one grid, three backgrounds
-  clear-space.png, favicon-simplified.png   the two rule diagrams
+  talmolab-logo.v003.svg       master SVG (normalised export) that every script reads
+  talmolab-logo.v003.svg.orig  raw Illustrator export, before normalising
+  palette.css, type.css        colour tokens and type spec
+  svg/  png/  favicon/  og/    the exports
+  contact-sheet*.png           every variant in one grid
+  clear-space.png, favicon-simplified.png   rule diagrams
+  scripts/                     the generators
 ```
 
-The 2048 px PNGs (30 files, 4.8 MB) are left out of git because every one of them is a
-single command away, and anything larger than 1024 px is better served by the SVG.
+### Regenerating
 
-### The site's copies
-
-The site serves 13 of these files from `public/` under its own names (the header logo,
-the favicons, the app icons and `og-card.png`). They are copies. Change the logo here,
-regenerate, then:
-
-```bash
-python3 brand/scripts/sync-public.py           # copy into public/
-python3 brand/scripts/sync-public.py --check   # exit 1 if public/ has drifted (CI runs this)
-```
-
-The list of files, and what the site uses each for, is at the top of `sync-public.py`.
-`src/components/Logo.astro` inlines `public/talmolab-lockup-h-light.svg` and recolours its
-ink with CSS, so one file serves both themes.
-
-### Regenerating everything
+Needs Python 3, Google Chrome at `/Applications/Google Chrome.app` (change `CHROME` at the
+top of each script to move it) and ImageMagick's `magick` on the path.
 
 ```bash
 cd brand/scripts
-python3 mkassets.py   # 36 SVGs, and variants.json
-python3 raster.py     # 144 PNGs + favicon.ico   (raster.py lockup-h: just one shape)
-python3 mkog.py       # 4 unfurl cards + 5 app icons
-python3 mksheet.py    # 3 contact sheets (reads the 2048 px PNGs)
-python3 mkdocs.py     # clear-space.png + favicon-simplified.png
-python3 sync-public.py
+python3 mkassets.py      # all SVGs, and variants.json
+python3 raster.py        # all PNGs and favicon.ico  (raster.py lockup-h: one shape only)
+python3 mkog.py          # link-preview cards and app icons
+python3 mksheet.py       # contact sheets (reads the 2048 px PNGs, which are gitignored)
+python3 mkdocs.py        # clear-space.png and favicon-simplified.png
+python3 sync-public.py   # copy the website's files into public/
 ```
 
-The scripts expect Chrome at `/Applications/Google Chrome.app` (edit `CHROME` at the top of
-each to move it) and ImageMagick's `magick` on the path.
+### The website's copies
 
----
+The site serves 13 of these files from `public/` under its own names (header logo,
+favicons, app icons, `og-card.png`). They are copies: change them here, then run
+`python3 brand/scripts/sync-public.py`. CI runs it with `--check` and fails if `public/`
+has drifted. The file list and what each one is for is at the top of `sync-public.py`.
+The header logo is inlined by `src/components/Logo.astro`, which recolours its ink with CSS
+so one file serves both themes.
 
-## The decision
-
-**Option 08 — Ink & Violet**, the runner-up in the round-26 vote that picked Ink & SLEAP
-Blue for v002.
-
-| Role | Hex | OKLCH | Carries |
-|---|---|---|---|
-| Ink | `#1e1a29` | 23.0% 0.029 296° | the `t`, the dendritic arbor, “talmo” |
-| Accent | `#8b6dd2` | 60.9% 0.150 295° | the `l` bar, the pose skeleton, the soma dot, “lab” |
-
-Where v002's blue sat at hue 245–254°, the whole v003 family sits at 293–298°. The ink is
-violet-tinted rather than blue-tinted, so the two logo values share a hue rather than
-contrasting across one.
-
-Geometry is v002's. The v003 master is a pure recolour, verified rather than assumed: with
-both rendered in the same colour at 2048 px, 17 pixels of 2,908,160 differ (RMSE 0.0009),
-which is antialiasing.
-
-### What this buys, from the round-26 numbers
-
-|  | Ink & SLEAP Blue (v002) | Ink & Violet (v003) |
-|---|---|---|
-| Accent lightness | 54.7 | **60.9** |
-| Separation between the two values | 31.3 | **39.8** |
-| Colour-blind separation | 30.2 | **37.7** |
-| Drift between logo and UI accent | 4.3 | **4.0** |
-
-Violet wins on every one of those, and it is the least-used hue in the field; v002's own
-record was that blue on near-black “is what most of computational neuroscience looks like”.
-
-### What violet costs
-
-**The brand violet fails WCAG AA on paper.** This inverts v002 exactly:
-
-| Accent on … | v002 blue `#2176b3` | v003 violet `#8b6dd2` |
-|---|---|---|
-| paper | 4.62 : 1 ✅ | **3.80 : 1 ❌** |
-| dark ground | 3.79 : 1 ❌ | **4.59 : 1 ✅** |
-
-So:
-
-- **The logo does not switch.** It is `#8b6dd2` in both themes, in every asset here.
-- **Light-mode text switches.** Links, buttons and inline accents use `#805fc9` (4.50:1).
-- Dark-mode text can use `#8c6bd6` (4.56:1) or the brand violet itself (4.59:1).
-
----
-
-## Palette
-
-`palette.css` has these as custom properties. Contrast is against `paper` in the light
-column and `ground` in the dark.
-
-### Light
-
-| Token | Hex | Contrast |
-|---|---|---|
-| `paper` | `#f8f8fb` | ground |
-| `sunk` | `#f0eff4` | — |
-| `rule` | `#dedde3` | — |
-| `text` | `#1e1a29` | 16.04 : 1 |
-| `muted` | `#5c5965` | 6.45 : 1 |
-| `link` | `#805fc9` | 4.50 : 1 |
-| `mark` | `#8b6dd2` | 3.80 : 1 — **logo only, not for text** |
-
-### Dark
-
-| Token | Hex | Contrast |
-|---|---|---|
-| `ground` | `#141319` | ground |
-| `text` | `#e8e7eb` | 15.01 : 1 |
-| `muted` | `#abaab1` | 8.02 : 1 |
-| `rule` | `#2c2a31` | — |
-| `link` | `#8c6bd6` | 4.56 : 1 |
-| `mark` | `#8b6dd2` | 4.59 : 1 |
-
----
-
-## Shapes
-
-| Shape | Contents | Aspect |
-|---|---|---|
-| `lockup` | mark above wordmark | 1191 × 1087 |
-| `lockup-h` | mark beside wordmark, the wordmark as tall as the `l` | 4446 × 778 (5.7 : 1) |
-| `mark` | mark only, no wordmark | 1106 × 767 |
-| `wordmark` | “talmolab” only | 1114 × 237 |
-| `lockup-square` | stacked lockup, padded to 1:1 | 1 : 1 — **avatars only** |
-| `favicon` | simplified cut, squared | 1 : 1 |
-
-### The horizontal lockup
-
-Chosen 2026-11-20 from three ways of making the typemark as tall as the mark. The mark is
-the letters `t` and `l`, so the wordmark is scaled (2.84×, one uniform transform on the
-master's outlined paths) until **its `l` is the mark's violet `l` bar: the same top
-(y 164.56) and the same baseline (y 823.10)**. The arbor rises above both. The gap between
-mark and wordmark is 2b, the clear-space unit.
-
-- The lockup is as tall as the mark, plus about 11 units for the round letters' overshoot, so
-  the clear-space rule below holds unchanged.
-- The wordmark's stroke is 1.24× the bar's width, so at large sizes the type carries more
-  weight than the mark. That was the accepted cost.
-- The rejected options were the wordmark reaching the top of the arbor (too wide for a
-  phone header at 32 px) and two lines, “talmo” over “lab” (it splits the name).
-- Before this, `lockup-h` set the wordmark at its native size, 30% of the mark's height,
-  optically centred with a 104-unit gap. That version is in git history, in `mkassets.py`
-  and in `public/talmolab-lockup-h-light.svg`.
-
-On the site the header shows it 38 px tall (217 px wide), and 32 px on phones, shrinking to
-24 px below about 370 px wide so the header stays on one row.
-
-### Colourways
-
-| Suffix | Ink | Accent | Background | Use |
-|---|---|---|---|---|
-| `-light` | `#1e1a29` | `#8b6dd2` | transparent | on light backgrounds |
-| `-dark` | `#e8e7eb` | `#8b6dd2` | transparent | on dark backgrounds |
-| `-on-paper` | `#1e1a29` | `#8b6dd2` | `#f8f8fb` | when transparency is unavailable |
-| `-on-ground` | `#e8e7eb` | `#8b6dd2` | `#141319` | dark, opaque |
-| `-mono-ink` | `#1e1a29` | `#1e1a29` | transparent | single-colour print, fax, embroidery |
-| `-mono-white` | `#ffffff` | `#ffffff` | transparent | knockout on photos or colour |
-
-### Sizes
-
-- `lockup`, `lockup-h`, `lockup-square`, `wordmark`: 512, 1024 (and 2048) px wide
-- `mark`: 256, 512, 1024 (and 2048) px wide
-- `favicon`: 16, 32, 48, 64, 96, 128, 256, 512 px square, plus `favicon.ico` (16/32/48)
-
-### Contact sheets
-
-The full **6 colourways × 5 shapes = 30-tile** matrix on a 4320 × 2520 canvas, in three
-views: `contact-sheet.png` (checkerboard, to see transparency), `contact-sheet-transparent.png`
-(real RGBA) and `contact-sheet-white.png` (plain white). On white the `mono-white` column is
-blank and `-dark` reads faint; both are cut for dark grounds.
-
----
-
-## Clear space
-
-**Unit `b` = the width of the violet bar in the mark = 88.91 viewBox units.**
-
-**Rule: clear space = `2b` on all four sides**: 23.2% of the logo's height, 4.0% of the
-horizontal lockup's width.
-
-| Logo height | Clear space each side |
-|---|---|
-| 28 px | 6.5 px |
-| 38 px (site header) | 8.8 px |
-| 52 px | 12.1 px |
-| 80 px | 18.6 px |
-| 120 px | 27.8 px |
-
-```css
-.logo { height: 38px; margin: calc(38px * 0.232); }
-```
-
-The tight-cropped SVGs (`-light`, `-dark`, `-mono-*`) have no built-in margin, so clear
-space must come from layout. The `-on-paper` / `-on-ground` variants carry 6%, which is less
-than `2b`: they are tiles for slots that supply their own space, not a substitute for the
-rule. Favicons carry 9–11% and maskable icons 26%, set by platform masking. See
-`clear-space.png` for the diagram and the common violations.
-
-### The squared cut, `lockup-square`
-
-The stacked lockup is 1.096 : 1, close enough to square that avatar uploaders (GitHub org
-profiles, Slack, Zenodo, ORCID) centre-crop it and clip the `t` and the `b` off the
-wordmark. `lockup-square-*` pads to a true 1:1 with `2b` on all four sides, then grows the
-short axis.
-
-Use it for avatars and any 1:1 slot that crops. Upload `lockup-square-on-paper-1024.png` to
-GitHub: it renders org avatars on both themes, so an opaque ground beats transparency, and
-1024 is the safe size for its 260 px (520 px at 2×) profile image. Only the stacked lockup
-gets a square cut; at avatar sizes use `favicon/` or the `og/` app icons instead of the mark.
-
----
-
-## The simplified favicon cut
-
-The full mark collapses below 32 px, so favicons keep only the `t` and the `l` bar: the two
-elements dense enough to survive, and the two letters the name is built from.
-`favicon-simplified.png` compares them at 16/32/48/64, magnified with no smoothing.
-
-- **The `t` and the arbor are one path in the master**, so the arbor is clipped away at
-  `x >= 480`. Below ~470 an arbor stub survives; above ~500 the `t` loses its left arm.
-- **Cropping the viewBox does not work.** Squaring the tall, narrow `t`+bar region pulls the
-  arbor and skeleton back in. Clip first, then square.
-- **The bar is trimmed to the `t`'s height** (`y 236`, `height 587`); full height unbalances it.
-
-| Family | Art | Sizes | Why |
-|---|---|---|---|
-| `favicon/` | **simplified cut** | 16–512 + `.ico` | never rendered large; must hold at 16px |
-| `og/` app icons | **full mark** | 180–512 | never below 180px, where the full mark is legible |
-
----
-
-## Link unfurls, `og/`
+### Link previews and app icons
 
 | File | Size | Use |
 |---|---|---|
-| `talmolab-og-light-1200x630.png` | 1200 × 630 | **the default card** (the site's `og-card.png`) |
-| `talmolab-og-dark-1200x630.png` | 1200 × 630 | dark alternate |
-| `talmolab-og-square-light-1200x1200.png` | 1200 × 1200 | platforms that prefer 1:1 |
-| `talmolab-og-square-dark-1200x1200.png` | 1200 × 1200 | dark 1:1 |
-| `talmolab-apple-touch-icon.png` | 180 × 180 | iOS home screen |
-| `talmolab-icon-192.png`, `-512.png` | 192, 512 | web app manifest |
-| `talmolab-maskable-512.png`, `-dark-512.png` | 512 × 512 | Android maskable, 26% safe zone (the site uses the dark one) |
+| `og/talmolab-og-light-1200x630.png` | 1200 × 630 | default share card (the site's `og-card.png`) |
+| `og/talmolab-og-dark-1200x630.png` | 1200 × 630 | dark alternative |
+| `og/talmolab-og-square-{light,dark}-1200x1200.png` | 1200 × 1200 | platforms that prefer 1:1 |
+| `og/talmolab-apple-touch-icon.png` | 180 × 180 | iOS home screen |
+| `og/talmolab-icon-{192,512}.png` | 192, 512 | web app manifest |
+| `og/talmolab-maskable{,-dark}-512.png` | 512 × 512 | Android adaptive icon (26% safe zone) |
 
-All are opaque sRGB with no alpha, which is what unfurl scrapers expect. `og/meta-tags.html`
-is the `<head>` block the site serves, with literal values and the site's file names. Two traps the scripts already handle: `og:image` must be an
-absolute URL, and Chrome's minimum window width means icons render at 1024 and downsample.
+All are opaque sRGB, which is what link scrapers expect. `og/meta-tags.html` is the
+`<head>` block the site serves.
 
-**Type caveat.** The cards are set in Bricolage Grotesque and IBM Plex Mono, carried over
-from v002, with the old tagline, while the site sets its type in Source Sans 3. Changing
-that is a design decision of its own: edit `scripts/og-template.html`, then run `mkog.py` and
-`sync-public.py`.
+### Changing the colours
 
----
+The logo is two fills. Change `INK` and `ACC` in `scripts/mkassets.py` and in the master
+SVG, regenerate everything, then update `palette.css` and the site's
+`src/styles/global.css`. If the violet's contrast changes, recheck the text-colour split
+in [Violet is not a text colour](#violet-is-not-a-text-colour).
 
-## The Illustrator export bug
+### Known issues and gotchas
 
-Illustrator writes the `l` of “talmo” as a rect rotated `-89.9966°`:
+- **The share cards use old type.** They are set in Bricolage Grotesque and IBM Plex Mono
+  with an old tagline, not Source Sans 3. To fix: edit `scripts/og-template.html`, then run
+  `mkog.py` and `sync-public.py`.
+- **Re-normalise after every Illustrator export.** Illustrator writes the `l` of “talmo”
+  as a rect rotated −89.9966°, which ImageMagick silently drops (the wordmark renders as
+  “ta molab”). Run `python3 scripts/normalize-svg.py talmolab-logo.v003.svg` (keeps a
+  `.orig`); `--check` exits non-zero if any rotated rects remain.
+- **ImageMagick traps**, both silent: `magick montage` needs a font even with `+label`
+  (so `mksheet.py` appends cells instead), and compositing onto a grey PNG writes greyscale
+  and drops the violet (`-define png:color-type=2` prevents it).
+- Chrome's minimum window width means icons render at 1024 px and are downsampled.
 
-```xml
-<rect class="st0" x="190.75" y="1004.01" width="231.85" height="38.67"
-      transform="translate(-716.6843 1329.9619) rotate(-89.9966)"/>
-```
+### History
 
-ImageMagick's built-in SVG renderer silently drops rotated rects with non-zero `x`/`y`,
-with no warning and exit 0, so `magick` renders the wordmark as “ta molab”. `normalize-svg.py`
-bakes it to the axis-aligned equivalent. Re-run it after every export from the `.ai` file:
-
-```bash
-python3 scripts/normalize-svg.py talmolab-logo.v003.svg          # bakes, keeps a .orig
-python3 scripts/normalize-svg.py talmolab-logo.v003.svg --check  # non-zero if any remain
-```
-
----
-
-## Changing the colours
-
-The logo is two fills. Change `INK` and `ACC` in `scripts/mkassets.py` (and the master SVG),
-regenerate everything, then update `palette.css` and the site's `src/styles/global.css`. If
-the accent's contrast changes, re-check the light/dark text accent split above: it is the
-part of the palette that does not follow from the two logo values.
-
----
-
-## Script history
-
-The v002 scripts were ported to v003 with four fixes: `mkassets.py` generates `lockup-h`
-(v002 shipped those SVGs with no generator); `mksheet.py` and `mkdocs.py` are new (v002's
-sheets and diagrams had none); and `og-template.html` uses `#805fc9` for accent-coloured type.
-
-Two ImageMagick traps, both silent: `magick montage` needs a font even with `+label`
-(`mksheet.py` appends cells instead), and compositing onto an all-grey PNG writes greyscale
-and drops the violet (`-define png:color-type=2` is load-bearing).
-
----
-
-## Where these files came from
-
-Two sources, both read-only: the v003 kit in `talmolab/lab-website-legacy`'s local
-`scratch/2026-10-03-redesign-redux/talmolab-logo.v003/` (gitignored there, so never on
-GitHub), and the v002 kit in that repository's `design/` folder.
-
-**Copied unchanged from the v003 kit**: `talmolab-logo.v003.ai`, `.svg` and `.svg.orig`;
-`raster.py`, `mkog.py`, `mksheet.py`, `normalize-svg.py`, `og-template.html`; 30 of the 36
-SVGs; every PNG except `lockup-h`'s; `favicon/`; the cards and icons in `og/`.
-
-**Regenerated here, 2026-11-20**, after the `lockup-h` change: the six `lockup-h` SVGs and
-their 18 PNGs (`mkassets.py`, `raster.py lockup-h`), the three contact sheets (`mksheet.py`),
-`clear-space.png` and `favicon-simplified.png` (`mkdocs.py`). The other 30 SVGs came out
-byte-identical to the kit's, which is the check that nothing else moved.
-
-**Changed**:
-- `scripts/mkassets.py`: `build_h()` builds the taller `lockup-h`.
-- `scripts/mkdocs.py`: reads the lockup's width from its SVG instead of assuming 2323 units,
-  and computes the "% of the width" caption, so the diagram follows any change of layout.
-- `og/meta-tags.html`: the kit's version pointed at `/og/…` and `/talmolab-icon-…` paths
-  and used “talmolab” as the site name. It now matches what `src/layouts/Base.astro` serves.
-- `og/type-system.css`: a note at the top that it is superseded by `type.css`.
-
-**Written for this repository**:
-- `palette.css`: the v003 README's palette tables as custom properties named like the site's,
-  plus the site's dark `sunk`, which the round-26 sheet does not give.
-- `type.css`: the face from the site's `astro.config.mjs` and the scale from
-  `src/styles/global.css`, as of 2026-11-20.
-- `scripts/sync-public.py`: the v002 kit's script of the same name, re-targeted at this
-  site's `public/` file names, with `--check` for CI.
-- `README.md`: the v003 kit's README, plus the usage rules, minimum sizes, type,
-  `lockup-h` and this section.
-
-**Superseded in `lab-website-legacy`'s `design/` (v002, blue), not copied**: `README.md`,
-`palette.css` and `scripts/`, which have v003 versions here; `type-system.css`, the same file
-as `og/type-system.css` before its note; `meta-tags.html` and `site.webmanifest`, which carry the v002 blue
-(`#2176b3`) and are replaced by `og/meta-tags.html` and the site's own manifest;
-`talmolab-logo.v002.svg`, the same geometry as the v003 master. `layout.css` (the old site's
-measure system) is not brand material, and the site's CSS replaced it.
+This is **v003, “Ink & Violet”** (September 2026). It keeps the v002 geometry exactly and
+replaces v002's blue `#2176b3` with violet, which separates better from the ink (including
+for colour-blind viewers) and stands apart from the blue most neuroscience labs use. The
+trade is the text-contrast split above: v002's blue passed on light and failed on dark;
+violet does the reverse. The horizontal lockup was redrawn in November 2026 so the wordmark
+matches the mark's height. Earlier versions and the full decision record are in git history
+and in `talmolab/lab-website-legacy`.
