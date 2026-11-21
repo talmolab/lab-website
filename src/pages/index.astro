@@ -11,7 +11,7 @@ import { EMAIL, INSTITUTE } from '../lib/site';
 import labPhoto from '../assets/pages/2024-08-06.lab-group1.jpg';
 
 const areas = (await getCollection('areas', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
-const { current, alumni, all } = await team();
+const { members, alumni, all } = await team();
 const lab = new Set(all.flatMap((p) => [p.data.name, ...p.data.aliases].map(nameKey)));
 const pubs = await allPubs();
 const recent = pubs.slice(0, 5);
@@ -41,7 +41,7 @@ const letters = 'abcdefghij';
         <div><dt>Led by</dt><dd><a class="plain" href="/members/talmo-pereira">Talmo Pereira</a></dd></div>
         <div><dt>Institute</dt><dd>{INSTITUTE}<br />La Jolla, California</dd></div>
         <div><dt>Founded</dt><dd>2021</dd></div>
-        <div><dt>People</dt><dd><a class="plain" href="/team/">{current.length} in the lab, {alumni.length} alumni</a></dd></div>
+        <div><dt>People</dt><dd><a class="plain" href="/team/">{members.length} in the lab, {alumni.length} alumni</a></dd></div>
         <div><dt>Software</dt><dd><a class="plain" href="/tools/">Open source, on GitHub</a></dd></div>
       </dl>
     </section>
@@ -86,7 +86,7 @@ const letters = 'abcdefghij';
         <h2 id="people-h">People</h2>
         <p>
           Scientists, engineers and students from neuroscience, computer science, biology
-          and beyond: {current.length} people in the lab today, and {alumni.length} alumni.
+          and beyond: {members.length} people in the lab today, and {alumni.length} alumni.
         </p>
         <a class="more" href="/team/">Meet the team</a>
       </header>

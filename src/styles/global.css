@@ -1424,6 +1424,10 @@ figcaption {
   gap: 6px 20px;
 }
 
+.group {
+  container-type: inline-size;
+}
+
 .group + .group {
   margin-top: 48px;
 }
@@ -1436,17 +1440,88 @@ figcaption {
   letter-spacing: 0;
 }
 
+/* As many columns of at least 150px as fit, which is what auto-fill did, written out as
+ * --cols so a flow group can tell which card starts a row. n columns need 174n - 24 px. */
 .people {
+  --cols: 2;
+  --gap-x: 24px;
+  --gap-y: 32px;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 32px 24px;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--gap-y) var(--gap-x);
+}
+
+@container (min-width: 498px) {
+  .people {
+    --cols: 3;
+  }
+}
+
+@container (min-width: 672px) {
+  .people {
+    --cols: 4;
+  }
+}
+
+@container (min-width: 846px) {
+  .people {
+    --cols: 5;
+  }
+}
+
+@container (min-width: 1020px) {
+  .people {
+    --cols: 6;
+  }
 }
 
 @media (max-width: 420px) {
   .people {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px 16px;
+    --gap-x: 16px;
+    --gap-y: 28px;
+  }
+}
+
+/* A flow group (FLOWS in src/lib/people.ts): several groups' cards in one grid, wrapping
+ * together. Each card is a two-row subgrid, label then card, so a group's label sits
+ * above its first card and the portraits in a row still line up when a label wraps. */
+.people.flow {
+  row-gap: 0;
+  /* The last row's card padding stands in for the gap, so take it back. */
+  margin-bottom: calc(-1 * var(--gap-y));
+}
+
+.flow > .person {
+  position: relative;
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+
+.flow > .person > .group-name {
+  grid-row: 1;
+}
+
+.flow > .person > a,
+.flow > .person > div {
+  grid-row: 2;
+  align-content: start;
+  padding-bottom: var(--gap-y);
+}
+
+/* Where a group starts mid-row, a hairline in the column gap marks the boundary. At the
+ * start of a row (its place in the flow is a multiple of --cols) the label alone does. */
+@supports (opacity: mod(3, 2)) {
+  .flow > .person.starts::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: var(--gap-y);
+    left: calc(var(--gap-x) / -2);
+    border-left: 1px solid var(--rule);
+    opacity: min(1, mod(var(--i), var(--cols)));
   }
 }
 
