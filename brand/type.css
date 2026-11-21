@@ -1,0 +1,74 @@
+/* talmolab type, as set on talmolab.org (2026-11-20)
+ *
+ *   Source Sans 3, and nothing else: headings, prose, interface, metadata, numbers.
+ *   No serif. No monospace (dropped 2026-11-20; DOIs, years and counts line up with
+ *   tabular figures instead).
+ *
+ * Chosen 2026-08-30 on coverage, measured from the TTFs against what the site really
+ * contains: Vietnamese author names, Greek in titles, maths in abstracts. Source Sans 3
+ * covers Latin-ext, Vietnamese and Greek at 100% and maths at 92%. The record of that
+ * decision, with the faces it rejected, is og/type-system.css.
+ *
+ * The logo is not type. Never set "talmolab" in any face: use the outlined lockups in
+ * svg/. The lab's name in running text is "Talmo Lab".
+ *
+ * Taken from the site's astro.config.mjs (the font) and src/styles/global.css (the
+ * scale). If they change, this file follows them, not the other way round.
+ */
+
+/* Self-hosted (the site uses Astro's Fonts API): weights 400, 500 and 600, roman and
+ * italic, subsets latin, latin-ext, vietnamese and greek. 600 is the heaviest weight
+ * set anywhere; there is no 700. */
+:root {
+  --sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--sans);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0938rem);   /* 16 to 17.5 px */
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+/* The home page's headline */
+.display {
+  font-size: clamp(2.375rem, 1.35rem + 3.9vw, 4.375rem);  /* 38 to 70 px */
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+/* Every other page's h1 */
+.title {
+  font-size: clamp(2.25rem, 1.55rem + 2.6vw, 3.5rem);     /* 36 to 56 px */
+  line-height: 1.04;
+  letter-spacing: -0.026em;
+}
+
+h2 {
+  font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);   /* 22 to 28 px */
+  line-height: 1.2;
+  letter-spacing: -0.016em;
+}
+
+h3 {
+  font-size: 1.1875rem;                                    /* 19 px */
+  line-height: 1.3;
+  letter-spacing: -0.008em;
+}
+
+.lede {
+  font-size: clamp(1.125rem, 1.02rem + 0.45vw, 1.375rem); /* 18 to 22 px */
+  line-height: 1.5;
+}
+
+/* Small metadata: dates, counts, DOIs, formats. Figures line up in columns. */
+.meta {
+  font-size: 0.875rem;                                     /* 14 px */
+  font-variant-numeric: tabular-nums;
+}
