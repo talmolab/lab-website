@@ -2,8 +2,9 @@
 // One publication. Used on Publications (with a thumbnail), and compact on Home,
 // Research and member pages. Lab members are set in bold in the author list, matched
 // on first and last name (src/lib/names.ts), and linked to their page when they have
-// one. Co-first and corresponding authors carry * and † (the overlay's `equal:` and
-// `corresponding:`); /publications/ prints the legend, and each mark has a tooltip.
+// one. Co-first, corresponding and jointly supervising authors carry *, † and ‡ (the
+// overlay's `equal:`, `corresponding:` and `senior:`); /publications/ prints the
+// legend, and each mark has a tooltip.
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { thumbInfo, href, fmtDate, isPreprintVenue } from '../lib/pubs';
 import { nameKey } from '../lib/names';
@@ -35,9 +36,14 @@ const pages = new Map<string, string>();
 for (const m of await getCollection('people', ({ data }) => data.page))
   for (const n of [m.data.name, ...m.data.aliases]) pages.set(nameKey(n), `/members/${m.id}`);
 
-const equal = new Set(p.equal.map(nameKey));
-const corresponding = new Set(p.corresponding.map(nameKey));
-type Author = { name: string; bold: boolean; href?: string; equal: boolean; corresponding: boolean };
+// In footnote order, which is also the order they follow a name in.
+const MARKS = [
+  { names: p.equal, sym: '*', label: 'Equal contribution' },
+  { names: p.corresponding, sym: '†', label: 'Corresponding author' },
+  { names: p.senior, sym: '‡', label: 'Jointly supervised' },
+].map((m) => ({ ...m, keys: new Set(m.names.map(nameKey)) }));
+type Mark = { sym: string; label: string };
+type Author = { name: string; bold: boolean; href?: string; marks: Mark[] };
 const authors: Author[] = p.authors.map((name) => {
   const k = nameKey(name);
   const page = pages.get(k);
@@ -45,8 +51,7 @@ const authors: Author[] = p.authors.map((name) => {
     name,
     bold: lab.has(k),
     href: lab.has(k) && page !== here ? page : undefined,
-    equal: equal.has(k),
-    corresponding: corresponding.has(k),
+    marks: MARKS.filter((m) => m.keys.has(k)),
   };
 });
 
@@ -59,7 +64,7 @@ const limit = compact ? 12 : 60;
 function shown(all: Author[]): Bit[] {
   if (all.length <= limit) return all;
   const keep = new Set([0, 1, 2, all.length - 1]);
-  all.forEach((a, i) => (a.bold || a.equal || a.corresponding) && keep.add(i));
+  all.forEach((a, i) => (a.bold || a.marks.length) && keep.add(i));
   const out: Bit[] = [];
   let prev = -1;
   for (const i of [...keep].sort((x, y) => x - y)) {
@@ -96,8 +101,7 @@ const shortened = bits.length < authors.length;
           {'gap' in b ? '…' : (
             <>
               {b.bold ? <b>{b.href ? <a href={b.href}>{b.name}</a> : b.name}</b> : b.name}
-              {b.equal && <sup class="mark" title="Equal contribution"><span aria-hidden="true">*</span><span class="vh">(equal contribution)</span></sup>}
-              {b.corresponding && <sup class="mark" title="Corresponding author"><span aria-hidden="true">†</span><span class="vh">(corresponding author)</span></sup>}
+              {b.marks.map((m) => <sup class="mark" title={m.label}><span aria-hidden="true">{m.sym}</span><span class="vh">({m.label.toLowerCase()})</span></sup>)}
             </>
           )}
           {i < bits.length - 1 ? ', ' : ''}
@@ -112,8 +116,7 @@ const shortened = bits.length < authors.length;
           {authors.map((a, i) => (
             <>
               {a.bold ? <b>{a.href ? <a href={a.href}>{a.name}</a> : a.name}</b> : a.name}
-              {a.equal && <sup class="mark" title="Equal contribution"><span aria-hidden="true">*</span><span class="vh">(equal contribution)</span></sup>}
-              {a.corresponding && <sup class="mark" title="Corresponding author"><span aria-hidden="true">†</span><span class="vh">(corresponding author)</span></sup>}
+              {a.marks.map((m) => <sup class="mark" title={m.label}><span aria-hidden="true">{m.sym}</span><span class="vh">({m.label.toLowerCase()})</span></sup>)}
               {i < authors.length - 1 ? ', ' : ''}
             </>
           ))}
@@ -154,8 +157,8 @@ const shortened = bits.length < authors.length;
     text-decoration-color: currentColor;
   }
 
-  /* * equal contribution, † corresponding author. line-height: 0 keeps the mark from
-     opening up the line it sits on. */
+  /* * equal contribution, † corresponding author, ‡ jointly supervised. line-height: 0
+     keeps the mark from opening up the line it sits on. */
   .mark {
     margin-left: 0.05em;
     font-size: 0.75em;

@@ -39,10 +39,10 @@ bug.
    build fails loudly rather than shipping a blank entry.
 
 Optional fields: `image` (relative to `public/images/`, or an absolute URL),
-`tags`, `highlight: true`, `links: [{ label, url }]`, and `equal` / `corresponding`
-(next section).
+`tags`, `highlight: true`, `links: [{ label, url }]`, and `equal` / `corresponding` /
+`senior` (next section).
 
-### Co-first and corresponding authors
+### Co-first, corresponding and co-senior authors
 
 No API reports these, so the overlay does. Copy them from the version of record (the
 publisher's page or PDF), never from memory or a preprint, and leave them out when you
@@ -53,7 +53,14 @@ cannot check:
   published: { doi: "10.1234/example" }
   equal: ["Jane Doe", "Wei Zhang"]                # "These authors contributed equally"
   corresponding: ["Ana Ruiz"]
+  senior: ["Ana Ruiz", "Lee Park"]                # "These authors jointly supervised this work"
 ```
+
+`senior` is for authors the publisher marks as jointly supervising the work: Nature's
+"jointly supervised", PLoS's "co-last authors", Cell's "senior author" when two are
+marked. Co-first and co-senior are different claims, so never fold one into the other.
+Put the publisher's URL, and a short quote of anything unusual, in a comment above the
+marks: that is the only record of where they came from.
 
 They go at the top level of the entry, beside `published:` or `manual:`, and apply to
 the version the site shows. Each name is matched to the author list with `nameKey`
@@ -63,15 +70,12 @@ in the people collection does not count here, so Kevin Bian's papers need "Kaiwe
 Bian". A name that matches no author, or two, fails the build and prints the paper's
 author list. That is the typo guard; do not loosen it.
 
-The site marks them `*` (equal contribution) and `†` (corresponding author) wherever a
-paper is listed, with a legend on `/publications/` and a tooltip on each mark.
-`/publications.json` carries both lists as printed in `authors`; `/publications.bib`
-carries them as a biblatex data annotation, `author+an = {1=equal; 4=corresponding}`.
-CSL-JSON has no field for either, so `/publications.csl.json` leaves them out.
-
-One mark covers co-first authors. A paper whose last authors also "contributed
-equally" or "jointly supervised" would need a third mark; ask before folding them into
-`equal`.
+The site marks them `*` (equal contribution), `†` (corresponding author) and `‡`
+(jointly supervised) wherever a paper is listed, with a legend on `/publications/` and a
+tooltip on each mark. `/publications.json` carries the three lists as printed in
+`authors`; `/publications.bib` carries them as a biblatex data annotation,
+`author+an = {1=equal; 4=corresponding, senior}`. CSL-JSON has no field for any of
+them, so `/publications.csl.json` leaves them out.
 
 ### Thumbnail
 
