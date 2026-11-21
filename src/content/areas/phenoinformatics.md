@@ -11,14 +11,13 @@ media:
     alt: "An infrared video of three mice in a home cage, each with its SLEAP skeleton, tilts away while the animals' tracked trajectories pile up behind it along a time axis."
     caption: "Three mice tracked in their home cage, their trajectories stacked over time behind the video."
     plate: true
-  - src: /media/root-sleap.mp4
+  - src: /media/roots-species.mp4
     thread: plant-roots
-    poster: /media/root-sleap.jpg
-    width: 240
-    height: 180
-    alt: "A plant root growing down a white imaging plate, traced by SLEAP as a chain of coloured keypoints from its base to its tip."
-    caption: "A growing root, traced from base to tip as a chain of keypoints."
-    plate: true
+    poster: /media/roots-species.jpg
+    width: 960
+    height: 912
+    alt: "Four seedlings growing in clear gel cylinders, each turning a full circle in front of the camera: three Arabidopsis plants, a soybean, a canola and a rice plant. On the second turn, SLEAP's keypoints appear on the roots and turn with them: the main roots as lines shaded from purple at the base to green at the tip, and points along each side root shaded from teal at its base to yellow at its tip."
+    caption: "Roots of Arabidopsis, soybean, canola and rice, imaged from every side as their cylinders turn. SLEAP's keypoints turn with them: main roots as lines, side roots as points, teal at the base to yellow at the tip."
 tools: [talmolab/sleap-roots]
 papers: [berrigan-2024, gall-2022, mitelut-2023, kiffer-2026, duporge-2025, cheng-2026, patel-2023, coley-2024, mills-2022, jia-2025]
 ---
