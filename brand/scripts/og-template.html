@@ -1,0 +1,69 @@
+<!-- OG card template. Rendered by scripts/mkog.py via headless Chrome at exact pixel sizes. -->
+<!--
+  Palette: Ink & Violet (round-26 option 08).
+
+  NOTE, and it is the one real difference from the v002 template: --acc is the
+  light-mode UI accent #805fc9, NOT the brand violet #8b6dd2. The brand violet
+  reaches only 3.80:1 on paper and fails AA for normal-size text, so the card's
+  em and url text would be non-compliant if it were used here. v002 could set
+  --acc to its brand blue because that blue passed on paper (4.62:1); violet
+  inverts the problem — it passes on the dark ground and fails on paper.
+  The LOGO art is unaffected: it is the SVG, and it stays brand violet in both
+  themes. Only the card's type switches.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root{
+    --paper:#f8f8fb; --ground:#141319;
+    --ink:#1e1a29; --dmink:#e8e7eb;
+    --muted:#5c5965; --dmmuted:#abaab1;
+    --acc:#805fc9; --accdm:#8c6bd6;
+    --rule:#dedde3; --dmrule:#2c2a31;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;height:100%}
+  body{
+    font-family:"Bricolage Grotesque",system-ui,sans-serif;
+    background:var(--paper); color:var(--ink);
+    display:flex; align-items:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  body.dark{background:var(--ground); color:var(--dmink)}
+
+  .card{display:flex;align-items:center;gap:var(--gap);width:100%;padding:var(--pad)}
+  .logo{flex:0 0 auto}
+  .logo img{display:block;height:var(--logoh);width:auto}
+  .bar{flex:0 0 auto;width:3px;align-self:stretch;background:var(--rule);margin:var(--barm) 0}
+  body.dark .bar{background:var(--dmrule)}
+  .copy{display:flex;flex-direction:column;gap:var(--cgap);min-width:0}
+  .desc{font-size:var(--descs);font-weight:600;line-height:1.16;letter-spacing:-.025em;text-wrap:balance}
+  .desc em{font-style:normal;color:var(--acc)}
+  body.dark .desc em{color:var(--accdm)}
+  .meta{font-size:var(--metas);font-weight:500;line-height:1.4;color:var(--muted)}
+  body.dark .meta{color:var(--dmmuted)}
+  .url{font-family:"IBM Plex Mono",monospace;font-size:var(--urls);font-weight:500;
+       letter-spacing:.02em;color:var(--acc)}
+  body.dark .url{color:var(--accdm)}
+
+  /* --- 1200x630 landscape --- */
+  body.wide{--pad:76px;--gap:56px;--logoh:330px;--barm:26px;--cgap:22px;
+            --descs:52px;--metas:25px;--urls:25px}
+  /* --- 1200x1200 square: stack vertically --- */
+  body.square{--pad:110px;--gap:56px;--logoh:400px;--cgap:26px;
+              --descs:62px;--metas:31px;--urls:31px;
+              align-items:center;text-align:center}
+  body.square .card{flex-direction:column}
+  body.square .bar{display:none}
+  body.square .copy{align-items:center}
+</style>
+<div class="card">
+  <div class="logo"><img id="lg" src="lockup.svg" alt=""></div>
+  <div class="bar"></div>
+  <div class="copy">
+    <div class="desc">Computational tools for studying <em>complex biological systems</em></div>
+    <div class="meta">Salk Institute for Biological Studies</div>
+    <div class="url">talmolab.org</div>
+  </div>
+</div>

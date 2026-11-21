@@ -42,6 +42,7 @@ const links = [
     href: l.linkedin.startsWith('http') ? l.linkedin : `https://www.linkedin.com/in/${l.linkedin}`,
     show: '',
   },
+  l.bluesky && { label: 'Bluesky', href: `https://bsky.app/profile/${l.bluesky}`, show: `@${l.bluesky}` },
   l.twitter && { label: 'X (Twitter)', href: l.twitter.startsWith('http') ? l.twitter : `https://x.com/${l.twitter}`, show: `@${l.twitter.replace(/^.*\//, '')}` },
 ].filter(Boolean) as { label: string; href: string; show: string }[];
 

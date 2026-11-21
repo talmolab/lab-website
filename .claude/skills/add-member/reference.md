@@ -29,6 +29,7 @@ links:                                     # all optional
   email: "name@salk.edu"
   github: "username"
   linkedin: "username"                     # or a full URL
+  bluesky: "name.bsky.social"              # the handle, without the @
   twitter: "handle"
   orcid: "0000-0000-0000-0000"
   scholar: "https://scholar.google.com/citations?user=…"
