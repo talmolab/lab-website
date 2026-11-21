@@ -65,6 +65,8 @@ jobs:
         if: ${{ always() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Raises OpenAlex's budget for the publications loader; empty (unauthenticated) without the secret.
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then npx astro check; else echo "nothing staged"; fi
 

@@ -52,6 +52,8 @@ jobs:
       - name: Validate against the content schema
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Raises OpenAlex's budget for the publications loader; empty (unauthenticated) without the secret.
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
         run: |
           set -o pipefail
           npx astro check 2>&1 | tee "$RUNNER_TEMP/check.log"
