@@ -84,10 +84,15 @@ guardrail on content.
 - **areas**: `src/content/areas/*.md`, the lab's three research directions, after the
   2025 research statement: biological motion capture (the statement's "scientific
   software engineering", renamed), phenoinformatics and virtual biology. Prose plus
-  optional `goal:` (the line under the heading on Research), `media:` (the first item
-  leads), `tools:` (repo ids) and `papers:` (overlay keys). Both are `reference()`s, so a
-  typo fails the build. The `###` headings in the prose are the direction's threads: the
-  Research overview lists and links them, so keep them short and unique across areas.
+  optional `goal:` (the line under the heading on Research), `media:`, `tools:` (repo ids)
+  and `papers:` (overlay keys). Both are `reference()`s, so a typo fails the build. The
+  `###` headings in the prose are the direction's threads: the Research overview lists
+  and links them, so keep them short and unique across areas.
+  In `media:`, the first item leads: it opens the section (and is the home page's
+  figure). Every later item names the thread it illustrates, `thread: plant-roots` (the
+  heading's slug); Research sets it beside that thread from 960 px and after the
+  thread's text below that, and an unknown slug fails the build. List them in thread
+  order.
   Cite a paper inline as `([Last et al., *Venue*, YYYY](https://doi.org/...))`: first
   author, venue in italics and year, as the publications data has them, never a link on
   a phrase.
