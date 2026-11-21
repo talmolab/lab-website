@@ -4,18 +4,18 @@ summary: "Computational models that emulate biological systems closely enough to
 goal: "Develop computational models that emulate biological systems faithfully enough to permit in silico experiments: ones that generate hypotheses we can test in the lab, and that are refined by the outcomes."
 order: 3
 media:
+  - src: /media/mimic-mjx-arena.jpg
+    width: 1600
+    height: 1114
+    alt: "Rendered body models of a hooded rat, a fruit fly, a stick insect, a translucent green C. elegans worm and a mouse forelimb with red muscles, posed on a blue checkered arena against black."
+    caption: "The five MIMIC-MJX body models, each posed from a frame of real motion."
   - src: /media/mimic-mjx-species.mp4
+    thread: embodied-neuromechanics
     poster: /media/mimic-mjx-species.jpg
     width: 960
     height: 540
     alt: "Five animals in turn, each as video beside its MuJoCo body model, labelled first 'Registered trajectory' and then 'Kinematic replay': a rat in a green arena, a tethered fruit fly, a mouse forelimb reaching, a C. elegans worm and a stick insect."
     caption: "MIMIC-MJX: a rat, a fruit fly, a mouse forelimb, a worm and a stick insect, each beside its biomechanical model."
-  - src: /media/mimic-mjx-arena.jpg
-    thread: embodied-neuromechanics
-    width: 1600
-    height: 1114
-    alt: "Rendered body models of a hooded rat, a fruit fly, a stick insect, a translucent green C. elegans worm and a mouse forelimb with red muscles, posed on a blue checkered arena against black."
-    caption: "The five MIMIC-MJX body models, each posed from a frame of real motion."
 tools: [talmolab/track-mjx, talmolab/stac-mjx]
 papers: [zhang-2025, leonardis-2025, sirbu-2026, bian-2026b, haspel-2023, prasad-2022]
 ---
@@ -60,17 +60,6 @@ realistic torque actuators
 ([Leonardis et al., *NeurIPS Workshop*, 2025](https://doi.org/10.48550/arxiv.2511.21848)):
 evidence that detailed biomechanics matter when modeling sensorimotor control.
 
-### Sensorimotor control
-
-We are using these models to ask how the nervous system controls movement. One
-question is how vision guides the body during unconstrained, naturalistic behavior,
-such as judging the distance across a gap before jumping it. Another, with the Azim
-lab, is how movement copes with proprioceptive delays: we aim to build known and
-hypothesized brainstem and spinal circuit architectures into our networks and probe
-the effect of delayed feedback on dexterous behavior. A robotic research platform
-gives us an embodied system in which to test the same control hypotheses, one where
-sensorimotor delays can be set directly.
-
 ### Neural networks as models of brains
 
 Our first step into *in silico* modeling asked how the visual diet of artificial
@@ -78,10 +67,3 @@ neural networks affects how well they predict biological ones. Networks trained 
 images with more naturalistic statistics better predicted neural activity along the
 ventral visual stream of mice shown the same stimuli
 ([Prasad et al., *NeurIPS Workshop*, 2022](https://openreview.net/forum?id=KIlSyKTulXO)).
-
-### Genotype to phenotype
-
-Using our plant data as a pilot, we aim to develop generative AI models that causally
-link genotypic variation and gene expression with phenotypic outcomes. The scale and
-natural variability of these datasets should let such models predict the consequences
-of experimental perturbations such as genetic knockouts.
