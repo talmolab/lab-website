@@ -1,5 +1,6 @@
 ---
 name: "Talmo Pereira"
+aliases: ["Talmo Periera"]
 image: ../../assets/people/talmo-pereira.png
 appointments:
   - role: pi
