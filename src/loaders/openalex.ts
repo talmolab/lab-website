@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import type { Loader } from 'astro/loaders';
+import { nameKey } from '../lib/names';
 
 const OPENALEX = 'https://api.openalex.org';
 const CROSSREF = 'https://api.crossref.org';
@@ -17,6 +18,11 @@ type OverlayEntry = {
   tags?: string[];
   highlight?: boolean;
   links?: { label: string; url: string }[];
+  /** Co-first (equal-contribution), corresponding and jointly supervising (co-senior)
+   *  authors, as named on the paper. */
+  equal?: string[];
+  corresponding?: string[];
+  senior?: string[];
 };
 
 type Meta = {
@@ -160,6 +166,27 @@ function givenFirst(name: string): string {
   return `${given} ${family}`;
 }
 
+/**
+ * The authors an overlay entry marks as `equal`, `corresponding` or `senior`, as `authors` prints
+ * them and in author order. Names are matched by nameKey, so "Talmo Pereira" finds
+ * "Talmo D. Pereira". A name that matches no author, or more than one, fails the build:
+ * a typo would otherwise mark nobody, or the wrong person, without a word.
+ */
+function marked(entry: OverlayEntry, field: 'equal' | 'corresponding' | 'senior', authors: string[]): string[] {
+  const hit = new Set<string>();
+  for (const name of entry[field] ?? []) {
+    const matches = authors.filter((a) => nameKey(a) === nameKey(name));
+    if (matches.length !== 1) {
+      throw new Error(
+        `${entry.key}: ${field} names "${name}", which ${matches.length ? `matches ${matches.length} authors` : 'is not one of its authors'}. ` +
+          `Authors: ${authors.join(', ')}`,
+      );
+    }
+    hit.add(matches[0]);
+  }
+  return authors.filter((a) => hit.has(a));
+}
+
 async function resolve(ref: Ref, logger: any): Promise<Meta | null> {
   // OpenAlex first: it resolves arXiv DOIs, which Crossref 404s (they are
   // registered with DataCite). Crossref is the fallback, not the primary.
@@ -216,12 +243,16 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
           }
         }
 
+        const authors = meta.authors ?? [];
         const data = await parseData({
           id: entry.key,
           data: {
             key: entry.key,
             title: meta.title,
-            authors: meta.authors ?? [],
+            authors,
+            equal: marked(entry, 'equal', authors),
+            corresponding: marked(entry, 'corresponding', authors),
+            senior: marked(entry, 'senior', authors),
             // The overlay wins over the API for every field it sets.
             venue: entry.published?.venue ?? entry.preprint?.venue ?? tidyVenue(meta.venue, meta.doi),
             date: entry.published?.date ?? meta.date,
