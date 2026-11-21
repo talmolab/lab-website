@@ -108,6 +108,10 @@ export const mediaItem = z.object({
   /** Paint a light plate behind the figure in dark mode, for transparent PNGs and
    *  figures drawn for paper (black text, white ground). */
   plate: z.boolean().default(false),
+  /** On an area, every figure after the lead names the `###` thread it illustrates, by
+   *  the heading's slug (`plant-roots`). Research sets it beside that thread; an
+   *  unknown slug fails the build. Unused on repos. */
+  thread: z.string().regex(/^[a-z0-9-]+$/, 'expected a heading slug such as plant-roots').optional(),
 });
 
 const appointment = z.object({
