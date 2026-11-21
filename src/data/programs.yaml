@@ -1,0 +1,9 @@
+# Graduate programs, referenced from appointments as `program: <id>`.
+ngp:
+  name: Neurosciences Graduate Program
+  school: UC San Diego
+  url: https://neurograd.ucsd.edu/
+ucsd-bioengineering:
+  name: Bioengineering PhD Program
+  school: UC San Diego
+  url: https://be.ucsd.edu/grad

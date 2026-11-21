@@ -19,6 +19,12 @@
 # links to it may still be out there.
 /members/sungwook-min.html  /team/  301
 /members/sungwook-min       /team/  301
+# Pages renamed, both forms of the old address. divya-seshadri-murali: the old slug
+# misspelled her name. austin-barbano: the page now uses his name.
+/members/divya-seshari-murali.html  /members/divya-seshadri-murali  301
+/members/divya-seshari-murali       /members/divya-seshadri-murali  301
+/members/ava-barbano.html           /members/austin-barbano         301
+/members/ava-barbano                /members/austin-barbano         301
 
 # No page has ever lived at /members/ itself; the people index is the Team page.
 /members   /team/  301

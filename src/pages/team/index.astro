@@ -3,11 +3,13 @@ import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import PersonCard from '../../components/PersonCard.astro';
 import Join from '../../components/Join.astro';
-import { team, grouped, roleHistory, years, latest, displayTitle } from '../../lib/people';
+import { team, grouped, roleHistory, years, latest, displayTitle, isRobot } from '../../lib/people';
 import labPhoto from '../../assets/pages/the-lab.jpg';
 
-const { current, alumni } = await team();
-const groups = grouped(current);
+const { current: inLab, alumni } = await team();
+// Robots get their own group but are not counted as people.
+const current = inLab.filter((p) => !isRobot(p));
+const groups = grouped(inLab);
 const [piGroup, ...rest] = groups[0]?.name === 'Principal investigator' ? groups : [undefined, ...groups];
 const pi = piGroup?.people[0];
 
