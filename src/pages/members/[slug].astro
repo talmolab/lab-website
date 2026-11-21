@@ -1,9 +1,9 @@
 ---
 import { Image } from 'astro:assets';
-import { getCollection, render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import PubRow from '../../components/PubRow.astro';
-import { roleHistory, years, isCurrent, latest, displayTitle } from '../../lib/people';
+import { roleHistory, years, isCurrent, latest, displayTitle, coAdvisorsOf, coAdvisorVerb } from '../../lib/people';
 import { allPubs } from '../../lib/pubs';
 import { isAuthor, nameKey } from '../../lib/names';
 
@@ -20,7 +20,12 @@ const d = person.data;
 const current = isCurrent(person);
 const roles = current ? [displayTitle(latest(person))] : roleHistory(person);
 const earlier = current ? roleHistory(person).filter((r) => !roles.includes(r)) : [];
-const coAdvisors = [...new Set(d.appointments.map((a) => a.coAdvisor).filter(Boolean))];
+// Genuine co-advisors only, linked to their lab where src/data/pis.yaml knows it.
+const coAdvisors = await Promise.all(coAdvisorsOf(person).map(async (name) => ({ name, url: (await getEntry('pis', name))?.data.url })));
+// The graduate program of the most recent appointment that has one, and current projects.
+const programRef = [...d.appointments].reverse().find((a) => a.program)?.program;
+const program = programRef ? (await getEntry(programRef))?.data : undefined;
+const projects = current ? (await Promise.all(d.projects.map((r) => getEntry(r)))).filter((x) => !!x) : [];
 const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(nameKey)));
 const papers = (await allPubs()).filter((p) => p.data.authors.some((a) => isAuthor(person, a)));
 const initials = d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
@@ -79,8 +84,16 @@ const search = `/publications/?search=${encodeURIComponent(`"${d.name}"`)}`;
           <p class="mono muted">
             {current ? `Since ${d.appointments[0].start?.slice(0, 4) ?? '—'}` : years(person)}
             {earlier.length > 0 && <> · previously {earlier.join(', ')}</>}
-            {coAdvisors.length > 0 && <> · co-advised by {coAdvisors.join(' and ')}</>}
+            {coAdvisors.length > 0 && <> · {`${coAdvisorVerb(person)} `}{coAdvisors.map((c, i) => <>{i > 0 && ' and '}{c.url ? <a href={c.url}>{c.name}</a> : c.name}</>)}</>}
           </p>
+          {program && (
+            <p class="member-program"><a href={program.url}>{program.name}</a>, {program.school}</p>
+          )}
+          {projects.length > 0 && (
+            <p class="member-projects muted">
+              Projects: {projects.map((x, i) => <>{i > 0 && ', '}{x.data.url ? <a href={x.data.url}>{x.data.title ?? x.data.name}</a> : (x.data.title ?? x.data.name)}</>)}
+            </p>
+          )}
           {!current && d.next && (
             <p>
               Now: {d.next.url ? <a href={d.next.url}>{d.next.org}</a> : d.next.org}{d.next.what && `, ${d.next.what}`}

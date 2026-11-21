@@ -40,6 +40,7 @@ body:
       options:
           - (no change)
           - Principal Investigator (pi)
+          - Lab Administrator (admin)
           - Staff Scientist (staff-scientist)
           - Postdoctoral Researcher (postdoc)
           - Scientific Programmer (scientific-programmer)
@@ -74,7 +75,12 @@ body:
     id: coadvisor
     attributes:
       label: Co-advisor
-      description: If you are jointly supervised.
+      description: Only if another PI genuinely co-advises or jointly supervises you, not the lab that holds your appointment on paper.
+  - type: input
+    id: program
+    attributes:
+      label: Graduate program
+      description: Graduate students only, e.g. "UCSD Neurosciences Graduate Program". Linked on your page if the site knows the program.
   - type: input
     id: next_org
     attributes:
