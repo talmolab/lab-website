@@ -1,6 +1,7 @@
 ---
 name: "Ketan Mittal"
 image: ../../assets/people/ketan-mittal.jpg
+projects: ["pheno"]
 appointments:
   - role: undergrad-intern
     start: "2025-03"

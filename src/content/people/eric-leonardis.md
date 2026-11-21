@@ -5,7 +5,11 @@ appointments:
   - role: postdoc
     title: "Postdoctoral Fellow"
     start: "2022-08"
+    end: "2026-08"
     coAdvisor: "Tom Albright"
+next:
+  org: "MaxWell Biomedical"
+  what: "Principal Scientist, Autonomous Cardiac Control Systems"
 links:
   "home-page": "https://ericleonardis.github.io/"
   github: "ericleonardis"

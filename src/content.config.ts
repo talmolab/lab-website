@@ -1,7 +1,8 @@
 import { existsSync } from 'node:fs';
 import { defineCollection, reference } from 'astro:content';
 import { z } from 'astro/zod';
-import { glob } from 'astro/loaders';
+import { parse } from 'yaml';
+import { file, glob } from 'astro/loaders';
 import { publications as publicationsLoader } from './loaders/openalex';
 import { repos as reposLoader } from './loaders/github';
 
@@ -16,11 +17,12 @@ const yearMonth = z
  *  staff scientists below undergraduate interns because ordering is manual. */
 export const ROLE_ORDER = [
   'pi',
+  'admin',
+  'software-engineer',
+  'scientific-programmer',
+  'bioinformatics-analyst',
   'staff-scientist',
   'postdoc',
-  'scientific-programmer',
-  'software-engineer',
-  'bioinformatics-analyst',
   'phd-student',
   'phd-rotation',
   'ms-student',
@@ -30,10 +32,13 @@ export const ROLE_ORDER = [
   'highschool-intern',
   'highschool-summer-intern',
   'friend',
+  /** Not people: never counted as lab members (see team/index.astro). */
+  'robot',
 ] as const;
 
 export const ROLE_LABEL: Record<(typeof ROLE_ORDER)[number], string> = {
   'pi': 'Principal Investigator',
+  'admin': 'Lab Administrator',
   'staff-scientist': 'Staff Scientist',
   'postdoc': 'Postdoctoral Researcher',
   'scientific-programmer': 'Scientific Programmer',
@@ -48,7 +53,38 @@ export const ROLE_LABEL: Record<(typeof ROLE_ORDER)[number], string> = {
   'highschool-intern': 'High School Research Intern',
   'highschool-summer-intern': 'High School Summer Research Intern',
   'friend': 'Friend of the Lab',
+  'robot': 'Robot',
 };
+
+/** Graduate programs, keyed by a short id that appointments reference
+ *  (`program: ngp`). Shown on the member page, linked. */
+const programs = defineCollection({
+  loader: file('src/data/programs.yaml'),
+  schema: z.object({
+    name: z.string(),
+    school: z.string(),
+    url: z.url(),
+  }),
+});
+
+/** The lab's project groups (VNL, Pheno, ...), referenced from people (`projects:`). */
+const projects = defineCollection({
+  loader: file('src/data/projects.yaml'),
+  schema: z.object({
+    /** As the lab writes it on cards: "VNL", "Pheno". */
+    name: z.string(),
+    /** Spelled out, where the short name needs it. */
+    title: z.string().optional(),
+    url: z.string().optional(),
+  }),
+});
+
+/** Lab pages for co-advisors, keyed by the name exactly as `coAdvisor` writes it. A
+ *  co-advisor without an entry is shown as plain text. */
+const pis = defineCollection({
+  loader: file('src/data/pis.yaml', { parser: (text) => Object.entries(parse(text) ?? {}).map(([id, url]) => ({ id, url })) }),
+  schema: z.object({ url: z.url() }),
+});
 
 /** A file under public/, named by its URL path. Checked at build time, so a typo in
  *  a media reference fails the build instead of shipping a broken figure. */
@@ -87,8 +123,13 @@ const appointment = z.object({
   /** The official Salk job title, where it differs from both of the above. */
   salkTitle: z.string().optional(),
 
-  /** Salk co-advisor for jointly supervised appointments. */
+  /** A PI who genuinely co-advises or jointly supervises this appointment, shown on
+   *  the member page and team card. NOT the lab that holds the appointment on paper
+   *  (a grad program's PI of record, an HR home department): that is an HR fact and
+   *  stays out of this public repository. A name in src/data/pis.yaml is linked. */
   coAdvisor: z.string().optional(),
+  /** Graduate program, for student appointments: an id in src/data/programs.yaml. */
+  program: reference('programs').optional(),
   start: yearMonth.optional(),
   /** Absent means still here. "Alumni" is derived from this, never stored — that
    *  is what let four people fall off the site: their file said role: alumni,
@@ -119,6 +160,9 @@ const people = defineCollection({
       /** Other spellings of the name as it appears on papers ("Kaiwen Bian"). Used only
        *  to list this person's publications on their page. Exact names, not patterns. */
       aliases: z.array(z.string()).default([]),
+      /** Current project groups, ids in src/data/projects.yaml. Per person, not per
+       *  appointment: they describe what someone works on now. */
+      projects: z.array(reference('projects')).default([]),
       /** At least one. Sorted oldest-first by convention, not enforced. */
       appointments: z.array(appointment).min(1),
       next: z
@@ -265,4 +309,4 @@ const news = defineCollection({
   }),
 });
 
-export const collections = { people, publications, repos, areas, posts, news };
+export const collections = { people, programs, projects, pis, publications, repos, areas, posts, news };

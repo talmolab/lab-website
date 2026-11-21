@@ -56,6 +56,18 @@ const ROLES = (() => {
   return [...block.matchAll(/'([a-z-]+)'/g)].map((m) => m[1]);
 })();
 
+// Graduate programs the site knows (src/data/programs.yaml). A form answer is matched by
+// the program's id or its full name appearing in the text: "UCSD Neurosciences Graduate
+// Program" -> ngp. Anything else is left for a maintainer, and the PR says so.
+const PROGRAMS = (() => {
+  try { return parse(readFileSync('src/data/programs.yaml', 'utf8')) ?? {}; } catch { return {}; }
+})();
+const programId = (s) => {
+  if (!s) return undefined;
+  const t = s.trim().toLowerCase();
+  return Object.entries(PROGRAMS).find(([id, p]) => t === id || t.includes(String(p.name).toLowerCase()))?.[0];
+};
+
 const YM = /^\d{4}(-(0[1-9]|1[0-2]))?$/;
 const one = (s, max = 120) => {
   if (!s) return undefined;
@@ -189,6 +201,8 @@ async function apply(body) {
   const start = date(f['Start (YYYY-MM)'], 'Start');
   const end = date(f['End (YYYY-MM)'], 'End');
   const coAdvisor = one(f['Co-advisor']);
+  const programText = one(f['Graduate program']);
+  const program = programId(programText);
   const bio = cleanBio(f['Bio']);
   const links = Object.fromEntries(
     Object.entries({
@@ -210,6 +224,7 @@ async function apply(body) {
 
   const existing = findExisting(name, one(f['Existing page'], 60));
   const notes = [];
+  if (programText && !program) notes.push(`The graduate program "${programText}" is not in src/data/programs.yaml yet. Add it there and set \`program\` on the appointment.`);
   let slug, data, text;
 
   if (change === 'Joining the lab') {
@@ -220,7 +235,7 @@ async function apply(body) {
     if (!slug) reject('The name has no letters that can make a page address.');
     data = {
       name,
-      appointments: [{ role, ...(title ? { title } : {}), start, ...(coAdvisor ? { coAdvisor } : {}) }],
+      appointments: [{ role, ...(title ? { title } : {}), start, ...(coAdvisor ? { coAdvisor } : {}), ...(program ? { program } : {}) }],
       ...(Object.keys(links).length ? { links } : {}),
     };
     text = bio ?? '';
@@ -235,6 +250,7 @@ async function apply(body) {
     if (change === 'Updating my entry') {
       if (title) last.title = title;
       if (coAdvisor) last.coAdvisor = coAdvisor;
+      if (program) last.program = program;
     } else if (change === 'Changing role') {
       if (last.end) reject(`${name} is recorded as having left (${last.end}). A role change needs a current appointment.`);
       if (!role) reject('Choose the new role.');
@@ -243,7 +259,7 @@ async function apply(body) {
       // Close the current appointment the month the new one starts: a handover, which
       // the team page reads as one continuous tenure. Never overwrite it.
       last.end = start;
-      appts.push({ role, ...(title ? { title } : {}), start, ...(coAdvisor ? { coAdvisor } : {}) });
+      appts.push({ role, ...(title ? { title } : {}), start, ...(coAdvisor ? { coAdvisor } : {}), ...(program ? { program } : {}) });
     } else if (change === 'Leaving the lab') {
       if (last.end) reject(`${name} is already recorded as having left (${last.end}).`);
       if (!end) reject('Give the last month in the lab (YYYY-MM). Leaving without an end date is the bug the content model exists to prevent.');

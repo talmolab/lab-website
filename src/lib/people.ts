@@ -30,10 +30,9 @@ export const displayTitle = (a: Appointment): string => {
  *  never by hand. Friends of the lab come last, as on the live site. */
 export const GROUPS: { name: string; roles: (typeof ROLE_ORDER)[number][] }[] = [
   { name: 'Principal investigator', roles: ['pi'] },
-  {
-    name: 'Research staff',
-    roles: ['staff-scientist', 'postdoc', 'scientific-programmer', 'software-engineer', 'bioinformatics-analyst'],
-  },
+  { name: 'Administration', roles: ['admin'] },
+  { name: 'Software engineers', roles: ['software-engineer', 'scientific-programmer', 'bioinformatics-analyst'] },
+  { name: 'Scientists and postdocs', roles: ['staff-scientist', 'postdoc'] },
   { name: 'Graduate students', roles: ['phd-student', 'phd-rotation', 'ms-student'] },
   { name: 'Research assistants', roles: ['research-assistant'] },
   {
@@ -41,7 +40,23 @@ export const GROUPS: { name: string; roles: (typeof ROLE_ORDER)[number][] }[] = 
     roles: ['undergrad-intern', 'undergrad-summer-intern', 'highschool-intern', 'highschool-summer-intern'],
   },
   { name: 'Friends of the lab', roles: ['friend'] },
+  { name: 'Robots', roles: ['robot'] },
 ];
+
+/** Robots are shown as a group but are not people: never in a headcount. */
+export const isRobot = (p: Person): boolean => latest(p).role === 'robot';
+
+/** Genuine co-advisors to show: the current appointment's for someone in the lab, every
+ *  appointment's for an alumnus. (On-paper affiliations are never recorded.) */
+export function coAdvisorsOf(p: Person): string[] {
+  const appts = isCurrent(p) ? [latest(p)] : p.data.appointments;
+  return [...new Set(appts.map((a) => a.coAdvisor).filter((c): c is string => !!c))];
+}
+
+/** "co-advised with" for trainees, "jointly with" for staff, where "co-advised" reads oddly. */
+const ADVISED: (typeof ROLE_ORDER)[number][] = ['postdoc', 'phd-student', 'phd-rotation', 'ms-student'];
+export const coAdvisorVerb = (p: Person): string =>
+  ADVISED.includes(latest(p).role) ? 'co-advised with' : 'jointly with';
 
 export function grouped(people: Person[]) {
   return GROUPS.map((g) => ({

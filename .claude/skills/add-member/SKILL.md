@@ -40,10 +40,10 @@ Ask the user for essential details:
 **Required**:
 - Full name
 - Role category — one of:
-  `pi`, `staff-scientist`, `postdoc`, `scientific-programmer`, `software-engineer`,
-  `bioinformatics-analyst`, `phd-student`, `phd-rotation`, `ms-student`,
+  `pi`, `admin`, `software-engineer`, `scientific-programmer`, `bioinformatics-analyst`,
+  `staff-scientist`, `postdoc`, `phd-student`, `phd-rotation`, `ms-student`,
   `research-assistant`, `undergrad-intern`, `undergrad-summer-intern`,
-  `highschool-intern`, `highschool-summer-intern`, `friend`
+  `highschool-intern`, `highschool-summer-intern`, `friend`, `robot`
 - Start date (`YYYY-MM`, or `YYYY` if the month genuinely is not known)
 
 **Optional** (we'll research if not provided):
@@ -348,7 +348,9 @@ They still appear in the alumni table, as plain text rather than a link.
 When member has co-advisor:
 
 1. Set `coAdvisor: "Name"` on the appointment — it is structured, so it renders
-   on the member page without depending on the bio wording
+   on the member page and team card without depending on the bio wording. Only for
+   genuine co-advising: never for the lab that holds the appointment on paper (see
+   reference.md, "Co-advisors, programs and projects")
 2. Optionally also mention it in the bio with a hyperlink
 3. Co-advisors are per-appointment: someone can change advisor on promotion
 

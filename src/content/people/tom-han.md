@@ -1,10 +1,12 @@
 ---
 name: "Tom Han"
+aliases: ["Chongye Han"]
 image: ../../assets/people/tom-han.jpg
+projects: ["pheno"]
 appointments:
   - role: research-assistant
     start: "2025-08"
-    coAdvisor: "Uri Manor"
+    coAdvisor: "Eiman Azim"
 links:
   "home-page": "https://tomhcy.com/"
   github: "tom21100227"
