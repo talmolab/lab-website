@@ -4,13 +4,12 @@ summary: "Pose estimation, identity tracking and 3D: from video to how every ani
 goal: "Advance and validate the computational techniques and new technologies that measure how living things move, and build them into tools that scientists can rely on."
 order: 1
 media:
-  - src: /media/luc3d-flythrough.mp4
-    poster: /media/luc3d-flythrough.jpg
+  - src: /media/sleap-species.mp4
+    poster: /media/sleap-species.jpg
     width: 1280
-    height: 720
-    alt: "Four mice reconstructed in 3D, each skeleton in its own colour, inside a wireframe arena ringed by cameras. The view flies into one camera's infrared footage, where the same skeletons sit on the real animals, and back out."
-    caption: "Four mice reconstructed in 3D with LUC3D: from the camera rig into one camera's view and back."
-    plate: true
+    height: 854
+    alt: "Six tracked videos in a grid: a single fly, two flies, two bees in a honeycomb dish, two mice in a home cage, mice in an open field drawn as skeletons alone, and a gerbil family in its home cage."
+    caption: "SLEAP across species: flies, bees, mice and gerbils."
   - src: /media/sleap-flies.mp4
     thread: pose-estimation
     poster: /media/sleap-flies.jpg
@@ -18,13 +17,14 @@ media:
     height: 280
     alt: "Two fruit flies on a dark floor with their SLEAP-predicted skeletons overlaid; beside them, the same skeletons moving on their own."
     caption: "Two fruit flies tracked with SLEAP: the video with predicted poses, and the poses alone."
-  - src: /media/sleap-species.mp4
-    thread: foundation-models-for-pose
-    poster: /media/sleap-species.jpg
+  - src: /media/luc3d-flythrough.mp4
+    thread: 3d-pose
+    poster: /media/luc3d-flythrough.jpg
     width: 1280
-    height: 854
-    alt: "Six tracked videos in a grid: a single fly, two flies, two bees in a honeycomb dish, two mice in a home cage, mice in an open field drawn as skeletons alone, and a gerbil family in its home cage."
-    caption: "SLEAP across species: flies, bees, mice and gerbils."
+    height: 720
+    alt: "Four mice reconstructed in 3D, each skeleton in its own colour, inside a wireframe arena ringed by cameras. The view flies into one camera's infrared footage, where the same skeletons sit on the real animals, and back out."
+    caption: "Four mice reconstructed in 3D with LUC3D: from the camera rig into one camera's view and back."
+    plate: true
 tools: [talmolab/sleap, talmolab/sleap-nn, talmolab/sleap-io, talmolab/dreem, talmolab/luc3d]
 papers: [pereira-2022, pereira-2018, pereira-2020, luxem-2023, weinreb-2024, rose-2024, maree-2024, leonardis-2026, marks-2026]
 ---
@@ -87,12 +87,3 @@ animal means working out which detection in each view belongs to which individua
 [LUC3D](https://talmolab.github.io/luc3d-docs) annotates poses across several cameras
 at once, in the browser, and triangulates them into 3D
 ([Leonardis et al., *bioRxiv*, 2026](https://doi.org/10.64898/2026.11.17.767188)).
-
-### Foundation models for pose
-
-Today, pose tracking on a new setup starts with annotating data from scratch, because
-annotations have not transferred between labs, or even between instruments. We are
-working on models that learn from annotations pooled across labs, rigs and species, so
-that tracking works on new data with little or no labeling. We see these models as a
-core tool for agentic phenotyping, where a large language model calls on pose tracking
-as needed to extract traits from diverse datasets.

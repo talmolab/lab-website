@@ -557,7 +557,6 @@ h3,
   color: var(--muted);
   font-size: 0.9375rem;
   line-height: 1.5;
-  max-width: 34ch;
 }
 
 .count {
@@ -1279,10 +1278,6 @@ figcaption {
   text-underline-offset: 0.2em;
 }
 
-.tool-blurb {
-  max-width: 62ch;
-}
-
 .tool-meta {
   display: flex;
   flex-wrap: wrap;
@@ -1453,17 +1448,11 @@ figcaption {
   color: var(--muted);
 }
 
-/* The figure sets the width of an area. While it is stacked above the prose, the goal
- * and the prose span the section as it does, with no measure of their own; beside the
- * figure, the prose has its column and the goal keeps near it. */
+/* The figure sets the width of an area. The goal sits above the figures at every width,
+ * so it spans the section; the prose spans it too while the figures are stacked, and
+ * beside them has its column. */
 .area .prose {
   max-width: none;
-}
-
-@media (min-width: 960px) {
-  .area-goal {
-    max-width: 58ch;
-  }
 }
 
 /* A thread heading that the overview links to lands with a little air above it. */
