@@ -4,8 +4,13 @@ appointments:
   - role: undergrad-summer-intern
     start: "2025-06"
     end: "2025-08"
+# Per his own message to Talmo (Slack, 2026-07-07): attending Georgia Tech for his
+#   Master's. Talmo remembered a PhD program; his LinkedIn headline (AWS) predates it.
+next:
+  org: "Georgia Tech"
+  what: "Master's student"
 links:
   linkedin: "papa-manu-41a5b827b"
 ---
 
-Papa Manu was an undergraduate summer research intern in 2025. He is an undergraduate at the University of Maryland, Baltimore County (UMBC) where he is a Meyerhoff Scholar studying Computer Science. He worked on improving computer vision algorithms for pose estimation through geometric invariance, mentored by Divya Murali. He has conducted research at NASA on the Wildfire Digital Twin project, and at the National Science Foundation on parallel algorithms for high-dimensional clustering, where he achieved a 96x speedup for K-means algorithms. He won the Award for Best Computer Science Oral Presentation at the Emerging Researchers National Conference in 2024.
+Papa Manu was an undergraduate summer research intern in 2025. He was an undergraduate at the University of Maryland, Baltimore County (UMBC), where he was a Meyerhoff Scholar studying Computer Science. He worked on improving computer vision algorithms for pose estimation through geometric invariance, mentored by Divya Murali. He has conducted research at NASA on the Wildfire Digital Twin project, and at the National Science Foundation on parallel algorithms for high-dimensional clustering, where he achieved a 96x speedup for K-means algorithms. He won the Award for Best Computer Science Oral Presentation at the Emerging Researchers National Conference in 2024.
