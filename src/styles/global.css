@@ -1340,18 +1340,16 @@ figcaption {
 
 /* ── Research ────────────────────────────────────────────────────────────── */
 
-/* Under the lede, the page head's two paragraphs sit side by side on wide screens, so
- * each keeps a reading measure while the pair spans the lede. */
+/* Under the lede, the page head's two paragraphs sit side by side on wide screens.
+ * Stacked, they span the head as the lede does. */
 .head-cols {
   display: grid;
   gap: 1em clamp(24px, 3.5vw, 56px);
-  max-width: 68ch;
 }
 
 @media (min-width: 960px) {
   .head-cols {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: none;
   }
 }
 
@@ -1446,7 +1444,6 @@ figcaption {
 .area-goal {
   display: grid;
   gap: 4px;
-  max-width: 58ch;
   margin-bottom: 40px;
   font-size: clamp(1.125rem, 1.02rem + 0.45vw, 1.375rem);
   line-height: 1.45;
@@ -1454,6 +1451,19 @@ figcaption {
 
 .area-goal .meta {
   color: var(--muted);
+}
+
+/* The figure sets the width of an area. While it is stacked above the prose, the goal
+ * and the prose span the section as it does, with no measure of their own; beside the
+ * figure, the prose has its column and the goal keeps near it. */
+.area .prose {
+  max-width: none;
+}
+
+@media (min-width: 960px) {
+  .area-goal {
+    max-width: 58ch;
+  }
 }
 
 /* A thread heading that the overview links to lands with a little air above it. */

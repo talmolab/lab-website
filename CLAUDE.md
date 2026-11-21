@@ -88,6 +88,9 @@ guardrail on content.
   leads), `tools:` (repo ids) and `papers:` (overlay keys). Both are `reference()`s, so a
   typo fails the build. The `###` headings in the prose are the direction's threads: the
   Research overview lists and links them, so keep them short and unique across areas.
+  Cite a paper inline as `([Last et al., *Venue*, YYYY](https://doi.org/...))`: first
+  author, venue in italics and year, as the publications data has them, never a link on
+  a phrase.
   The file name is the section's anchor (`/research/#virtual-biology`), which
   `src/data/projects.yaml` links to. `draft: true` keeps an area out of the site.
 - **media**: inline, not a collection. Each item is `{ src, poster?, width, height, alt,

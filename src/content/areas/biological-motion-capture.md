@@ -16,9 +16,10 @@ papers: [pereira-2022, pereira-2018, pereira-2020, luxem-2023, weinreb-2024, ros
 
 We develop deep learning and computer vision methods for **motion capture of living
 things**: finding the body parts of animals in ordinary video, following each
-individual over time, and reconstructing how they move in 3D. This is how we
-[quantify behavior](https://doi.org/10.1038/s41593-020-00734-z), and it is the
-foundation for the rest of the lab's work.
+individual over time, and reconstructing how they move in 3D. This is how we quantify
+behavior
+([Pereira et al., *Nature Neuroscience*, 2020](https://doi.org/10.1038/s41593-020-00734-z)),
+and it is the foundation for the rest of the lab's work.
 
 A new algorithm or AI model is like a new measurement instrument: making sure it works
 on new data is not trivial. Many systems make implicit assumptions about their data,
@@ -37,16 +38,18 @@ do, as well as by publications.
 [SLEAP](https://sleap.ai) is our flagship tool: an open-source framework for the
 entire multi-animal pose tracking workflow, from labeling a few frames to training
 models and tracking animals through video
-([Nature Methods, 2022](https://doi.org/10.1038/s41592-022-01426-1)). It has been
-developed and maintained in the lab since.
+([Pereira et al., *Nature Methods*, 2022](https://doi.org/10.1038/s41592-022-01426-1)).
+It has been developed and maintained in the lab since.
 
 Making deep learning-based motion capture accessible has created an ecosystem that
 builds on it. With the behavior quantification community, we set out best practices
-for using this technology ([eLife, 2023](https://doi.org/10.7554/elife.79305)). We
-have also contributed to methods downstream of pose tracking: unsupervised behavior
-segmentation with
-[Keypoint-MoSeq](https://doi.org/10.1038/s41592-024-02318-2), and imputation of
-missing movement data with [DISK](https://doi.org/10.1038/s41592-025-02893-y).
+for using this technology
+([Luxem et al., *eLife*, 2023](https://doi.org/10.7554/elife.79305)). We have also
+contributed to methods downstream of pose tracking: unsupervised behavior segmentation
+with Keypoint-MoSeq
+([Weinreb et al., *Nature Methods*, 2024](https://doi.org/10.1038/s41592-024-02318-2)),
+and imputation of missing movement data with DISK
+([Rose et al., *Nature Methods*, 2025](https://doi.org/10.1038/s41592-025-02893-y)).
 
 ### Identity tracking
 
@@ -64,7 +67,7 @@ are extending motion capture to 3D with multiple cameras, which for more than on
 animal means working out which detection in each view belongs to which individual.
 [LUC3D](https://talmolab.github.io/luc3d-docs) annotates poses across several cameras
 at once, in the browser, and triangulates them into 3D
-([bioRxiv, 2026](https://doi.org/10.64898/2026.11.17.767188)).
+([Leonardis et al., *bioRxiv*, 2026](https://doi.org/10.64898/2026.11.17.767188)).
 
 ### Foundation models for pose
 

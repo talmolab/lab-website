@@ -42,16 +42,17 @@ animal did.
 Building on work from Google DeepMind and our collaborators at Harvard, we generalized
 the approach to work with any body model, adapted it to GPU-accelerated physics
 simulators, and validated it across behaviors, species and levels of biomechanical
-fidelity ([arXiv, 2025](https://doi.org/10.48550/arxiv.2511.20532)). STAC-MJX fits a
-body model to motion capture data, and track-mjx trains the control policies that
-imitate it, for rodent, fruit fly, mouse arm, stick insect and worm models.
+fidelity
+([Zhang et al., *arXiv*, 2025](https://doi.org/10.48550/arxiv.2511.20532)). STAC-MJX
+fits a body model to motion capture data, and track-mjx trains the control policies
+that imitate it, for rodent, fruit fly, mouse arm, stick insect and worm models.
 
 In a companion study, we trained neural control models to reproduce the movements of
 mice performing a dexterous reaching task. Models that controlled muscle-based
 actuators predicted recorded muscle activity better than models with less biologically
 realistic torque actuators
-([NeurIPS workshop, 2025](https://doi.org/10.48550/arxiv.2511.21848)): evidence that
-detailed biomechanics matter when modeling sensorimotor control.
+([Leonardis et al., *NeurIPS Workshop*, 2025](https://doi.org/10.48550/arxiv.2511.21848)):
+evidence that detailed biomechanics matter when modeling sensorimotor control.
 
 ### Sensorimotor control
 
@@ -70,7 +71,7 @@ Our first step into *in silico* modeling asked how the visual diet of artificial
 neural networks affects how well they predict biological ones. Networks trained on
 images with more naturalistic statistics better predicted neural activity along the
 ventral visual stream of mice shown the same stimuli
-([NeurIPS workshop, 2022](https://openreview.net/forum?id=KIlSyKTulXO)).
+([Prasad et al., *NeurIPS Workshop*, 2022](https://openreview.net/forum?id=KIlSyKTulXO)).
 
 ### Genotype to phenotype
 
