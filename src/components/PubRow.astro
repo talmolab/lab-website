@@ -18,9 +18,12 @@ interface Props {
   filterable?: boolean;
   /** Heading level for the title, so each page's outline stays correct. */
   level?: 'h2' | 'h3' | 'h4';
+  /** Shorten the author list only past this many authors. Defaults to 60 for full
+   *  rows and 12 for compact ones; member pages pass 60. */
+  collapseAt?: number;
 }
 
-const { pub, lab, compact = false, filterable = false, level = 'h3' } = Astro.props;
+const { pub, lab, compact = false, filterable = false, level = 'h3', collapseAt } = Astro.props;
 const p = pub.data;
 const t = compact ? undefined : await thumbInfo(p.image);
 const link = href(p);
@@ -58,9 +61,10 @@ const authors: Author[] = p.authors.map((name) => {
 // Long author lists are shortened to the first three, every lab member, every marked
 // author and the last author, with an ellipsis for each gap. Full rows (Publications)
 // almost never shorten: only past 60 authors, and they expand in place. Compact rows
-// (Home, member pages) shorten past 12, the old full-row limit, and give the count.
+// on Home shorten past 12, the old full-row limit, and give the count; member pages
+// pass `collapseAt={60}` so a person's papers read like the Publications page.
 type Bit = Author | { gap: true };
-const limit = compact ? 12 : 60;
+const limit = collapseAt ?? (compact ? 12 : 60);
 function shown(all: Author[]): Bit[] {
   if (all.length <= limit) return all;
   const keep = new Set([0, 1, 2, all.length - 1]);
