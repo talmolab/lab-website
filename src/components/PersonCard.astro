@@ -6,8 +6,12 @@ import { latest, displayTitle, coAdvisorsOf } from '../lib/people';
 
 interface Props {
   person: Person;
+  /** Extra classes and inline style for the list item, and a default slot rendered before
+   *  the card: a flow group uses all three to label a group's first card. */
+  class?: string;
+  style?: string;
 }
-const { person: p } = Astro.props;
+const { person: p, class: cls, style } = Astro.props;
 const a = latest(p);
 const initials = p.data.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
 const inner = { title: displayTitle(a) };
@@ -16,7 +20,8 @@ const inner = { title: displayTitle(a) };
 const withWhom = coAdvisorsOf(p);
 const tags = (await Promise.all(p.data.projects.map((r) => getEntry(r)))).filter((x) => !!x).map((x) => x.data.name);
 ---
-<li class="person">
+<li class:list={['person', cls]} style={style}>
+  <slot />
   {p.data.page ? (
     <a href={`/members/${p.id}`}>
       {p.data.image ? (
