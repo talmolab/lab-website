@@ -5,6 +5,21 @@ import { getCollection } from 'astro:content';
 const tex = (s: string) =>
   String(s).replace(/([&%$#_])/g, '\\$1').replace(/[{}]/g, '');
 
+/** The overlay's `equal:`, `corresponding:` and `senior:` as a biblatex `author+an` value. */
+function annotations(p: { authors: string[]; equal: string[]; corresponding: string[]; senior: string[] }): string | undefined {
+  const items = p.authors
+    .map((a, i) => {
+      const an = [
+        p.equal.includes(a) && 'equal',
+        p.corresponding.includes(a) && 'corresponding',
+        p.senior.includes(a) && 'senior',
+      ].filter(Boolean);
+      return an.length ? `${i + 1}=${an.join(', ')}` : '';
+    })
+    .filter(Boolean);
+  return items.length ? items.join('; ') : undefined;
+}
+
 export const GET: APIRoute = async () => {
   const pubs = (await getCollection('publications'))
     .map((p) => p.data)
@@ -17,6 +32,9 @@ export const GET: APIRoute = async () => {
         ['title', tex(p.title)],
         // BibTeX wants " and " between authors, not commas.
         ['author', p.authors.map(tex).join(' and ')],
+        // biblatex data annotations (manual: "Data Annotations"): "1=equal, corresponding; 5=senior"
+        // marks co-first, corresponding and co-senior authors by position. BibTeX ignores it.
+        ['author+an', annotations(p)],
         ['journal', p.venue ? tex(p.venue) : undefined],
         ['year', year || undefined],
         ['doi', p.doi],

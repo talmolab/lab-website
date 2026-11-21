@@ -16,6 +16,11 @@
 # preprint      The earlier version. Linked secondarily, never listed separately.
 # manual        Everything, for works no API knows about (no DOI at all).
 # image         Thumbnail, relative to public/images/ or an absolute URL.
+# equal         Co-first (equal-contribution) authors, as the paper prints them.
+# corresponding Corresponding authors, likewise.
+# senior        Authors who jointly supervised the work (co-senior, "co-last"), likewise.
+#               A name not in the author list fails the build. Copy all three from the
+#               publisher's page; never guess.
 #
 # Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
 # API at build time; anything written here overrides them.
@@ -29,6 +34,9 @@
 - key: leonardis-2026
   # LUC3D. bioRxiv's new DOI prefix (10.64898) since late 2026.
   published: { doi: "10.64898/2026.11.17.767188" }
+  # Marks as the publisher prints them: https://www.biorxiv.org/content/10.64898/2026.11.17.767188v2.full.pdf (read 2026-11-20).
+  # From the PDF; the bioRxiv page and API list only Pereira.
+  corresponding: ["Annegret L. Falkner", "Talmo Pereira"]
 
 - key: bian-2026
   # NeurReps 2026 Proceedings Track (arXiv comment: "Accepted to NeurReps 2026"). The
@@ -88,12 +96,20 @@
 - key: marks-2026
   # Days of our Mice consortium benchmark
   published: { doi: "10.64898/2026.10.18.758876" }
+  # Marks as the publisher prints them: https://www.biorxiv.org/content/10.64898/2026.10.18.758876v1.full (read 2026-11-20).
+  corresponding: ["Sam A. Golden", "Jennifer J. Sun", "Talmo Pereira", "Ann Kennedy"]
 
 - key: kiffer-2026
   published: { doi: "10.64898/2026.04.30.721950" }
+  # Marks as the publisher prints them: https://www.biorxiv.org/content/10.64898/2026.04.30.721950v2.full.pdf (read 2026-11-20).
+  # "These authors jointly supervised this work: F.C.K., T.D.P. and A.J.E."
+  corresponding: ["Frederico C. Kiffer", "Amelia J. Eisch", "Talmo Pereira"]
+  senior: ["Frederico C. Kiffer", "Talmo Pereira", "Amelia J. Eisch"]
 
 - key: liu-2026
   published: { doi: "10.64898/2026.05.04.721738" }
+  # Marks as the publisher prints them: https://www.biorxiv.org/content/10.64898/2026.05.04.721738v1.full (read 2026-11-20).
+  corresponding: ["Pallav Kosuri"]
 
 - key: leonardis-2025
   # NeurIPS 2025 Workshop: Data on the Brain & Mind (Findings track, poster)
@@ -116,6 +132,8 @@
 - key: jia-2025
   # Tye lab. The Research Square copy (10.21203/rs.3.rs-6615222/v1) is the same work.
   published: { doi: "10.1101/2025.05.09.653162" }
+  # Marks as the publisher prints them: https://www.biorxiv.org/content/10.1101/2025.05.09.653162v1.full (read 2026-11-20).
+  corresponding: ["Kay M. Tye"]
 
 - key: haspel-2023
   published: { doi: "10.48550/arxiv.2308.06578" }
@@ -132,6 +150,10 @@
   #   Prefrontal Cortex for Cooperative Behavior"), all 16 authors match in order
   preprint: { doi: "10.1101/2025.08.27.672249" }
   published: { doi: "10.1038/s41586-026-10900-1" }
+  # Marks as the publisher prints them: https://www.nature.com/articles/s41586-026-10900-1 (read 2026-11-20).
+  # Nature prints the corresponding author as "Herbert Zheng Wu".
+  equal: ["Yuan Cheng", "Yusi Chen"]
+  corresponding: ["Zheng Wu"]
 
 - key: duporge-2025
   published: { doi: "10.1038/s41526-025-00460-5" }
@@ -139,6 +161,9 @@
 - key: zhang-2025
   published: { doi: "10.48550/arxiv.2511.20532" }
   image: "papers/zhang-2025.png"
+  # Marks as the publisher prints them: https://arxiv.org/pdf/2511.20532v3 (read 2026-11-20).
+  equal: ["Charles Y. Zhang", "Yuanjia Yang", "Aidan Sirbu"]
+  corresponding: ["Bence P. Ölveczky", "Talmo D. Pereira"]
 
 - key: coley-2024
   published: { doi: "10.1101/2024.12.18.629202" }
@@ -151,6 +176,8 @@
   preprint: { doi: "10.1101/2023.03.16.532307" }
   published: { doi: "10.1038/s41592-024-02318-2" }
   image: "papers/weinreb-2023.png"
+  # Marks as the publisher prints them: https://www.nature.com/articles/s41592-024-02318-2 (read 2026-11-20).
+  corresponding: ["Scott W. Linderman", "Sandeep Robert Datta"]
 
 - key: maree-2024
   manual:
@@ -166,12 +193,16 @@
     date: "2024-05-15"
     link: "/images/papers/maree-2024.pdf"
   image: "papers/maree-2024.png"
+  # Marks as the lab's own PDF prints them: /images/papers/maree-2024.pdf (read 2026-11-20).
+  corresponding: ["Talmo Pereira"]
 
 - key: rose-2024
   # Crossref is-preprint-of
   preprint: { doi: "10.1101/2024.05.03.592173" }
   published: { doi: "10.1038/s41592-025-02893-y" }
   image: "papers/rose-2024.png"
+  # Marks as the publisher prints them: https://www.nature.com/articles/s41592-025-02893-y (read 2026-11-20).
+  corresponding: ["France Rose", "Katarzyna Bożek"]
 
 - key: berrigan-2024
   # Crossref is-preprint-of; bioRxiv's own record agrees
@@ -189,6 +220,11 @@
   preprint: { doi: "10.1101/2023.11.10.566632" }
   published: { doi: "10.1371/journal.pbio.3003348" }
   image: "papers/mitelut-2023.png"
+  # Marks as the publisher prints them: https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3003348 (read 2026-11-20).
+  # "TDP and DHS are co-last authors on this work."
+  equal: ["Catalin Mitelut", "Marielisa Diez Castro"]
+  corresponding: ["Catalin Mitelut"]
+  senior: ["Talmo Pereira", "Dan H. Sanes"]
 
 - key: patel-2023
   # associated BY HAND: Crossref carries no relation for this preprint,
@@ -197,6 +233,9 @@
   preprint: { doi: "10.1101/2023.11.09.566421" }
   published: { doi: "10.1038/s41593-026-02413-x" }
   image: "papers/patel-2023.png"
+  # Marks as the publisher prints them: https://www.nature.com/articles/s41593-026-02413-x (read 2026-11-20).
+  equal: ["Reesha R. Patel", "Kelly N. Kim"]
+  corresponding: ["Reesha R. Patel", "Kay M. Tye"]
 
 - key: luxem-2023
   # associated BY HAND, confirmed by Talmo (2026-11-20): arXiv carries no journal DOI;
@@ -205,6 +244,9 @@
   preprint: { doi: "10.48550/arxiv.2204.02842" }
   published: { doi: "10.7554/elife.79305" }
   image: "papers/luxem-2022.png"
+  # Marks as the publisher prints them: https://cdn.elifesciences.org/articles/79305/elife-79305-v1.pdf (read 2026-11-20).
+  equal: ["Kevin Luxem", "Jennifer J. Sun"]
+  corresponding: ["Talmo Pereira", "Mark Laubach"]
 
 - key: mills-2022
   # Published in Neuron (2026). bioRxiv's own record names this published DOI and the
@@ -240,6 +282,10 @@
   preprint: { doi: "10.1101/2020.08.31.276246" }
   published: { doi: "10.1038/s41592-022-01426-1" }
   image: "papers/pereira-2022.webp"
+  # Marks as the publisher prints them: https://www.nature.com/articles/s41592-022-01426-1 (read 2026-11-20).
+  # "These authors jointly supervised this work: Joshua W. Shaevitz, Mala Murthy."
+  corresponding: ["Mala Murthy"]
+  senior: ["Joshua W. Shaevitz", "Mala Murthy"]
 
 - key: gall-2022
   published: { doi: "10.1186/s13007-022-00851-9" }
@@ -256,6 +302,8 @@
   preprint: { doi: "10.1101/2020.02.13.947952" }
   published: { doi: "10.7554/elife.59502" }
   image: "papers/deutsch-2020.png"
+  # Marks as the publisher prints them: https://cdn.elifesciences.org/articles/59502/elife-59502-v7.pdf (read 2026-11-20).
+  corresponding: ["Mala Murthy"]
 
 - key: pereira-2020
   published: { doi: "10.1038/s41593-020-00734-z" }
@@ -266,6 +314,9 @@
   preprint: { doi: "10.1101/2020.02.18.955070" }
   published: { doi: "10.7554/elife.57258" }
   image: "papers/jones-2020.webp"
+  # Marks as the publisher prints them: https://cdn.elifesciences.org/articles/57258/elife-57258-v2.pdf (read 2026-11-20).
+  equal: ["Jessica M. Jones", "William Foster", "Colin R. Twomey"]
+  corresponding: ["Ishmail Abdus-Saboor"]
 
 - key: charles-2020
   published: { doi: "10.1146/annurev-neuro-100119-110036" }
@@ -276,10 +327,15 @@
   preprint: { doi: "10.1101/331181" }
   published: { doi: "10.1038/s41592-018-0234-5" }
   image: "papers/pereira-2019.png"
+  # Marks as the publisher prints them: https://www.nature.com/articles/s41592-018-0234-5 (read 2026-11-20).
+  equal: ["Talmo Pereira", "Diego E. Aldarondo"]
+  corresponding: ["Mala Murthy", "Joshua W. Shaevitz"]
 
 - key: badura-2018
   published: { doi: "10.7554/elife.36401" }
   image: "papers/badura-2018.webp"
+  # Marks as the publisher prints them: https://cdn.elifesciences.org/articles/36401/elife-36401-v3.pdf (read 2026-11-20).
+  corresponding: ["Samuel S.‐H. Wang"]
 
 - key: clemens-2018
   # Crossref is-preprint-of; bioRxiv agrees
@@ -306,6 +362,9 @@
 - key: giovannucci-2017
   published: { doi: "10.1038/nn.4531" }
   image: "papers/giovannucci-2017.webp"
+  # Marks as the publisher prints them: https://www.nature.com/articles/nn.4531 (read 2026-11-20).
+  equal: ["Andrea Giovannucci", "Aleksandra Badura"]
+  corresponding: ["Javier F. Medina", "Samuel S.‐H. Wang"]
 
 - key: hobbs-2016
   published: { doi: "10.1186/s13015-016-0082-8" }

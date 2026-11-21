@@ -39,7 +39,43 @@ bug.
    build fails loudly rather than shipping a blank entry.
 
 Optional fields: `image` (relative to `public/images/`, or an absolute URL),
-`tags`, `highlight: true`, and `links: [{ label, url }]`.
+`tags`, `highlight: true`, `links: [{ label, url }]`, and `equal` / `corresponding` /
+`senior` (next section).
+
+### Co-first, corresponding and co-senior authors
+
+No API reports these, so the overlay does. Copy them from the version of record (the
+publisher's page or PDF), never from memory or a preprint, and leave them out when you
+cannot check:
+
+```yaml
+- key: doe-2027                                  # an example, not a real entry
+  published: { doi: "10.1234/example" }
+  equal: ["Jane Doe", "Wei Zhang"]                # "These authors contributed equally"
+  corresponding: ["Ana Ruiz"]
+  senior: ["Ana Ruiz", "Lee Park"]                # "These authors jointly supervised this work"
+```
+
+`senior` is for authors the publisher marks as jointly supervising the work: Nature's
+"jointly supervised", PLoS's "co-last authors", Cell's "senior author" when two are
+marked. Co-first and co-senior are different claims, so never fold one into the other.
+Put the publisher's URL, and a short quote of anything unusual, in a comment above the
+marks: that is the only record of where they came from.
+
+They go at the top level of the entry, beside `published:` or `manual:`, and apply to
+the version the site shows. Each name is matched to the author list with `nameKey`
+(first and last name; case, accents, middle names and initials ignored), so "Talmo
+Pereira" finds "Talmo D. Pereira". Write the name **as the paper prints it**: an alias
+in the people collection does not count here, so Kevin Bian's papers need "Kaiwen
+Bian". A name that matches no author, or two, fails the build and prints the paper's
+author list. That is the typo guard; do not loosen it.
+
+The site marks them `*` (equal contribution), `†` (corresponding author) and `‡`
+(jointly supervised) wherever a paper is listed, with a legend on `/publications/` and a
+tooltip on each mark. `/publications.json` carries the three lists as printed in
+`authors`; `/publications.bib` carries them as a biblatex data annotation,
+`author+an = {1=equal; 4=corresponding, senior}`. CSL-JSON has no field for any of
+them, so `/publications.csl.json` leaves them out.
 
 ### Thumbnail
 
