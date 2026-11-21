@@ -1,4 +1,8 @@
-/* talmolab type system — decided 2026-08-30
+/* SUPERSEDED. This is the record of the 2026-08-30 decision, kept for its evidence (the
+ * coverage table and the rejected faces). The site has since dropped JetBrains Mono
+ * (2026-11-20) and sets no weight above 600. The current spec is ../type.css.
+ *
+ * talmolab type system — decided 2026-08-30
  *
  *   SANS   Source Sans 3     everything: headings, prose, interface, metadata
  *   MONO   JetBrains Mono    code, repo names, DOIs, accessions, array shapes

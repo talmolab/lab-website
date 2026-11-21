@@ -4,8 +4,9 @@ The logo, its colours and the scripts that make every file here, in one place. T
 footer links to this folder.
 
 - **Logo files**: `svg/` (any size), `png/` (512 and 1024 px wide), `favicon/`, `og/`.
-  Pick a colourway from [Colourways](#colourways) and keep [clear space](#clear-space).
+  Read the [usage rules](#usage-rules) first.
 - **Colours**: `palette.css`, and the tables under [Palette](#palette).
+- **Type**: `type.css`, and [Type](#type).
 - **Sources**: `talmolab-logo.v003.ai` (Illustrator) and `talmolab-logo.v003.svg` (the
   normalised export every script reads).
 
@@ -17,6 +18,53 @@ gitignored `scratch/` folder; it moved here, into `talmolab/lab-website`, on 202
 
 ---
 
+## Usage rules
+
+1. **Never set “talmolab” in type.** Not in a heading, a slide title or a sign. Use a
+   lockup from `svg/`: its letters are outlines from the master, not a font. In running
+   text the lab is “Talmo Lab”.
+2. **Keep clear space**: `2b` on every side, which is 0.232 × the logo's height
+   (9 px around a 38 px logo). Details under [Clear space](#clear-space).
+3. **Stay above the minimum sizes** below.
+4. **One accent.** Violet is the only colour beside ink and paper. Structure comes from
+   weight, rules and position, not from a second hue, a gradient or a tint of the violet.
+5. **The violet is for the logo and non-text marks.** It is 3.80:1 on paper, under AA.
+   Text and links use `#805fc9` on paper (4.50:1) and `#8c6bd6` on the dark ground
+   (4.56:1). The logo's violet is `#8b6dd2` in both themes; only its ink reverses.
+6. **Match the colourway to the ground**: `-light` on light grounds, `-dark` on dark ones,
+   `-on-paper` or `-on-ground` where transparency is not available, `-mono-ink` for
+   one-colour printing, `-mono-white` over photographs. See [Colourways](#colourways).
+7. **Do not alter it.** No other colours, no stretching, rotating, outlines, shadows or
+   effects, no rearranging the mark and the wordmark, no redrawn letters. The layouts are
+   the shapes in `svg/`; the only other cut is the favicon's.
+
+### Minimum sizes
+
+Height on screen, judged from renders at 1× pixel density, where detail goes first. On 2×
+screens these hold with room to spare.
+
+| Shape | Smallest | Below that | What fails first |
+|---|---|---|---|
+| `lockup-h` | 24 px tall | the favicon cut | the arbor and the skeleton blur together |
+| `lockup` (stacked) | 64 px tall | `lockup-h` | the mark above, then the small wordmark |
+| `mark` | 32 px tall | the favicon cut | the arbor and the skeleton turn to noise |
+| `wordmark` | 12 px tall | `lockup-h` | the counters of a, o and b close |
+| `favicon` | 16 px | nothing smaller | drawn for 16 px |
+
+The site's header uses `lockup-h` at 38 px, 32 px on phones, and never below 24 px.
+
+---
+
+## Type
+
+**Source Sans 3 only**, weights 400, 500 and 600 with italics, self-hosted with Latin,
+Latin-ext, Vietnamese and Greek subsets. No serif and no monospace. `type.css` has the face
+and the site's scale. It was chosen on coverage of the site's real content (Vietnamese
+names, Greek, maths); `og/type-system.css` is the record of that decision from 2026-08-30,
+which also chose JetBrains Mono, since dropped.
+
+---
+
 ## What's here
 
 ```
@@ -25,6 +73,7 @@ brand/
   talmolab-logo.v003.svg       master: the .ai export, transforms baked out
   talmolab-logo.v003.svg.orig  the raw export, before normalize-svg.py
   palette.css                  colour tokens, named as on the site
+  type.css                     the typeface and the site's type scale
   scripts/                     the generators (Python 3, headless Chrome, ImageMagick)
   svg/        36   every shape in every colourway, tight-cropped
   png/        66   512 and 1024 px (and 256 for the mark); the 2048 px renders are gitignored
@@ -275,7 +324,7 @@ elements dense enough to survive, and the two letters the name is built from.
 | `talmolab-maskable-512.png`, `-dark-512.png` | 512 × 512 | Android maskable, 26% safe zone (the site uses the dark one) |
 
 All are opaque sRGB with no alpha, which is what unfurl scrapers expect. `og/meta-tags.html`
-is the matching `<head>` block. Two traps the scripts already handle: `og:image` must be an
+is the `<head>` block the site serves, with literal values and the site's file names. Two traps the scripts already handle: `og:image` must be an
 absolute URL, and Chrome's minimum window width means icons render at 1024 and downsample.
 
 **Type caveat.** The cards are set in Bricolage Grotesque and IBM Plex Mono, carried over
@@ -320,15 +369,48 @@ The v002 scripts were ported to v003 with four fixes: `mkassets.py` generates `l
 (v002 shipped those SVGs with no generator); `mksheet.py` and `mkdocs.py` are new (v002's
 sheets and diagrams had none); and `og-template.html` uses `#805fc9` for accent-coloured type.
 
-Since then:
-
-- **`mkassets.py`** builds the taller `lockup-h` (2026-11-20).
-- **`mkdocs.py`** reads the lockup's width from its SVG instead of assuming 2323 units, so
-  the clear-space diagram follows any change of layout.
-- **`sync-public.py`** is new: the copy into the site's `public/`, and the drift check.
-
 Two ImageMagick traps, both silent: `magick montage` needs a font even with `+label`
 (`mksheet.py` appends cells instead), and compositing onto an all-grey PNG writes greyscale
 and drops the violet (`-define png:color-type=2` is load-bearing).
 
-The v002 sources and scripts remain in `talmolab/lab-website-legacy` under `design/`.
+---
+
+## Where these files came from
+
+Two sources, both read-only: the v003 kit in `talmolab/lab-website-legacy`'s local
+`scratch/2026-10-03-redesign-redux/talmolab-logo.v003/` (gitignored there, so never on
+GitHub), and the v002 kit in that repository's `design/` folder.
+
+**Copied unchanged from the v003 kit**: `talmolab-logo.v003.ai`, `.svg` and `.svg.orig`;
+`raster.py`, `mkog.py`, `mksheet.py`, `normalize-svg.py`, `og-template.html`; 30 of the 36
+SVGs; every PNG except `lockup-h`'s; `favicon/`; the cards and icons in `og/`.
+
+**Regenerated here, 2026-11-20**, after the `lockup-h` change: the six `lockup-h` SVGs and
+their 18 PNGs (`mkassets.py`, `raster.py lockup-h`), the three contact sheets (`mksheet.py`),
+`clear-space.png` and `favicon-simplified.png` (`mkdocs.py`). The other 30 SVGs came out
+byte-identical to the kit's, which is the check that nothing else moved.
+
+**Changed**:
+- `scripts/mkassets.py`: `build_h()` builds the taller `lockup-h`.
+- `scripts/mkdocs.py`: reads the lockup's width from its SVG instead of assuming 2323 units,
+  and computes the "% of the width" caption, so the diagram follows any change of layout.
+- `og/meta-tags.html`: the kit's version pointed at `/og/…` and `/talmolab-icon-…` paths
+  and used “talmolab” as the site name. It now matches what `src/layouts/Base.astro` serves.
+- `og/type-system.css`: a note at the top that it is superseded by `type.css`.
+
+**Written for this repository**:
+- `palette.css`: the v003 README's palette tables as custom properties named like the site's,
+  plus the site's dark `sunk`, which the round-26 sheet does not give.
+- `type.css`: the face from the site's `astro.config.mjs` and the scale from
+  `src/styles/global.css`, as of 2026-11-20.
+- `scripts/sync-public.py`: the v002 kit's script of the same name, re-targeted at this
+  site's `public/` file names, with `--check` for CI.
+- `README.md`: the v003 kit's README, plus the usage rules, minimum sizes, type,
+  `lockup-h` and this section.
+
+**Superseded in `lab-website-legacy`'s `design/` (v002, blue), not copied**: `README.md`,
+`palette.css` and `scripts/`, which have v003 versions here; `type-system.css`, the same file
+as `og/type-system.css` before its note; `meta-tags.html` and `site.webmanifest`, which carry the v002 blue
+(`#2176b3`) and are replaced by `og/meta-tags.html` and the site's own manifest;
+`talmolab-logo.v002.svg`, the same geometry as the v003 master. `layout.css` (the old site's
+measure system) is not brand material, and the site's CSS replaced it.
