@@ -17,8 +17,10 @@
 # manual        Everything, for works no API knows about (no DOI at all).
 # image         Thumbnail, relative to public/images/ or an absolute URL.
 # equal         Co-first (equal-contribution) authors, as the paper prints them.
-# corresponding Corresponding authors, likewise. A name not in the author list fails
-#               the build. Copy both from the publisher's page; never guess.
+# corresponding Corresponding authors, likewise.
+# senior        Authors who jointly supervised the work (co-senior, "co-last"), likewise.
+#               A name not in the author list fails the build. Copy all three from the
+#               publisher's page; never guess.
 #
 # Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
 # API at build time; anything written here overrides them.
@@ -100,8 +102,9 @@
 - key: kiffer-2026
   published: { doi: "10.64898/2026.04.30.721950" }
   # Marks as the publisher prints them: https://www.biorxiv.org/content/10.64898/2026.04.30.721950v2.full.pdf (read 2026-11-20).
-  # Kiffer, Pereira and Eisch "jointly supervised this work": not marked; the site has no mark for that.
+  # "These authors jointly supervised this work: F.C.K., T.D.P. and A.J.E."
   corresponding: ["Frederico C. Kiffer", "Amelia J. Eisch", "Talmo Pereira"]
+  senior: ["Frederico C. Kiffer", "Talmo Pereira", "Amelia J. Eisch"]
 
 - key: liu-2026
   published: { doi: "10.64898/2026.05.04.721738" }
@@ -218,9 +221,10 @@
   published: { doi: "10.1371/journal.pbio.3003348" }
   image: "papers/mitelut-2023.png"
   # Marks as the publisher prints them: https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3003348 (read 2026-11-20).
-  # Pereira and Sanes are "co-last authors": not marked; the site has no mark for that.
+  # "TDP and DHS are co-last authors on this work."
   equal: ["Catalin Mitelut", "Marielisa Diez Castro"]
   corresponding: ["Catalin Mitelut"]
+  senior: ["Talmo Pereira", "Dan H. Sanes"]
 
 - key: patel-2023
   # associated BY HAND: Crossref carries no relation for this preprint,
@@ -279,8 +283,9 @@
   published: { doi: "10.1038/s41592-022-01426-1" }
   image: "papers/pereira-2022.webp"
   # Marks as the publisher prints them: https://www.nature.com/articles/s41592-022-01426-1 (read 2026-11-20).
-  # Shaevitz and Murthy "jointly supervised this work": not marked; the site has no mark for that.
+  # "These authors jointly supervised this work: Joshua W. Shaevitz, Mala Murthy."
   corresponding: ["Mala Murthy"]
+  senior: ["Joshua W. Shaevitz", "Mala Murthy"]
 
 - key: gall-2022
   published: { doi: "10.1186/s13007-022-00851-9" }

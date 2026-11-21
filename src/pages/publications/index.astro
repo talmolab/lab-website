@@ -19,8 +19,8 @@ const lab = new Set(people.flatMap((p) => [p.data.name, ...p.data.aliases].map(n
         since been published is listed once, under the published version. Lab members are
         in bold.
       </p>
-      {pubs.some((p) => p.data.equal.length || p.data.corresponding.length) && (
-        <p class="muted">* Equal contribution &nbsp;·&nbsp; † Corresponding author</p>
+      {pubs.some((p) => p.data.equal.length || p.data.corresponding.length || p.data.senior.length) && (
+        <p class="muted"><span class="nowrap">* Equal contribution &nbsp;·</span>&nbsp; <span class="nowrap">† Corresponding author &nbsp;·</span>&nbsp; <span class="nowrap">‡ Jointly supervised</span></p>
       )}
       <div class="tools-row">
         <form class="filter" role="search" data-filter hidden onsubmit="return false">

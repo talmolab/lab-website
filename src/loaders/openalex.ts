@@ -18,9 +18,11 @@ type OverlayEntry = {
   tags?: string[];
   highlight?: boolean;
   links?: { label: string; url: string }[];
-  /** Co-first (equal-contribution) and corresponding authors, as named on the paper. */
+  /** Co-first (equal-contribution), corresponding and jointly supervising (co-senior)
+   *  authors, as named on the paper. */
   equal?: string[];
   corresponding?: string[];
+  senior?: string[];
 };
 
 type Meta = {
@@ -165,12 +167,12 @@ function givenFirst(name: string): string {
 }
 
 /**
- * The authors an overlay entry marks as `equal` or `corresponding`, as `authors` prints
+ * The authors an overlay entry marks as `equal`, `corresponding` or `senior`, as `authors` prints
  * them and in author order. Names are matched by nameKey, so "Talmo Pereira" finds
  * "Talmo D. Pereira". A name that matches no author, or more than one, fails the build:
  * a typo would otherwise mark nobody, or the wrong person, without a word.
  */
-function marked(entry: OverlayEntry, field: 'equal' | 'corresponding', authors: string[]): string[] {
+function marked(entry: OverlayEntry, field: 'equal' | 'corresponding' | 'senior', authors: string[]): string[] {
   const hit = new Set<string>();
   for (const name of entry[field] ?? []) {
     const matches = authors.filter((a) => nameKey(a) === nameKey(name));
@@ -250,6 +252,7 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
             authors,
             equal: marked(entry, 'equal', authors),
             corresponding: marked(entry, 'corresponding', authors),
+            senior: marked(entry, 'senior', authors),
             // The overlay wins over the API for every field it sets.
             venue: entry.published?.venue ?? entry.preprint?.venue ?? tidyVenue(meta.venue, meta.doi),
             date: entry.published?.date ?? meta.date,
