@@ -24,6 +24,7 @@ export const ELSEWHERE = [
   { href: 'https://bsky.app/profile/talmo.bsky.social', label: 'Bluesky' },
   { href: 'https://www.linkedin.com/in/talmo/', label: 'LinkedIn' },
   { href: 'https://x.com/talmop', label: 'X (Twitter)' },
+  { href: 'https://github.com/talmolab/lab-website/tree/main/brand', label: 'Brand kit' },
 ];
 
 export const EXPORTS = [

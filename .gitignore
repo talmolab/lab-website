@@ -5,3 +5,6 @@ dist/
 .env
 .env.local
 .DS_Store
+
+# Brand kit: the 2048 px renders regenerate with brand/scripts/raster.py (see brand/README.md).
+brand/png/*-2048.png
