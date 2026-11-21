@@ -4,7 +4,11 @@ image: ../../assets/people/mustafa-shaikh.jpg
 appointments:
   - role: research-assistant
     start: "2024-07"
+    end: "2026-03"
     coAdvisor: "Uri Manor"
+next:
+  org: "Avride"
+  what: "Machine Learning Engineer, Motion Planning"
 ---
 
 Mustafa joined in the lab July 2024 co-advised by [Uri Manor](https://manorlab.ucsd.edu/).
