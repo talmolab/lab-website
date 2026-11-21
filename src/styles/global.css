@@ -1517,9 +1517,9 @@ figcaption {
   .flow > .person.starts::before {
     content: '';
     position: absolute;
-    /* 60% of the card's height (the box minus the row gap), centred on it. */
-    top: calc((100% - var(--gap-y)) * 0.2);
-    bottom: calc(var(--gap-y) + (100% - var(--gap-y)) * 0.2);
+    /* 30% of the card's height (the box minus the row gap), centred on it. */
+    top: calc((100% - var(--gap-y)) * 0.35);
+    bottom: calc(var(--gap-y) + (100% - var(--gap-y)) * 0.35);
     left: calc(var(--gap-x) / -2);
     border-left: 1px solid var(--rule);
     opacity: min(1, mod(var(--i), var(--cols)));
