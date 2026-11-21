@@ -7,14 +7,47 @@ import { href } from '../../lib/pubs';
 const areas = (await getCollection('areas', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
 const letters = 'abcdefghij';
 
+type Item = (typeof areas)[number]['data']['media'][number];
+type Block = { slug?: string; html: string; figs: Item[]; row: number; rows?: string };
+
+/** An area's prose cut into its intro and one block per `###` thread, each thread with
+ *  the figures that name it. The lead (the first figure) belongs to the intro. On wide
+ *  screens a block's figures sit beside it and stay in view until the next block that
+ *  has figures; `rows` is that span of grid rows, references included at the end. */
+function blocks(a: (typeof areas)[number], threads: { slug: string }[]): Block[] {
+  const html = a.rendered?.html ?? '';
+  const parts = html.split(/(?=<h3 id=")/);
+  if (parts.length !== threads.length + 1) {
+    throw new Error(`areas/${a.id}: expected ${threads.length} top-level ### threads in the HTML, found ${parts.length - 1}`);
+  }
+  const out: Block[] = parts.map((h, i) => ({ slug: threads[i - 1]?.slug, html: h, figs: [], row: i + 1 }));
+  const [lead, ...more] = a.data.media;
+  if (lead) out[0].figs.push(lead);
+  for (const m of more) {
+    const b = out.find((x) => x.slug && x.slug === m.thread);
+    if (!b) {
+      const known = threads.map((t) => t.slug).join(', ');
+      throw new Error(`areas/${a.id}: ${m.src} needs \`thread:\` set to one of: ${known}`);
+    }
+    b.figs.push(m);
+  }
+  const withFigs = out.filter((b) => b.figs.length > 0);
+  withFigs.forEach((b, i) => {
+    // The last group runs to the end of the references (one row after the last block).
+    b.rows = `${b.row} / ${withFigs[i + 1]?.row ?? out.length + 2}`;
+  });
+  return out;
+}
+
 const rendered = await Promise.all(
   areas.map(async (a) => {
-    const { Content, headings } = await render(a);
+    const { headings } = await render(a);
+    /** The area's threads: the `###` headings of its prose. */
+    const threads = headings.filter((h) => h.depth === 3);
     return {
       area: a,
-      Content,
-      /** The area's threads: the `###` headings of its prose. */
-      threads: headings.filter((h) => h.depth === 3),
+      threads,
+      blocks: blocks(a, threads),
       tools: (await getEntries(a.data.tools)).sort((x, y) => x.data.order - y.data.order),
       papers: (await getEntries(a.data.papers)).sort((x, y) => (y.data.date ?? '').localeCompare(x.data.date ?? '')),
     };
@@ -67,9 +100,8 @@ const rendered = await Promise.all(
       </ol>
     </nav>
 
-    {rendered.map(({ area: a, Content, tools, papers }, i) => {
-      const [lead] = a.data.media;
-      const small = lead && lead.width < 400;
+    {rendered.map(({ area: a, blocks, tools, papers }, i) => {
+      const refsRow = blocks.length + 1;
       return (
         <section class="area" id={a.id} aria-labelledby={`${a.id}-h`}>
           <div class="area-head">
@@ -83,43 +115,53 @@ const rendered = await Promise.all(
             </p>
           )}
           <div class="area-body">
-            {lead && (
-              <figure class="area-fig">
-                <Media item={lead} eager={i === 0} class={small ? 'small' : undefined} />
-                {lead.caption && <figcaption>{lead.caption}{lead.credit && ` ${lead.credit}`}</figcaption>}
-              </figure>
-            )}
-            <div>
-              <div class="prose"><Content /></div>
-              {(tools.length > 0 || papers.length > 0) && (
-                <div class="area-refs">
-                  {tools.length > 0 && (
-                    <div>
-                      <h3 class="refs-label">Software</h3>
-                      <ul class="chips">
-                        {tools.map((t) => <li><a href={`/tools/#${t.data.name}`}>{t.data.title ?? t.data.name}</a></li>)}
-                      </ul>
-                    </div>
-                  )}
-                  {papers.length > 0 && (
-                    <div>
-                      <h3 class="refs-label">Selected papers</h3>
-                      <ul class="ref-list">
-                        {papers.map(({ data: p }) => (
-                          <li>
-                            <a class="plain" href={`/publications/#${p.key}`}>{p.title}</a>
-                            <span class="ref-meta">
-                              {p.venue && <i>{p.venue}</i>}{p.date && !p.venue?.includes(p.date.slice(0, 4)) && <>{p.venue ? ', ' : ''}{p.date.slice(0, 4)}</>}
-                              {href(p) && <> · <a href={href(p)}>paper</a></>}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+            {blocks.map((b, j) => {
+              const figs = b.figs.length > 0 && (
+                <div class="area-figs" style={`--rows: ${b.rows}`}>
+                  <div class="area-figs-in">
+                    {b.figs.map((m) => (
+                      <figure>
+                        <Media item={m} eager={i === 0 && j === 0} class={m.width < 400 ? 'small' : undefined} />
+                        {m.caption && <figcaption>{m.caption}{m.credit && ` ${m.credit}`}</figcaption>}
+                      </figure>
+                    ))}
+                  </div>
                 </div>
-              )}
-            </div>
+              );
+              const text = (
+                <div class:list={['prose', { thread: j > 0 }]} style={`--row: ${b.row}`} set:html={b.html} />
+              );
+              // Stacked, the lead comes before the intro; a thread's figures follow its text.
+              return j === 0 ? <>{figs}{text}</> : <>{text}{figs}</>;
+            })}
+            {(tools.length > 0 || papers.length > 0) && (
+              <div class="area-refs" style={`--row: ${refsRow}`}>
+                {tools.length > 0 && (
+                  <div>
+                    <h3 class="refs-label">Software</h3>
+                    <ul class="chips">
+                      {tools.map((t) => <li><a href={`/tools/#${t.data.name}`}>{t.data.title ?? t.data.name}</a></li>)}
+                    </ul>
+                  </div>
+                )}
+                {papers.length > 0 && (
+                  <div>
+                    <h3 class="refs-label">Selected papers</h3>
+                    <ul class="ref-list">
+                      {papers.map(({ data: p }) => (
+                        <li>
+                          <a class="plain" href={`/publications/#${p.key}`}>{p.title}</a>
+                          <span class="ref-meta">
+                            {p.venue && <i>{p.venue}</i>}{p.date && !p.venue?.includes(p.date.slice(0, 4)) && <>{p.venue ? ', ' : ''}{p.date.slice(0, 4)}</>}
+                            {href(p) && <> · <a href={href(p)}>paper</a></>}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
       );
