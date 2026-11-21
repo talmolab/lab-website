@@ -5,9 +5,13 @@ appointments:
     title: "Undergraduate Research Intern"
     start: "2024-06"
     end: "2024-08"
+# PhD program per Talmo (2026-11-21); institution from his LinkedIn, program not listed there.
+next:
+  org: "UT Southwestern Medical Center"
+  what: "PhD student"
 ---
 
-Arthur is an undergraduate pursuing his B.S. in Molecular and Cellular Neuroscience at
-Texas A&M University. He joined the lab in summer 2024 as a Salk Summer Undergraduate Research Fellowship
+Arthur was an undergraduate pursuing his B.S. in Molecular and Cellular Neuroscience at
+Texas A&M University when he joined the lab in summer 2024 as a Salk Summer Undergraduate Research Fellowship
 (SURF) intern and worked on systems for high throughput behavioral phenotyping on Earth
 and in space!
