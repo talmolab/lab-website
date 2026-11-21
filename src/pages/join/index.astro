@@ -2,6 +2,7 @@
 // The live /join/ page, in full. Its prose is the lab's own; only the layout is new.
 import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+import HeadingLink from '../../components/HeadingLink.astro';
 import { EMAIL } from '../../lib/site';
 import group2 from '../../assets/pages/2024-08-06.lab-group2.jpg';
 import action from '../../assets/pages/2024-09-05.action.jpg';
@@ -12,7 +13,7 @@ import theTeam from '../../assets/pages/the-team.jpg';
 const wide = '(min-width: 1280px) 1184px, calc(100vw - 2 * var(--gutter))';
 const half = '(min-width: 1280px) 480px, (min-width: 960px) 38vw, calc(100vw - 2 * var(--gutter))';
 ---
-<Base title="Join us" description="Opportunities in the Talmo Pereira Lab at the Salk Institute: software engineers, postdocs, graduate students and interns.">
+<Base title="Join us" description="Opportunities in the Talmo Lab at the Salk Institute: software engineers, postdocs, graduate students and interns.">
   <div class="wrap">
     <header class="page-head">
       <h1 class="title">Join the team</h1>
@@ -38,7 +39,7 @@ const half = '(min-width: 1280px) 480px, (min-width: 960px) 38vw, calc(100vw - 2
     </figure>
 
     <section class="ledger" id="philosophy" aria-labelledby="philosophy-h" style="margin-top: var(--space)">
-      <header class="ledger-head"><h2 id="philosophy-h">Philosophy</h2></header>
+      <header class="ledger-head"><HeadingLink id="philosophy-h" target="philosophy" text="Philosophy" /></header>
       <div class="split">
         <div class="prose">
           <p>
@@ -67,7 +68,7 @@ const half = '(min-width: 1280px) 480px, (min-width: 960px) 38vw, calc(100vw - 2
     </section>
 
     <section class="ledger" id="location" aria-labelledby="location-h">
-      <header class="ledger-head"><h2 id="location-h">Location, location, location!</h2></header>
+      <header class="ledger-head"><HeadingLink id="location-h" target="location" text="Location, location, location!" /></header>
       <div class="split">
         <div class="prose">
           <p>
@@ -86,15 +87,15 @@ const half = '(min-width: 1280px) 480px, (min-width: 960px) 38vw, calc(100vw - 2
 
     <section class="ledger" id="opportunities" aria-labelledby="opportunities-h">
       <header class="ledger-head">
-        <h2 id="opportunities-h">Opportunities</h2>
+        <HeadingLink id="opportunities-h" target="opportunities" text="Opportunities" />
         <p>
           Reach out to <a href={`mailto:${EMAIL}`}>{EMAIL}</a> for a casual chat.
           <strong>We strongly recommend including your CV and GitHub.</strong>
         </p>
       </header>
       <div class="positions">
-        <div class="position prose">
-          <h3>Open positions</h3>
+        <div class="position prose" id="open-positions">
+          <HeadingLink level={3} target="open-positions" text="Open positions" />
           <p>
             We do not currently have open positions. If you are interested in the positions
             below feel free to reach out to chat with us about potential upcoming
@@ -102,8 +103,8 @@ const half = '(min-width: 1280px) 480px, (min-width: 960px) 38vw, calc(100vw - 2
           </p>
         </div>
 
-        <div class="position prose">
-          <h3>Software engineers</h3>
+        <div class="position prose" id="software-engineers">
+          <HeadingLink level={3} target="software-engineers" text="Software engineers" />
           <p>
             We are always on the look out for scientific programmers! If you have a background
             in DevOps, MLOps, web dev or other software engineering skillsets and an interest
@@ -117,8 +118,8 @@ const half = '(min-width: 1280px) 480px, (min-width: 960px) 38vw, calc(100vw - 2
           </p>
         </div>
 
-        <div class="position prose">
-          <h3>Postdoctoral fellows</h3>
+        <div class="position prose" id="postdocs">
+          <HeadingLink level={3} target="postdocs" text="Postdoctoral fellows" />
           <p>
             Finishing your PhD soon in neuroscience, computer science, physics, or another
             computational field? We regularly recruit post-docs to work directly with us or
@@ -126,9 +127,9 @@ const half = '(min-width: 1280px) 480px, (min-width: 960px) 38vw, calc(100vw - 2
           </p>
         </div>
 
-        <div class="position split">
+        <div class="position split" id="graduate-students">
           <div class="prose">
-            <h3>Graduate students</h3>
+            <HeadingLink level={3} target="graduate-students" text="Graduate students" />
             <p>
               If you are interested in pursuing a MS or PhD while working in the lab, you will
               need to apply to one of the graduate programs at UCSD. We are open to potentially
@@ -151,8 +152,8 @@ const half = '(min-width: 1280px) 480px, (min-width: 960px) 38vw, calc(100vw - 2
           </figure>
         </div>
 
-        <div class="position prose">
-          <h3>High school and undergraduate internships</h3>
+        <div class="position prose" id="internships">
+          <HeadingLink level={3} target="internships" text="High school and undergraduate internships" />
           <p>
             Interested in doing research with us during the school year or for a summer? We
             are always looking for talented undergraduates to take on ambitious independent

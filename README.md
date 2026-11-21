@@ -59,8 +59,8 @@ an area or a repo (see `CLAUDE.md`).
 
 Light paper first, with a dark theme that follows the system or the header switch. v003
 brand: ink `#1e1a29`, logo violet `#8b6dd2`, links `#805fc9` on paper and `#8c6bd6` on the
-dark ground. The logo is always the SVG lockup. Type is Source Sans 3 and JetBrains Mono,
-self-hosted.
+dark ground. The logo is always the SVG lockup. Type is Source Sans 3 alone, self-hosted:
+no serif, no monospace.
 
 One structure recurs on every page: a narrow label column beside the content (`.ledger`
 in `src/styles/global.css`, which holds the whole system). Clips play only while on screen,
