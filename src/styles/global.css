@@ -512,9 +512,20 @@ h3,
 /* ── Page head and the ledger ────────────────────────────────────────────── */
 
 .page-head {
-  padding-block: clamp(40px, 6vw, 88px) clamp(32px, 4vw, 56px);
+  padding-block: clamp(20px, 3vw, 44px) clamp(32px, 4vw, 56px);
   display: grid;
   gap: 20px;
+}
+
+/* A page head that runs straight into its first ledger (Team): no rule between them,
+ * and half the space that the head's bottom padding and the ledger's top made. */
+.page-head.joined {
+  padding-bottom: 0;
+}
+
+.page-head.joined + .ledger {
+  padding-top: calc((clamp(32px, 4vw, 56px) + var(--space)) / 2);
+  border-top: 0;
 }
 
 .crumbs {
@@ -560,6 +571,17 @@ h3,
 @media (min-width: 960px) {
   .ledger {
     grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  }
+
+  /* Half the label column, for labels that are short headings (Team's "In the lab"
+   * and "Alumni"), but never narrower than the heading, so it does not wrap. */
+  .ledger.narrow {
+    grid-template-columns: minmax(max-content, 1.5fr) minmax(0, 10.5fr);
+  }
+
+  /* A note under the heading wraps to the column instead of widening it. */
+  .ledger.narrow .ledger-head p {
+    contain: inline-size;
   }
 
   .ledger-head {
@@ -1697,7 +1719,7 @@ figcaption {
 .member {
   display: grid;
   gap: 36px 64px;
-  padding-block: clamp(32px, 5vw, 64px) var(--space);
+  padding-block: clamp(16px, 2.5vw, 32px) var(--space);
 }
 
 .member-side {
@@ -2013,7 +2035,7 @@ dialog.search::backdrop {
 .lost {
   display: grid;
   gap: 24px;
-  padding-block: var(--space);
+  padding-block: calc(var(--space) / 2) var(--space);
 }
 
 .search-cta {
