@@ -23,9 +23,10 @@ apart from those of bioinformatics. We combine hardware, software and analysis t
 scale SLEAP and other methods to high-throughput studies of phenotypic traits.
 
 These pipelines also support collaborations in which behavioral analysis is one part
-of a larger study, on questions from
-[social isolation and alcohol drinking](https://doi.org/10.1038/s41593-026-02413-x)
-to [cooperative behavior](https://doi.org/10.1038/s41586-026-10900-1). Our goal for
+of a larger study, on questions from social isolation and alcohol drinking
+([Patel et al., *Nature Neuroscience*, 2026](https://doi.org/10.1038/s41593-026-02413-x))
+to cooperative behavior
+([Cheng et al., *Nature*, 2026](https://doi.org/10.1038/s41586-026-10900-1)). Our goal for
 the coming years is to build the analytical and informatics frameworks that mine these
 large phenotypic datasets for biological insight.
 
@@ -34,7 +35,7 @@ large phenotypic datasets for biological insight.
 Short behavioral assays miss what continuous recording catches. In developing gerbils,
 monitoring families around the clock revealed structured social behavior well before
 the animals become independent
-([PLoS Biology, 2025](https://doi.org/10.1371/journal.pbio.3003348)).
+([Mitelut et al., *PLoS Biology*, 2025](https://doi.org/10.1371/journal.pbio.3003348)).
 
 With experimental labs at Salk, we have been scaling a home cage monitoring system for
 longitudinal phenotyping of rodents. It records around the clock and uses
@@ -56,7 +57,7 @@ With the Busch lab at Salk, we developed
 [sleap-roots](https://github.com/talmolab/sleap-roots), a toolkit for extracting the
 traits that characterize root system architecture in developing crop plants. It was
 the first approach to use pose estimation for root phenotyping
-([Plant Phenomics, 2024](https://doi.org/10.34133/plantphenomics.0175)).
+([Berrigan et al., *Plant Phenomics*, 2024](https://doi.org/10.34133/plantphenomics.0175)).
 
 This work is part of the Salk
 [Harnessing Plants Initiative](https://www.salk.edu/harnessing-plants-initiative/),
@@ -71,9 +72,9 @@ reused.
 Supported by NASA Space Biology, we developed a system for phenotyping rodent behavior
 in microgravity, and applied it to video of mice aboard the International Space
 Station from the Rodent Research-1 mission
-([bioRxiv, 2026](https://doi.org/10.64898/2026.04.30.721950)). Animal models like
-these will inform
-[the next generation of human space exploration](https://doi.org/10.1038/s41526-025-00460-5).
+([Kiffer et al., *bioRxiv*, 2026](https://doi.org/10.64898/2026.04.30.721950)). Animal
+models like these will inform the next generation of human space exploration
+([Duporge et al., *npj Microgravity*, 2025](https://doi.org/10.1038/s41526-025-00460-5)).
 
 ### Human movement
 
