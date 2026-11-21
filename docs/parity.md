@@ -72,7 +72,7 @@ onto talmolab.org once the gate passes.
 | Block | Media | Links | New site | Status |
 |---|---|---|---|---|
 | Portrait grid, hand-ordered by role filters (pi, programmer, postdoc, staff, phd, ms, ra, undergrad, highschool, friends) | 20 portraits (`images/*.jpg`); Yipeng Li's file is missing, so a broken image | each → `/members/<slug>.html` | Current members grouped by role (ranked by `ROLE_ORDER`, never by hand). Friends of the lab last, as live. A neutral initials tile where there is no portrait. | kept |
-| Button "Join the Team" | — | `/join` | Join section `#join` at the foot of Team (target of `/contact/`), linking to `/join/` | kept |
+| Button "Join the Team" | — | `/join` | Dropped from Team (2026-11-21): `/join/` is its own page and is in the main nav. `/contact/` now redirects there | moved |
 | Alumni: hand-written list, year · name (→ page) · role · Next | — | 31 entries | Alumni table generated from appointments: years, name (→ page), roles, next. 33 entries: adds Vincent Tu, who was invisible on live (`role: alumni` bug) | improved |
 
 ## `/join/`
@@ -109,7 +109,7 @@ onto talmolab.org once the gate passes.
 
 | Live | New site | Status |
 |---|---|---|
-| `/contact/`, `/contact`, `/contact/index.html`: Greene filler ("Department of Metaphor", scrooge@mcduck.com, a Nova Scotia map pin, `images/photo.jpg`) | 301 → `/team/#join`; the real address and email are in the footer and on `/join/` | 301 |
+| `/contact/`, `/contact`, `/contact/index.html`: Greene filler ("Department of Metaphor", scrooge@mcduck.com, a Nova Scotia map pin, `images/photo.jpg`) | 301 → `/join/` (until 2026-11-21, `/team/#join`, a join block the Team page no longer has); the real address and email are in the footer and on `/join/` | 301 |
 | `/CLAUDE.html`, `/CLAUDE`, `/CLAUDE.md`: internal notes, rendered as a page and served raw | 301 → `/` | 301 |
 | Every section page's other two shapes: `/<section>` (GitHub Pages 301s it to the slash) and `/<section>/index.html` (200), for research, publications, team, join, tools and blog; and `/index.html` | 301 → `/<section>/` and `/`. Workers' own answer for these is a 307, which does not move a search index. | 301 |
 | The three example posts without `.html` (GitHub Pages serves them) | 301 → `/blog/` | 301 |
@@ -216,7 +216,7 @@ served by `wrangler dev`), with the live site crawled the same day for compariso
 | Live | New | Why |
 |---|---|---|
 | `/members/<slug>.html` is the page | `/members/<slug>` is the page; `.html` 301s to it | Workers serves `build.format: 'preserve'` files without the extension; a 301 moves the index (as decided for the Astro migration) |
-| `/join/` and `/contact/` both pages | `/join/` a page; `/contact/` 301 → `/team/#join` | `/contact/` is template filler |
+| `/join/` and `/contact/` both pages | `/join/` a page; `/contact/` 301 → `/join/` | `/contact/` is template filler |
 | Example posts, `/CLAUDE.html` | 301 | template filler / internal notes |
 | `/tools/` lorem ipsum | real list from `repos.yaml` | parity of intent |
 | 28 publications | 31 | the discovery workflow added three since the live site was last edited |
