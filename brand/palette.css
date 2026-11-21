@@ -1,0 +1,39 @@
+/* talmolab palette, v003 "Ink & Violet"
+ *
+ * The two logo values, and the interface colours derived from them. Light and dark
+ * columns of the round-26 review sheet (option 08), as used on talmolab.org; token names
+ * match the site's src/styles/global.css. Contrast is against --paper in each theme.
+ *
+ *   Ink     #1e1a29   the `t`, the dendritic arbor, "talmo"
+ *   Violet  #8b6dd2   the `l` bar, the pose skeleton, the soma dot, "lab"
+ *
+ * The violet is for the logo and non-text marks only: it is 3.80:1 on paper, under AA.
+ * Text and links use --link, which is #805fc9 on paper and #8c6bd6 on the dark ground.
+ * The logo never switches: its violet is #8b6dd2 in both themes; only its ink reverses.
+ */
+
+:root {
+  /* logo, both themes */
+  --mark:     #8b6dd2;   /* 3.80:1 on paper, 4.59:1 on ground: never for text on paper */
+  --logo-ink: #1e1a29;
+
+  /* light */
+  --paper:    #f8f8fb;
+  --sunk:     #f0eff4;
+  --rule:     #dedde3;
+  --text:     #1e1a29;   /* 16.04:1 */
+  --muted:    #5c5965;   /*  6.45:1 */
+  --link:     #805fc9;   /*  4.50:1 */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --logo-ink: #e8e7eb;
+    --paper:    #141319;
+    --sunk:     #1c1b22;   /* the site's value; the round-26 sheet gives no dark sunk */
+    --rule:     #2c2a31;
+    --text:     #e8e7eb;   /* 15.01:1 */
+    --muted:    #abaab1;   /*  8.02:1 */
+    --link:     #8c6bd6;   /*  4.56:1 */
+  }
+}

@@ -105,6 +105,9 @@ Clips with identifiable people need consent first.
   Fonts API with Greek and Vietnamese subsets. No serif.
 - Never set "talmolab" in type: `src/components/Logo.astro` inlines the lockup so its ink
   follows the theme and its violet never changes. Clear space is 2b (0.232 × height).
+- The brand kit is `brand/` (its README is the reference): the .ai and SVG masters,
+  `palette.css`, the generators and the exports. The logo files in `public/` are copies:
+  regenerate in `brand/`, then `python3 brand/scripts/sync-public.py`. CI fails if they drift.
 - One accent. Structure comes from weight, rules and position. The recurring layout is
   the ledger (`.ledger`): a sticky label column beside the content.
 - Clips play only while on screen, never automatically under `prefers-reduced-motion`,
