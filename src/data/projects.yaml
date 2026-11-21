@@ -3,10 +3,11 @@
 vnl:
   name: VNL
   title: Virtual Neuroscience Lab
-  url: /research/#neuro-ai
+  url: /research/#virtual-biology
 pheno:
   name: Pheno
   title: Phenotyping
+  url: /research/#phenoinformatics
 3d:
   name: 3D
 sleap:
@@ -14,7 +15,7 @@ sleap:
   url: https://sleap.ai
 plants:
   name: Plants
-  url: /research/#complex-morphology
+  url: /research/#phenoinformatics
 mot:
   name: MOT
   title: Multi-object tracking
