@@ -32,7 +32,7 @@ export const ROLE_ORDER = [
   'highschool-intern',
   'highschool-summer-intern',
   'friend',
-  /** Not people: never counted as lab members (see team/index.astro). */
+  /** Not people: never counted as lab members (isMember in src/lib/people.ts). */
   'robot',
 ] as const;
 

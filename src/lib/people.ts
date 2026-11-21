@@ -26,13 +26,16 @@ export const displayTitle = (a: Appointment): string => {
   return a.note && a.note.startsWith(l) ? a.note : l;
 };
 
+type Role = (typeof ROLE_ORDER)[number];
+
 /** How the team page groups current members: by kind of appointment, in ROLE_ORDER,
  *  never by hand. Friends of the lab come last, as on the live site. */
-export const GROUPS: { name: string; roles: (typeof ROLE_ORDER)[number][] }[] = [
+export const GROUPS: { name: string; roles: Role[] }[] = [
   { name: 'Principal investigator', roles: ['pi'] },
   { name: 'Administration', roles: ['admin'] },
   { name: 'Software engineers', roles: ['software-engineer', 'scientific-programmer', 'bioinformatics-analyst'] },
-  { name: 'Scientists and postdocs', roles: ['staff-scientist', 'postdoc'] },
+  // Staff scientists sit with the postdocs whenever the lab has one.
+  { name: 'Postdocs', roles: ['staff-scientist', 'postdoc'] },
   { name: 'Graduate students', roles: ['phd-student', 'phd-rotation', 'ms-student'] },
   { name: 'Research assistants', roles: ['research-assistant'] },
   {
@@ -43,8 +46,26 @@ export const GROUPS: { name: string; roles: (typeof ROLE_ORDER)[number][] }[] = 
   { name: 'Robots', roles: ['robot'] },
 ];
 
-/** Robots are shown as a group but are not people: never in a headcount. */
-export const isRobot = (p: Person): boolean => latest(p).role === 'robot';
+/** Flow groups: groups whose cards share rows on the team page instead of each
+ *  starting its own, so a group of one or two does not leave a row mostly empty.
+ *  Each group keeps its label, above its first card. The groups of a flow must be
+ *  adjacent in GROUPS; a name that is not in GROUPS fails the build. */
+export const FLOWS: string[][] = [
+  ['Administration', 'Software engineers'],
+  ['Postdocs', 'Graduate students'],
+];
+
+for (const flow of FLOWS) {
+  const at = flow.map((n) => GROUPS.findIndex((g) => g.name === n));
+  if (at.some((i) => i < 0)) throw new Error(`FLOWS: no group named ${flow[at.findIndex((i) => i < 0)]}`);
+  if (at.some((i, k) => k > 0 && i !== at[k - 1] + 1)) throw new Error(`FLOWS: ${flow.join(', ')} are not adjacent in GROUPS`);
+}
+
+/** Who "people in the lab" counts: current members who are neither robots (not people)
+ *  nor friends of the lab (shown on the team page, not members of the lab). Every
+ *  headcount on the site uses this. */
+const UNCOUNTED: Role[] = ['robot', 'friend'];
+export const isMember = (p: Person): boolean => !UNCOUNTED.includes(latest(p).role);
 
 /** Genuine co-advisors to show: the current appointment's for someone in the lab, every
  *  appointment's for an alumnus. (On-paper affiliations are never recorded.) */
@@ -54,15 +75,30 @@ export function coAdvisorsOf(p: Person): string[] {
 }
 
 /** "co-advised with" for trainees, "jointly with" for staff, where "co-advised" reads oddly. */
-const ADVISED: (typeof ROLE_ORDER)[number][] = ['postdoc', 'phd-student', 'phd-rotation', 'ms-student'];
+const ADVISED: Role[] = ['postdoc', 'phd-student', 'phd-rotation', 'ms-student'];
 export const coAdvisorVerb = (p: Person): string =>
   ADVISED.includes(latest(p).role) ? 'co-advised with' : 'jointly with';
 
-export function grouped(people: Person[]) {
+export type Group = { name: string; people: Person[] };
+
+export function grouped(people: Person[]): Group[] {
   return GROUPS.map((g) => ({
     name: g.name,
     people: people.filter((p) => g.roles.includes(latest(p).role)),
   })).filter((g) => g.people.length > 0);
+}
+
+/** Groups as the team page lays them out: one block per group, except that the
+ *  non-empty groups of a flow share one block. */
+export function blocks(groups: Group[]): Group[][] {
+  const out: Group[][] = [];
+  for (const g of groups) {
+    const flow = FLOWS.find((f) => f.includes(g.name));
+    const prev = out[out.length - 1];
+    if (flow && prev && flow.includes(prev[0].name)) prev.push(g);
+    else out.push([g]);
+  }
+  return out;
 }
 
 /** Every distinct role held, oldest first, deduped — "Undergraduate Research
@@ -145,5 +181,6 @@ export async function team() {
   const alumni = all
     .filter((p) => !isCurrent(p))
     .sort((a, b) => lastYear(b) - lastYear(a) || a.data.name.localeCompare(b.data.name));
-  return { current, alumni, all };
+  /** `current` is everyone on the team page; `members` is who a headcount counts. */
+  return { current, members: current.filter(isMember), alumni, all };
 }
