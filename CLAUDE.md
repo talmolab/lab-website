@@ -100,8 +100,9 @@ guardrail on content.
   `src/data/projects.yaml` links to. `draft: true` keeps an area out of the site.
 - **media**: inline, not a collection. Each item is `{ src, poster?, width, height, alt,
   caption?, credit?, plate? }`, and `src`/`poster` must exist under `public/` or the build
-  fails. Today: the old site's `sleap_movie.gif` and `root_sleap.gif` (as MP4 + WebM in
-  `public/media/`, the GIFs kept at their old URLs) and `nn_systems.png`.
+  fails. The old site's `sleap_movie.gif`, `root_sleap.gif` and `nn_systems.png` stay in
+  `public/media/` (the GIFs also as MP4 + WebM) because their old URLs must resolve, even
+  where no page shows them any more.
 
 ### Adding a clip later
 
