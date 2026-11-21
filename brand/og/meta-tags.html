@@ -1,64 +1,62 @@
 <!--
-  Link-unfurl reference for talmolab.org — Slack, iMessage, Twitter/X, LinkedIn,
+  Link-unfurl reference for talmolab.org: Slack, iMessage, Twitter/X, LinkedIn,
   Discord, Bluesky, Facebook.
 
-  Copy into the Astro base layout <head>. Values below assume the images are served
-  from /og/ and /  — adjust paths to wherever they land in public/.
+  This is what src/layouts/Base.astro emits for the home page (2026-11-20), written
+  out with literal values. Paths are the site's public/ names, which
+  scripts/sync-public.py fills from this kit (og-card.png is
+  og/talmolab-og-light-1200x630.png, and so on). The lab's name is "Talmo Lab";
+  "talmolab" appears only as the logo, never as text.
 
   THE ONE RULE THAT BREAKS UNFURLS: og:image must be an ABSOLUTE URL, including the
   scheme and host. Relative paths silently produce a card with no image on every
   platform. In Astro, build it from Astro.site:
-      const og = new URL('/og/talmolab-og-light-1200x630.png', Astro.site).href;
+      const og = new URL('/og-card.png', Astro.site).href;
 -->
 
 <!-- ── Core ─────────────────────────────────────────────────────────────── -->
-<title>talmolab — Computational tools for studying complex biological systems</title>
-<meta name="description" content="Talmo Pereira's lab at the Salk Institute for Biological Studies, building computational tools that leverage deep learning and computer vision to study complex biological systems.">
+<title>Talmo Lab · Salk Institute</title>
+<meta name="description" content="Talmo Pereira's lab at the Salk Institute for Biological Studies builds computational tools that use deep learning and computer vision to study complex biological systems.">
 <link rel="canonical" href="https://talmolab.org/">
 
 <!-- ── OpenGraph (Slack, iMessage, LinkedIn, Discord, Facebook) ─────────── -->
-<meta property="og:type"        content="website">
-<meta property="og:site_name"   content="talmolab">
-<meta property="og:title"       content="talmolab">
-<meta property="og:description" content="Computational tools for studying complex biological systems. Talmo Pereira's lab at the Salk Institute.">
-<meta property="og:url"         content="https://talmolab.org/">
-<meta property="og:image"       content="https://talmolab.org/og/talmolab-og-light-1200x630.png">
-<meta property="og:image:type"  content="image/png">
+<meta property="og:type"         content="website">
+<meta property="og:site_name"    content="Talmo Lab">
+<meta property="og:title"        content="Talmo Lab">
+<meta property="og:description"  content="Talmo Pereira's lab at the Salk Institute for Biological Studies builds computational tools that use deep learning and computer vision to study complex biological systems.">
+<meta property="og:url"          content="https://talmolab.org/">
+<meta property="og:image"        content="https://talmolab.org/og-card.png">
+<meta property="og:image:type"   content="image/png">
 <meta property="og:image:width"  content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt"   content="The talmolab logo: a lowercase t drawn as a neuron with a dendritic arbor, beside an l with a pose skeleton.">
+<meta property="og:image:alt"    content="The talmolab logo: a lowercase t drawn as a neuron with a dendritic arbor, beside an l with a pose skeleton.">
 
 <!-- ── Twitter / X ──────────────────────────────────────────────────────── -->
-<meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:site"        content="@talmop">
-<meta name="twitter:creator"     content="@talmop">
-<meta name="twitter:title"       content="talmolab">
-<meta name="twitter:description" content="Computational tools for studying complex biological systems. Talmo Pereira's lab at the Salk Institute.">
-<meta name="twitter:image"       content="https://talmolab.org/og/talmolab-og-light-1200x630.png">
-<meta name="twitter:image:alt"   content="The talmolab logo.">
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:site"  content="@talmop">
+<meta name="twitter:image" content="https://talmolab.org/og-card.png">
 
 <!-- ── Icons ────────────────────────────────────────────────────────────── -->
 <link rel="icon"             href="/favicon.ico" sizes="32x32">
-<link rel="icon"             href="/talmolab-favicon-light.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/talmolab-apple-touch-icon.png">
+<link rel="icon"             href="/talmolab-favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest"         href="/site.webmanifest">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8f8fb">
 <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#141319">
 
 <!--
-  ── site.webmanifest ────────────────────────────────────────────────────────
+  ── site.webmanifest (public/site.webmanifest, authored by the site) ─────────
   {
-    "name": "talmolab",
-    "short_name": "talmolab",
+    "name": "Talmo Lab",
+    "short_name": "Talmo Lab",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#f8f8fb",
     "theme_color": "#8b6dd2",
     "icons": [
-      { "src": "/talmolab-icon-192.png",     "sizes": "192x192", "type": "image/png" },
-      { "src": "/talmolab-icon-512.png",     "sizes": "512x512", "type": "image/png" },
-      { "src": "/talmolab-maskable-512.png", "sizes": "512x512", "type": "image/png",
-        "purpose": "maskable" }
+      { "src": "/icon-192.png",     "sizes": "192x192", "type": "image/png" },
+      { "src": "/icon-512.png",     "sizes": "512x512", "type": "image/png" },
+      { "src": "/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
     ]
   }
 
