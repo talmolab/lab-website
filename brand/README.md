@@ -270,9 +270,9 @@ in [Violet is not a text colour](#violet-is-not-a-text-colour).
 
 ### Known issues and gotchas
 
-- **The share cards use old type.** They are set in Bricolage Grotesque and IBM Plex Mono
-  with an old tagline, not Source Sans 3. To fix: edit `scripts/og-template.html`, then run
-  `mkog.py` and `sync-public.py`.
+- **The share cards use old type.** They are set in Bricolage Grotesque and IBM Plex Mono,
+  not Source Sans 3. To fix: edit `scripts/og-template.html`, then run `mkog.py` and
+  `sync-public.py`.
 - **Re-normalise after every Illustrator export.** Illustrator writes the `l` of “talmo”
   as a rect rotated −89.9966°, which ImageMagick silently drops (the wordmark renders as
   “ta molab”). Run `python3 scripts/normalize-svg.py talmolab-logo.v003.svg` (keeps a

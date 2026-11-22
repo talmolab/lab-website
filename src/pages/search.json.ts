@@ -9,7 +9,7 @@ export const GET: APIRoute = async () => {
   const docs: { type: string; title: string; detail?: string; url: string; text: string }[] = [];
 
   const pages = [
-    ['Home', '/', 'Computational tools for studying complex biological systems'],
+    ['Home', '/', 'Quantifying form and motion to understand biology'],
     ['Research', '/research/', 'Biological motion capture, phenoinformatics, virtual biology'],
     ['Publications', '/publications/', 'Papers, preprints and proceedings; BibTeX, CSL JSON'],
     ['Tools', '/tools/', 'Open-source software: SLEAP and related tools'],
