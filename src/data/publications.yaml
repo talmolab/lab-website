@@ -25,8 +25,9 @@
 # Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
 # API at build time; anything written here overrides them.
 
-# Added 2026-11-20 from the Google Scholar profile and the discovery report. No
-# thumbnails yet, so they show the venue tile; add one with scripts/paper-thumb.mjs.
+# Added 2026-11-20 from the Google Scholar profile and the discovery report.
+# Thumbnails added 2026-11-22 (figure source noted on each); an entry without one
+# shows the venue tile. Make one with scripts/paper-thumb.mjs.
 #
 # Conference papers (NeurIPS and its workshops) have no DOI. Their version of record is
 # a manual block linking OpenReview or the venue, and the arXiv version is the preprint.
@@ -37,6 +38,11 @@
   # Marks as the publisher prints them: https://www.biorxiv.org/content/10.64898/2026.11.17.767188v2.full.pdf (read 2026-11-20).
   # From the PDF; the bioRxiv page and API list only Pereira.
   corresponding: ["Annegret L. Falkner", "Talmo Pereira"]
+  # Thumbnail: Fig. 1a, from the project page's copy (talmolab.github.io/luc3d-page).
+  image: "papers/leonardis-2026.webp"
+  # The bioRxiv full text links the project page.
+  links:
+    - { label: "Project page", url: "https://talmolab.github.io/luc3d-page/" }
 
 - key: bian-2026
   # NeurReps 2026 Proceedings Track (arXiv comment: "Accepted to NeurReps 2026"). The
@@ -56,6 +62,11 @@
     date: "2026-10-31"
     link: "https://neurreps.org/"
   preprint: { doi: "10.48550/arxiv.2611.00688" }
+  # Thumbnail: right half of Fig. 1 (arXiv HTML), DM-cycle/path and the transitions.
+  image: "papers/bian-2026.webp"
+  # The project page is linked from the arXiv paper.
+  links:
+    - { label: "Project page", url: "https://kbian.org/TopoMimic-website/" }
 
 - key: bian-2026b
   # NeurIPS 2026 Workshop on Neuro-Symbolic Embodied Intelligence (NEmo), oral. No arXiv
@@ -74,6 +85,11 @@
     venue: "NeurIPS 2026 Workshop: Neuro-Symbolic Embodied Intelligence"
     date: "2026-09-30"
     link: "https://openreview.net/forum?id=FBEAYXac4j"
+  # Thumbnail: Fig. 1, stage 3 (OpenReview PDF).
+  image: "papers/bian-2026b.webp"
+  # The paper's first page: "Website: kbian.org/Code2Act-website".
+  links:
+    - { label: "Project page", url: "https://kbian.org/Code2Act-website/" }
 
 - key: sirbu-2026
   # NeurIPS 2026 (main conference, poster)
@@ -90,6 +106,8 @@
     date: "2026-09-24"
     link: "https://openreview.net/forum?id=zebI1xXFB1"
   preprint: { doi: "10.48550/arxiv.2610.27279" }
+  # Thumbnail: Fig. 1 (arXiv HTML).
+  image: "papers/sirbu-2026.webp"
   links:
     - { label: "Project page", url: "https://aidansirbu.com/SCAMPER-site/" }
 
@@ -98,6 +116,12 @@
   published: { doi: "10.64898/2026.10.18.758876" }
   # Marks as the publisher prints them: https://www.biorxiv.org/content/10.64898/2026.10.18.758876v1.full (read 2026-11-20).
   corresponding: ["Sam A. Golden", "Jennifer J. Sun", "Talmo Pereira", "Ann Kennedy"]
+  # Thumbnail: the lab mosaic (Fig. 1B), left two thirds, from the project page.
+  image: "papers/marks-2026.webp"
+  # HiDRA is the paper's classifier; the paper links this page ("General information
+  #   about HiDRA") and the page leads with the paper.
+  links:
+    - { label: "Project page", url: "https://neuroethology.github.io/hidra-site/" }
 
 - key: kiffer-2026
   published: { doi: "10.64898/2026.04.30.721950" }
@@ -105,11 +129,15 @@
   # "These authors jointly supervised this work: F.C.K., T.D.P. and A.J.E."
   corresponding: ["Frederico C. Kiffer", "Amelia J. Eisch", "Talmo Pereira"]
   senior: ["Frederico C. Kiffer", "Talmo Pereira", "Amelia J. Eisch"]
+  # Thumbnail: Fig. 1b-c.
+  image: "papers/kiffer-2026.webp"
 
 - key: liu-2026
   published: { doi: "10.64898/2026.05.04.721738" }
   # Marks as the publisher prints them: https://www.biorxiv.org/content/10.64898/2026.05.04.721738v1.full (read 2026-11-20).
   corresponding: ["Pallav Kosuri"]
+  # Thumbnail: Fig. 1B, first two panels.
+  image: "papers/liu-2026.webp"
 
 - key: leonardis-2025
   # NeurIPS 2025 Workshop: Data on the Brain & Mind (Findings track, poster)
@@ -128,21 +156,28 @@
     date: "2025-12-05"
     link: "https://openreview.net/forum?id=jJS0ZT0F8x"
   preprint: { doi: "10.48550/arxiv.2511.21848" }
+  # Thumbnail: Fig. 1B (arXiv HTML).
+  image: "papers/leonardis-2025.webp"
 
 - key: jia-2025
   # Tye lab. The Research Square copy (10.21203/rs.3.rs-6615222/v1) is the same work.
   published: { doi: "10.1101/2025.05.09.653162" }
   # Marks as the publisher prints them: https://www.biorxiv.org/content/10.1101/2025.05.09.653162v1.full (read 2026-11-20).
   corresponding: ["Kay M. Tye"]
+  # Thumbnail: Fig. 1c.
+  image: "papers/jia-2025.webp"
 
 - key: haspel-2023
   published: { doi: "10.48550/arxiv.2308.06578" }
+  # Thumbnail: Fig. 1 (arXiv PDF).
+  image: "papers/haspel-2023.webp"
 
 # DISCOVERED 2026-08-31 — review before merging.
 # Quantifying Behavior Using Deep Learning
 # Biological Psychiatry · 2023-04-10
 - key: maree-2023
   published: { doi: "10.1016/j.biopsych.2023.02.038" }
+  # No thumbnail: a symposium abstract (Biol. Psychiatry 93(9) Suppl., S7), no figures.
 
 - key: cheng-2026
   # associated BY HAND, confirmed by Talmo (2026-11-20): neither Crossref nor bioRxiv
@@ -154,13 +189,19 @@
   # Nature prints the corresponding author as "Herbert Zheng Wu".
   equal: ["Yuan Cheng", "Yusi Chen"]
   corresponding: ["Zheng Wu"]
+  # Thumbnail: Fig. 1a.
+  image: "papers/cheng-2026.webp"
 
 - key: duporge-2025
   published: { doi: "10.1038/s41526-025-00460-5" }
+  # No thumbnail: the review has no figures.
 
 - key: zhang-2025
   published: { doi: "10.48550/arxiv.2511.20532" }
   image: "papers/zhang-2025.png"
+  # arXiv comment: "Project page available at https://mimic-mjx.talmolab.org"
+  links:
+    - { label: "Project page", url: "https://mimic-mjx.talmolab.org/" }
   # Marks as the publisher prints them: https://arxiv.org/pdf/2511.20532v3 (read 2026-11-20).
   equal: ["Charles Y. Zhang", "Yuanjia Yang", "Aidan Sirbu"]
   corresponding: ["Bence P. Ölveczky", "Talmo D. Pereira"]
@@ -176,6 +217,9 @@
   preprint: { doi: "10.1101/2023.03.16.532307" }
   published: { doi: "10.1038/s41592-024-02318-2" }
   image: "papers/weinreb-2023.png"
+  # The repository's homepage; the docs are the project's site.
+  links:
+    - { label: "Project page", url: "https://keypoint-moseq.readthedocs.io/" }
   # Marks as the publisher prints them: https://www.nature.com/articles/s41592-024-02318-2 (read 2026-11-20).
   corresponding: ["Scott W. Linderman", "Sandeep Robert Datta"]
 
@@ -282,6 +326,8 @@
   preprint: { doi: "10.1101/2020.08.31.276246" }
   published: { doi: "10.1038/s41592-022-01426-1" }
   image: "papers/pereira-2022.webp"
+  links:
+    - { label: "Project page", url: "https://sleap.ai/" }
   # Marks as the publisher prints them: https://www.nature.com/articles/s41592-022-01426-1 (read 2026-11-20).
   # "These authors jointly supervised this work: Joshua W. Shaevitz, Mala Murthy."
   corresponding: ["Mala Murthy"]
