@@ -5,7 +5,7 @@ export const INSTITUTE = 'Salk Institute for Biological Studies';
 export const EMAIL = 'talmo@salk.edu';
 export const ADDRESS = ['10010 North Torrey Pines Road', 'La Jolla, California 92037'];
 export const DESCRIPTION =
-  "Talmo Pereira's lab at the Salk Institute for Biological Studies builds computational tools that use deep learning and computer vision to study complex biological systems.";
+  "Talmo Pereira's lab at the Salk Institute for Biological Studies builds deep learning and computer vision tools that quantify form and motion to understand biology.";
 
 export const NAV = [
   { href: '/research/', label: 'Research' },
