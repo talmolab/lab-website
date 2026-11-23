@@ -37,8 +37,8 @@ bug.
    the year of the *earliest* version:
 
    ```yaml
-   - key: maree-2023
-     published: { doi: "10.1016/j.biopsych.2023.02.038" }
+   - key: badura-2018
+     published: { doi: "10.7554/elife.36401" }
    ```
 
 3. `npm run build`. The loader resolves the rest and adds the DOI's record to
@@ -49,6 +49,30 @@ bug.
 Optional fields: `image` (relative to `public/images/`, or an absolute URL),
 `tags`, `highlight: true`, `links: [{ label, url }]`, and `equal` / `corresponding` /
 `senior` (next section).
+
+### Correcting the venue or date
+
+The overlay wins for every field it sets, so a correction goes on the DOI's line, never
+into `publications.resolved.json` (a refresh would overwrite it). The common case is a
+paper published online in December and cited by its January issue:
+
+```yaml
+- key: pereira-2018
+  # Dated by its issue, Nat. Methods 16, 117–125 (January 2019); online 2018-12-20.
+  published: { doi: "10.1038/s41592-018-0234-5", date: "2019-01" }
+```
+
+`date` is `YYYY`, `YYYY-MM` or `YYYY-MM-DD`; it sets the year the paper is listed and
+cited under, and its place in the list. `venue` works the same way. The key does not
+change: it is permanent.
+
+### Removing a work that is not a paper
+
+Delete the stanza, leave a one-line comment where it was saying what it was and why it
+went, and add its DOI to `NOT_PAPERS` in `scripts/discover-publications.mjs`. Without
+that, the next Monday's discovery stages it again. Its record drops out of
+`publications.resolved.json` on the next build. If a member page or an area's
+`papers:` names the key, the build fails until that reference goes too.
 
 ### Co-first, corresponding and co-senior authors
 

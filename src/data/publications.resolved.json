@@ -786,29 +786,6 @@
       "citations": 122
     }
   },
-  "maree-2023": {
-    "10.1016/j.biopsych.2023.02.038": {
-      "title": "Quantifying Behavior Using Deep Learning",
-      "authors": [
-        "Liezl Maree",
-        "Eric J. Leonardis",
-        "Sergei Gepshtein",
-        "Thomas David Albright",
-        "Kristianna Hitchcock",
-        "Nick Andrews",
-        "Eiman Azim",
-        "Samuel L. Pfaff",
-        "Christian M. Metallo",
-        "Talmo Pereira"
-      ],
-      "venue": "Biological Psychiatry",
-      "date": "2023-04-10",
-      "doi": "10.1016/j.biopsych.2023.02.038",
-      "url": "https://doi.org/10.1016/j.biopsych.2023.02.038",
-      "type": "article",
-      "citations": 1
-    }
-  },
   "marks-2026": {
     "10.64898/2026.10.18.758876": {
       "title": "A community benchmark enables high-resolution, cross-lab quantification of mouse social behavior",
