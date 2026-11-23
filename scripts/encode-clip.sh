@@ -24,6 +24,13 @@ mkdir -p "$OUT"
 # Even dimensions are required by yuv420p; pad by at most one pixel rather than crop.
 VF="scale='min(${MAXW},iw)':-2:flags=lanczos,pad=ceil(iw/2)*2:ceil(ih/2)*2,format=yuv420p"
 
+# At most 30 fps. A page plays two or three clips at once while it scrolls, and a 60 fps
+# one made Research choppy in Chrome on Windows (2026-11). Slower sources keep their rate.
+RATE=$(ffprobe -v error -select_streams v:0 -show_entries stream=avg_frame_rate -of csv=p=0 "$IN")
+if awk -v r="$RATE" 'BEGIN { split(r, f, "/"); exit !((f[2] ? f[1] / f[2] : f[1]) > 30) }'; then
+  VF="fps=30,$VF"
+fi
+
 ffmpeg -v error -y -i "$IN" -an -vf "$VF" -c:v libx264 -preset slow -crf 22 \
   -movflags +faststart "$OUT/$NAME.mp4"
 ffmpeg -v error -y -i "$IN" -an -vf "$VF" -c:v libvpx-vp9 -b:v 0 -crf 34 -row-mt 1 \
