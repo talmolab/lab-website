@@ -2,9 +2,12 @@ name: Discover
 
 # Weekly: finds new publications (OpenAlex), preprints that have since been published or
 # that belong to papers already listed (Crossref is-preprint-of, forward only), and new
-# tool releases (GitHub). It NEVER commits to main and never publishes. It opens one PR
-# with the staged changes and a report; a person reviews and merges. News items carry
-# draft: true, so even merging does not put them on the site.
+# tool releases (GitHub). It also refetches every listed paper's metadata (citation
+# counts, corrected records) into src/data/publications.resolved.json: builds read that
+# file and never ask the APIs about a DOI it holds, so this is where it stays current.
+# It NEVER commits to main and never publishes. It opens one PR with the staged changes
+# and a report; a person reviews and merges. News items carry draft: true, so even
+# merging does not put them on the site.
 on:
   schedule:
     # Mondays, 07:00 UTC. Weekly is enough: journal records take days to appear.
@@ -59,9 +62,22 @@ jobs:
           fi
           node scripts/discover-news.mjs "${args[@]}"
 
+      - name: Refresh paper metadata
+        # Asks OpenAlex and Crossref about every DOI in the overlay again, papers staged
+        # above included, and rewrites src/data/publications.resolved.json. A lookup that
+        # gets no real answer keeps last week's record. The summary goes in the PR body.
+        env:
+          REFRESH_PUBLICATIONS: "1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional, as above; a refresh is ~50 lookups, so it helps here most.
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+        run: |
+          npx astro sync
+          node scripts/publications-diff.mjs --report "$RUNNER_TEMP/metadata.md"
+
       - name: Validate staged changes
         # The content schemas are the only guardrail on content, so a PR that would
-        # break the build is not opened. Fetches metadata for any new DOI, too.
+        # break the build is not opened. Reads paper metadata from the refreshed file.
         if: ${{ always() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -81,13 +97,15 @@ jobs:
           {
             echo "Opened automatically by \`.github/workflows/discover.yaml\`."
             echo
-            echo "**Nothing here is published by merging alone.** Publication additions are staged"
-            echo "in the overlay for review, and news items carry \`draft: true\`."
+            echo "News items carry \`draft: true\`, so merging does not publish them. Staged papers"
+            echo "and the refreshed paper metadata do go on the site when this merges."
             echo
             echo "Before merging: check each staged paper belongs on the site, and add a thumbnail"
             echo "with \`node scripts/paper-thumb.mjs <key> <figure.png>\` if it should have one."
             echo
             cat "$RUNNER_TEMP/pubs.md"
+            echo
+            cat "$RUNNER_TEMP/metadata.md" 2>/dev/null || true
             echo
             cat "$RUNNER_TEMP/news.md" 2>/dev/null || true
           } > "$RUNNER_TEMP/body.md"
@@ -96,14 +114,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add -A
-          git commit -m "Discovered publications and draft news items"
+          git commit -m "Discovered publications, refreshed paper metadata, draft news items"
           git push --force origin "$BRANCH"
           # Reuse the day's PR on a re-run rather than stacking duplicates.
           if gh pr view "$BRANCH" >/dev/null 2>&1; then
             gh pr edit "$BRANCH" --body-file "$RUNNER_TEMP/body.md"
           else
             gh pr create --base main --head "$BRANCH" \
-              --title "Discovered publications and draft news ($(date -u +%Y-%m-%d))" \
+              --title "Discovered publications, paper metadata and draft news ($(date -u +%Y-%m-%d))" \
               --body-file "$RUNNER_TEMP/body.md"
           fi
 

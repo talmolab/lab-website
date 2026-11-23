@@ -23,6 +23,15 @@ const args = process.argv.slice(2);
 const WRITE = args.includes('--write');
 const REPORT = args.includes('--report') ? args[args.indexOf('--report') + 1] : null;
 
+/** Single records that look like papers to every rule below but are not, by DOI
+ *  (lowercase). Taking one out of the overlay is not enough: it would be staged again
+ *  the next Monday. Say why, and when. */
+const NOT_PAPERS = new Set([
+  // "Quantifying Behavior Using Deep Learning", Biol. Psychiatry 93(9) Suppl., S7: a
+  // symposium talk abstract. Listed as maree-2023 until 2026-11-22.
+  '10.1016/j.biopsych.2023.02.038',
+]);
+
 /** Classes that are indexed as "works" but are not publications. Verified against
  *  this author's 69 records, where ~40 fall in here: twelve Figshare MOESM
  *  supplementary stubs, three "Author response:" peer-review records, an erratum. */
@@ -41,6 +50,7 @@ const NOT_A_PUBLICATION = [
     why: 'conference abstract (APS Bulletin)',
   },
   { test: (w) => /^NAPPN Annual Conference Abstract/i.test(w.title ?? ''), why: 'conference abstract' },
+  { test: (w) => NOT_PAPERS.has(norm(w.doi)), why: 'judged not a paper by hand (NOT_PAPERS)' },
 ];
 
 const esc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

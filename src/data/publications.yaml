@@ -22,8 +22,10 @@
 #               A name not in the author list fails the build. Copy all three from the
 #               publisher's page; never guess.
 #
-# Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
-# API at build time; anything written here overrides them.
+# Metadata is NOT duplicated here. Titles, authors, venues and dates come from OpenAlex
+# and Crossref, recorded per DOI in publications.resolved.json beside this file; anything
+# written here overrides them. A build fetches only DOIs that file lacks and adds them,
+# so commit it with any change to a DOI here.
 
 # Added 2026-11-20 from the Google Scholar profile and the discovery report.
 # Thumbnails added 2026-11-22 (figure source noted on each); an entry without one
@@ -172,12 +174,9 @@
   # Thumbnail: Fig. 1 (arXiv PDF).
   image: "papers/haspel-2023.webp"
 
-# DISCOVERED 2026-08-31 — review before merging.
-# Quantifying Behavior Using Deep Learning
-# Biological Psychiatry · 2023-04-10
-- key: maree-2023
-  published: { doi: "10.1016/j.biopsych.2023.02.038" }
-  # No thumbnail: a symposium abstract (Biol. Psychiatry 93(9) Suppl., S7), no figures.
+# maree-2023 ("Quantifying Behavior Using Deep Learning", Biol. Psychiatry 93(9) Suppl.,
+# S7) was removed 2026-11-22: a symposium talk abstract, not a paper. Discovery skips its
+# DOI (NOT_PAPERS in scripts/discover-publications.mjs), so it is not proposed again.
 
 - key: cheng-2026
   # associated BY HAND, confirmed by Talmo (2026-11-20): neither Crossref nor bioRxiv
@@ -371,7 +370,9 @@
 - key: pereira-2018
   # Crossref is-preprint-of; bioRxiv agrees
   preprint: { doi: "10.1101/331181" }
-  published: { doi: "10.1038/s41592-018-0234-5" }
+  # Dated by its issue, Nat. Methods 16, 117–125 (January 2019), the year it is cited
+  # with; it was published online 2018-12-20, which is what the APIs report.
+  published: { doi: "10.1038/s41592-018-0234-5", date: "2019-01" }
   image: "papers/pereira-2019.png"
   # Marks as the publisher prints them: https://www.nature.com/articles/s41592-018-0234-5 (read 2026-11-20).
   equal: ["Talmo Pereira", "Diego E. Aldarondo"]

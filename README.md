@@ -27,8 +27,8 @@ run the site locally (below).
 
 | Workflow | When | What it does |
 |---|---|---|
-| **Deploy** | Every merge to `main`, and Mondays | Builds and publishes the site. The Monday rebuild picks up new paper and repository details without needing a commit. |
-| **Discover** | Mondays | Looks for new papers by the lab (OpenAlex, Crossref) and new releases of the lab's software (GitHub). Proposes them in a pull request, and keeps the **Discovery report** issue up to date with anything that needs a decision. It never publishes anything itself. |
+| **Deploy** | Every merge to `main`, and Mondays | Builds and publishes the site. The Monday rebuild picks up new repository details without needing a commit. |
+| **Discover** | Mondays | Looks for new papers by the lab (OpenAlex, Crossref) and new releases of the lab's software (GitHub), and refetches the details of every listed paper, citation counts included. Proposes all of it in a pull request, and keeps the **Discovery report** issue up to date with anything that needs a decision. It never publishes anything itself. |
 | **Member update** | When a *Lab member update* issue is opened or edited | Turns the form into a pull request that edits that person's entry on the team page. |
 
 The workflow files are in [`.github/workflows/`](.github/workflows/).
@@ -82,8 +82,9 @@ npm run dev                            # http://localhost:4321
 | `./scripts/check-urls.sh <url>` | Checks that every address in `test/live-urls.txt` still resolves |
 
 Without `GITHUB_TOKEN`, the GitHub API runs out of anonymous requests after a few
-builds. Paper details come from OpenAlex, which needs no key but slows down repeated
-requests; set `OPENALEX_API_KEY` if you rebuild often.
+builds. Paper details are saved in `src/data/publications.resolved.json`, so a build
+asks OpenAlex only about a paper that file does not have yet, and adds it: commit the
+file along with the paper.
 
 ## Where things are
 
