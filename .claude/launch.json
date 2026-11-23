@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "preview", "--", "--port", "8790"],
       "port": 8790
+    },
+    {
+      "name": "dev",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-Command", "$env:GITHUB_TOKEN = (gh auth token); npm.cmd run dev"],
+      "port": 4321
     }
   ]
 }
