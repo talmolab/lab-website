@@ -45,17 +45,22 @@ For the second check locally: `SITE_URL=https://talmolab.org npm run build`, the
 Export `GITHUB_TOKEN` before building (`export GITHUB_TOKEN=$(gh auth token)`): the repos
 loader calls the GitHub API and runs out of unauthenticated quota fast.
 
-OpenAlex works without a key but throttles unauthenticated traffic: on 2026-11-20, a day
-of many builds, it answered 429 with long Retry-After waits and a deploy spent 8 minutes
-in the loader's retries. CI passes the `OPENALEX_API_KEY` secret to every step that loads
-publications. Locally, set `OPENALEX_API_KEY` if you rebuild often, and don't clear
-`node_modules/.astro/data-store.json` without a reason: it saves refetching every entry.
+Paper metadata is committed. `src/data/publications.resolved.json` holds what OpenAlex
+and Crossref answered for every DOI in the overlay, so a build asks them only about a DOI
+the file lacks (a new entry, a changed DOI) and writes the answer back. Commit the file
+with the overlay change: CI fetches what is missing but warns, because its copy is
+thrown away. Editing anything else in an entry (marks, tags, venue overrides) fetches
+nothing. Citation counts move only when `REFRESH_PUBLICATIONS=1 npx astro sync`
+refetches every DOI; `discover.yaml` does that each Monday and its PR carries the file.
+Before this, every build refetched everything, and on 2026-11-20 OpenAlex's throttling
+(429s, long Retry-After waits) held a deploy in the loader's retries for 8 minutes. CI
+still passes the `OPENALEX_API_KEY` secret; set it locally for a refresh.
 
 ## Keeping it current: the three workflows
 
 | Workflow | Trigger | Does | Never |
 |---|---|---|---|
-| `discover.yaml` | Mondays 07:00 UTC, or by hand | Stages new papers and preprint links in `src/data/publications.yaml`, draft news in `src/content/news/`; validates; opens a PR; rewrites the open "Discovery report" issue | commits to main, publishes |
+| `discover.yaml` | Mondays 07:00 UTC, or by hand | Stages new papers and preprint links in `src/data/publications.yaml`, draft news in `src/content/news/`; refetches every paper's metadata into `src/data/publications.resolved.json`; validates; opens a PR; rewrites the open "Discovery report" issue | commits to main, publishes |
 | `member.yaml` | a "Lab member update" issue (form in `.github/ISSUE_TEMPLATE/member.yml`) | `scripts/member-from-issue.mjs` edits `src/content/people/` and the portrait; validates; opens a PR closing the issue | processes issues from non-collaborators |
 | `deploy.yaml` | push to main, PRs, Mondays 09:00 UTC | builds; deploys the preview when `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets exist; deploys talmolab.org, then runs both checks against it, only while the variable `PRODUCTION_DOMAIN` is `talmolab.org` | deploys production from a PR or a branch |
 
@@ -76,7 +81,9 @@ guardrail on content.
   `.claude/skills/add-member/reference.md`.
 - **publications**: `src/data/publications.yaml` is an allowlist overlay over OpenAlex.
   Keys are permanent. Preprint and published version are one entry. Resolve via Crossref
-  `is-preprint-of`, forward only, and never fuzzy-match. Thumbnails:
+  `is-preprint-of`, forward only, and never fuzzy-match. The APIs' answers live in
+  `src/data/publications.resolved.json` (above); the overlay wins for every field it
+  sets. Thumbnails:
   `node scripts/paper-thumb.mjs <key> <figure>`. Keep them local: `image:` accepts a URL,
   but a hotlinked publisher figure breaks whenever the publisher says so.
 - **repos**: `src/data/repos.yaml`, array order is display order; optional `title`
