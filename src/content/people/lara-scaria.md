@@ -8,6 +8,7 @@ appointments:
     coAdvisor: "Eiman Azim"
     program: ngp
 links:
+  email: "lscaria@salk.edu"
   linkedin: "lara-scaria-7a289018a"
 ---
 
