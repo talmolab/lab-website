@@ -1,5 +1,6 @@
 ---
 name: "Lara Scaria"
+image: ../../assets/people/lara-scaria.jpg
 projects: ["pheno"]
 appointments:
   - role: phd-student
