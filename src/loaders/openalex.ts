@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import type { Loader } from 'astro/loaders';
 import { nameKey } from '../lib/names';
@@ -43,10 +43,11 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /**
  * `fetch` that retries network errors and RETRYABLE statuses with backoff (1 s, 2 s,
- * 4 s, plus jitter; a Retry-After header wins, capped at 30 s). Every overlay entry is
- * resolved on every build and a single failed lookup fails the build, so a one-off 429
- * or 503 from OpenAlex used to block a production deploy until someone re-ran it (twice
- * on 2026-11-20, for entries that resolved on the job before and after).
+ * 4 s, plus jitter; a Retry-After header wins, capped at 30 s). A single failed lookup
+ * fails the build, so when every build resolved every entry, a one-off 429 or 503 from
+ * OpenAlex blocked a production deploy until someone re-ran it (twice on 2026-11-20,
+ * for entries that resolved on the job before and after). Builds now ask only about
+ * DOIs missing from the snapshot (below), but a refresh still asks about all of them.
  *
  * Gives back the last response once retries run out, so callers keep their `!res.ok`
  * handling; throws only if the network never answered. `label` names the request in
@@ -91,7 +92,11 @@ function key() {
   return process.env.OPENALEX_API_KEY;
 }
 
-async function openalexByDoi(doi: string, logger: any): Promise<Meta | null> {
+/** An API's answer for one DOI. `answered` is false when the API never gave a real answer
+ *  (still throttled or failing after every retry): a 404 is an answer, a 503 is not. */
+type Answer = { meta: Meta | null; answered: boolean };
+
+async function openalexByDoi(doi: string, logger: any): Promise<Answer> {
   const url = new URL(`${OPENALEX}/works/doi:${doi}`);
   url.searchParams.set('mailto', MAILTO);
   const k = key();
@@ -99,39 +104,46 @@ async function openalexByDoi(doi: string, logger: any): Promise<Meta | null> {
   const res = await fetchWithRetry(url, `OpenAlex ${doi}`, logger);
   if (!res.ok) {
     if (res.status !== 404) logger.warn(`OpenAlex ${doi}: HTTP ${res.status}`);
-    return null;
+    return { meta: null, answered: res.status === 404 };
   }
   const w: any = await res.json();
   const cost = w?.meta?.cost_usd;
   if (cost) logger.info(`openalex cost ${cost} for ${doi}`);
   return {
-    title: w.title ?? w.display_name,
-    authors: (w.authorships ?? []).map((a: any) => a.author?.display_name).filter(Boolean).map(givenFirst),
-    venue: w.primary_location?.source?.display_name ?? undefined,
-    date: w.publication_date,
-    // OpenAlex reports doi: null for some records (MIMIC-MJX is indexed via
-    // PubMed only), so fall back to the DOI we asked with.
-    doi: (w.doi ?? '').replace('https://doi.org/', '') || doi,
-    url: w.doi ?? undefined,
-    type: w.type,
-    citations: w.cited_by_count,
+    answered: true,
+    meta: {
+      title: w.title ?? w.display_name,
+      authors: (w.authorships ?? []).map((a: any) => a.author?.display_name).filter(Boolean).map(givenFirst),
+      venue: w.primary_location?.source?.display_name ?? undefined,
+      date: w.publication_date,
+      // OpenAlex reports doi: null for some records (MIMIC-MJX is indexed via
+      // PubMed only), so fall back to the DOI we asked with.
+      doi: (w.doi ?? '').replace('https://doi.org/', '') || doi,
+      url: w.doi ?? undefined,
+      type: w.type,
+      citations: w.cited_by_count,
+    },
   };
 }
 
-async function crossrefByDoi(doi: string, logger?: any): Promise<Meta | null> {
+async function crossrefByDoi(doi: string, logger?: any): Promise<Answer> {
   const res = await fetchWithRetry(`${CROSSREF}/works/${doi}?mailto=${MAILTO}`, `Crossref ${doi}`, logger);
-  if (!res.ok) return null;
+  // Crossref 404s arXiv DOIs by design (DataCite registers them): that is an answer.
+  if (!res.ok) return { meta: null, answered: res.status === 404 };
   const m: any = (await res.json()).message;
   const parts = m.issued?.['date-parts']?.[0] ?? [];
   return {
-    title: Array.isArray(m.title) ? m.title[0] : m.title,
-    authors: (m.author ?? []).map((a: any) => `${a.given ?? ''} ${a.family ?? ''}`.trim()),
-    // Posted content (bioRxiv, medRxiv) has no container; the server is the institution.
-    venue: (Array.isArray(m['container-title']) ? m['container-title'][0] : undefined) ?? m.institution?.[0]?.name,
-    date: parts.length ? parts.map((n: number, i: number) => (i ? String(n).padStart(2, '0') : n)).join('-') : undefined,
-    doi: m.DOI,
-    url: m.URL,
-    type: m.type,
+    answered: true,
+    meta: {
+      title: Array.isArray(m.title) ? m.title[0] : m.title,
+      authors: (m.author ?? []).map((a: any) => `${a.given ?? ''} ${a.family ?? ''}`.trim()),
+      // Posted content (bioRxiv, medRxiv) has no container; the server is the institution.
+      venue: (Array.isArray(m['container-title']) ? m['container-title'][0] : undefined) ?? m.institution?.[0]?.name,
+      date: parts.length ? parts.map((n: number, i: number) => (i ? String(n).padStart(2, '0') : n)).join('-') : undefined,
+      doi: m.DOI,
+      url: m.URL,
+      type: m.type,
+    },
   };
 }
 
@@ -187,38 +199,105 @@ function marked(entry: OverlayEntry, field: 'equal' | 'corresponding' | 'senior'
   return authors.filter((a) => hit.has(a));
 }
 
-async function resolve(ref: Ref, logger: any): Promise<Meta | null> {
+/** A lookup's result, and whether both APIs it consulted gave a real answer. A
+ *  `complete: false` result is a fallback (OpenAlex throttled, so Crossref's thinner
+ *  record) and is good for one build but never written to the snapshot. */
+type Resolved = { meta: Meta | null; complete: boolean };
+
+async function resolve(ref: Ref, logger: any): Promise<Resolved> {
   // OpenAlex first: it resolves arXiv DOIs, which Crossref 404s (they are
   // registered with DataCite). Crossref is the fallback, not the primary.
   const oa = await openalexByDoi(ref.doi, logger);
-  if (oa && oa.doi?.toLowerCase() === ref.doi.toLowerCase()) return oa;
+  if (oa.meta && oa.meta.doi?.toLowerCase() === ref.doi.toLowerCase()) return { meta: oa.meta, complete: true };
   // OpenAlex merges a preprint and its published version into one work, and then
   // answers a lookup by the preprint's DOI with the journal's record. Taking that
   // would associate the two without Crossref's is-preprint-of, which is exactly the
   // fuzzy match the overlay forbids (and it mislabelled preprint links as journals).
   // So a different DOI in the answer means: get the exact record from Crossref.
   const cr = await crossrefByDoi(ref.doi, logger);
-  if (cr) return cr;
-  if (oa) {
-    logger.warn(`${ref.doi}: OpenAlex answered with ${oa.doi} and Crossref has no record; keeping the requested DOI`);
-    return { ...oa, doi: ref.doi, url: `https://doi.org/${ref.doi}`, venue: undefined };
+  const complete = oa.answered && cr.answered;
+  if (cr.meta) return { meta: cr.meta, complete };
+  if (oa.meta) {
+    logger.warn(`${ref.doi}: OpenAlex answered with ${oa.meta.doi} and Crossref has no record; keeping the requested DOI`);
+    return { meta: { ...oa.meta, doi: ref.doi, url: `https://doi.org/${ref.doi}`, venue: undefined }, complete };
   }
-  return null;
+  return { meta: null, complete };
 }
 
-export function publications(file = 'src/data/publications.yaml'): Loader {
+/**
+ * What OpenAlex and Crossref answered, committed beside the overlay
+ * (`src/data/publications.resolved.json`) so that builds do not ask again:
+ *
+ *   { "<overlay key>": { "<DOI as asked, lowercased>": Meta | null } }
+ *
+ * The answer for a DOI changes rarely (citation counts, now and then a corrected
+ * title), so a build asks the APIs only about a DOI this file lacks: a new entry, or a
+ * DOI that changed. Everything else an entry says (venue and date overrides, marks,
+ * tags, image, links) is applied at build time on top, so editing it fetches nothing.
+ * `null` is a DOI both APIs answered with nothing (a preprint link that never
+ * resolved), kept so it is not asked about on every build.
+ *
+ * REFRESH_PUBLICATIONS=1 asks about every DOI again. discover.yaml does that each
+ * Monday and commits the result in its PR, which is how citation counts stay current.
+ *
+ * Keys and DOIs are sorted so the file diffs cleanly; DOIs the overlay no longer
+ * names are dropped whenever it is written.
+ */
+type Snapshot = Record<string, Record<string, Meta | null>>;
+
+function serialize(snapshot: Snapshot): string {
+  const sorted = (o: Record<string, any>) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
+  const out: Snapshot = {};
+  for (const [key, dois] of Object.entries(sorted(snapshot))) out[key] = sorted(dois);
+  return `${JSON.stringify(out, null, 2)}\n`;
+}
+
+export function publications(
+  file = 'src/data/publications.yaml',
+  snapshotFile = file.replace(/\.ya?ml$/, '.resolved.json'),
+): Loader {
   return {
     name: 'publications',
     async load({ store, logger, parseData, generateDigest }) {
       const overlay = parse(readFileSync(file, 'utf8')) as OverlayEntry[];
-      logger.info(`${overlay.length} curated publications`);
-      let fetched = 0;
+      const refresh = /^(1|true|yes)$/i.test(process.env.REFRESH_PUBLICATIONS ?? '');
+      const before = existsSync(snapshotFile) ? readFileSync(snapshotFile, 'utf8').replace(/\r\n/g, '\n') : '';
+      const snapshot: Snapshot = before ? JSON.parse(before) : {};
+      const next: Snapshot = {};
+      const asked: string[] = [];
+      let reused = 0;
+      logger.info(`${overlay.length} curated publications${refresh ? '; REFRESH_PUBLICATIONS is set, so every DOI is fetched again' : ''}`);
+
+      /** The metadata for one of an entry's DOIs: from the snapshot when it has it (and
+       *  this is not a refresh), otherwise from the APIs. Whatever the build uses is
+       *  carried into the next snapshot, except a fallback the APIs never confirmed. */
+      async function lookup(key: string, ref: Ref): Promise<Meta | null> {
+        const doi = ref.doi.toLowerCase();
+        const held = snapshot[key] ?? {};
+        const has = Object.hasOwn(held, doi);
+        const keep = (meta: Meta | null) => ((next[key] ??= {})[doi] = meta);
+        if (has && !refresh) {
+          reused++;
+          return keep(held[doi]);
+        }
+        asked.push(`${key} (${ref.doi})`);
+        const { meta, complete } = await resolve(ref, logger);
+        // A complete answer replaces what the snapshot held, unless it would replace a
+        // record with nothing: a DOI does not stop existing, an API has a bad day.
+        if (complete && (meta || !held[doi])) return keep(meta);
+        if (has) {
+          logger.warn(
+            `${key}: ${ref.doi} ${complete ? 'resolved to nothing' : 'got no full answer from OpenAlex and Crossref'}; keeping the snapshot's record`,
+          );
+          return keep(held[doi]);
+        }
+        // Nothing to fall back on: use the fallback for this build only, so the next
+        // build asks again rather than inheriting it.
+        logger.warn(`${key}: ${ref.doi} got no full answer from OpenAlex and Crossref; not recording it`);
+        return meta;
+      }
 
       for (const entry of overlay) {
-        const digest = generateDigest(entry);
-        const cached = store.get(entry.key);
-        if (cached?.digest === digest) continue;
-
         let meta: Meta | null = null;
         let preprintMeta: Meta | null = null;
 
@@ -227,20 +306,18 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
           // A conference paper (NeurIPS, a NeurIPS workshop) has no DOI, so its version
           // of record is a manual block, but it often has an arXiv preprint: link it the
           // same way a journal article links its bioRxiv version.
-          if (entry.preprint) {
-            preprintMeta = await resolve(entry.preprint, logger);
-            fetched++;
-          }
+          if (entry.preprint) preprintMeta = await lookup(entry.key, entry.preprint);
         } else {
           const primary = entry.published ?? entry.preprint;
           if (!primary) throw new Error(`${entry.key}: needs published, preprint or manual`);
-          meta = await resolve(primary, logger);
-          fetched++;
+          meta = await lookup(entry.key, primary);
           if (!meta) throw new Error(`${entry.key}: could not resolve ${primary.doi}`);
-          if (entry.published && entry.preprint) {
-            preprintMeta = await resolve(entry.preprint, logger);
-            fetched++;
-          }
+          if (entry.published && entry.preprint) preprintMeta = await lookup(entry.key, entry.preprint);
+        }
+        // A preprint beside a published or manual version is a link; alone, it is the
+        // entry itself and has already failed loudly above.
+        if (entry.preprint && (entry.published || entry.manual) && !preprintMeta) {
+          logger.warn(`${entry.key}: preprint ${entry.preprint.doi} does not resolve; listed without its preprint link`);
         }
 
         const authors = meta.authors ?? [];
@@ -269,9 +346,32 @@ export function publications(file = 'src/data/publications.yaml'): Loader {
               : undefined,
           },
         });
-        store.set({ id: entry.key, data, digest });
+        // Every entry is rebuilt from the overlay and the snapshot on every run (no
+        // network, so it costs nothing), which keeps the store in step with both.
+        store.set({ id: entry.key, data, digest: generateDigest(data) });
       }
-      logger.info(`resolved ${fetched} records from the API (rest cached)`);
+      // An entry taken out of the overlay leaves the site, even with a warm store.
+      const keys = new Set(overlay.map((e) => e.key));
+      for (const id of store.keys()) if (!keys.has(id)) store.delete(id);
+
+      logger.info(`${reused} DOIs from ${snapshotFile}, ${asked.length} fetched from OpenAlex/Crossref`);
+      if (asked.length && !refresh) {
+        const msg =
+          `${asked.length} DOI(s) not in ${snapshotFile} were fetched: ${asked.join(', ')}. ` +
+          (process.env.CI
+            ? 'Build locally and commit the updated file, or every CI build will fetch them again.'
+            : 'Commit the updated file with the overlay change.');
+        logger.warn(msg);
+        if (process.env.GITHUB_ACTIONS) console.log(`::warning file=${snapshotFile}::${msg}`);
+      }
+
+      const after = serialize(next);
+      if (after !== before) {
+        // In CI the copy is thrown away, and nothing depends on it: a later build
+        // just fetches the same DOIs again.
+        writeFileSync(snapshotFile, after);
+        logger.info(`updated ${snapshotFile}`);
+      }
     },
   };
 }

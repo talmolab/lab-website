@@ -384,6 +384,11 @@ rm -f node_modules/.astro/data-store.json
 It is in `node_modules/.astro/`, **not** `.astro/`. Deleting the latter looks like
 it should work and does not.
 
+Publications are the exception: they rebuild from the overlay and
+`src/data/publications.resolved.json` on every run, so clearing the store changes
+nothing there. Paper metadata changes only on a refresh,
+`REFRESH_PUBLICATIONS=1 npx astro sync` (see the `add-publication` skill).
+
 ### 4. Both themes
 
 The palette has three states — explicit light, explicit dark, and system. Check

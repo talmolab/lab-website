@@ -8,10 +8,16 @@ allowed-tools: Read, Write, Edit, Bash, WebFetch, AskUserQuestion, Glob, Grep
 # Add or Update a Publication
 
 Publications live in **`src/data/publications.yaml`**, the curated overlay.
-Metadata is *not* stored there — titles, authors, venues and dates are resolved
-from OpenAlex at build time by `src/loaders/openalex.ts`. The overlay records only
-what an API cannot know: whether to list a work at all, the preprint↔published
-pairing, thumbnails, tags, and extra links.
+Metadata is *not* written there — titles, authors, venues and dates are resolved
+from OpenAlex (Crossref as the fallback) by `src/loaders/openalex.ts`. The overlay
+records only what an API cannot know: whether to list a work at all, the
+preprint↔published pairing, thumbnails, tags, and extra links.
+
+What the APIs answered is committed beside it, in
+**`src/data/publications.resolved.json`** (keyed by overlay key, then DOI). A build
+asks the APIs only about a DOI that file lacks and writes the answer back, so commit
+it together with the overlay change. Never edit a record by hand: put a correction
+in the overlay, which wins for every field it sets.
 
 ## The overlay is an allowlist
 
@@ -35,8 +41,10 @@ bug.
      published: { doi: "10.1016/j.biopsych.2023.02.038" }
    ```
 
-3. `npm run build`. The loader resolves the rest. If the DOI cannot be resolved the
-   build fails loudly rather than shipping a blank entry.
+3. `npm run build`. The loader resolves the rest and adds the DOI's record to
+   `src/data/publications.resolved.json`; the log says `1 fetched from
+   OpenAlex/Crossref`. Commit both files. If the DOI cannot be resolved the build fails
+   loudly rather than shipping a blank entry.
 
 Optional fields: `image` (relative to `public/images/`, or an absolute URL),
 `tags`, `highlight: true`, `links: [{ label, url }]`, and `equal` / `corresponding` /
@@ -216,16 +224,32 @@ What it produces:
   the full report, including the items that need a human decision and so are never
   staged. Work through it, then leave it open for next week.
 
+The same run refetches every DOI already listed (`REFRESH_PUBLICATIONS=1`), which is
+how citation counts and corrected records reach the site: its PR carries the updated
+`src/data/publications.resolved.json` and a summary of what changed in it.
+
 ## After editing
 
 ```bash
-rm -f node_modules/.astro/data-store.json   # loader results are cached
 npm run build
+git add src/data/publications.yaml src/data/publications.resolved.json
 ```
 
-The cache is keyed on each overlay entry, so an edit normally refetches on its own.
-Clear it explicitly if a change to the *loader* appears to do nothing — and note the
-store is in `node_modules/.astro/`, not `.astro/`.
+`publications.resolved.json` is keyed on each entry's DOIs, so a new or changed DOI
+is fetched on its own and nothing else is. Editing anything else in an entry (marks,
+tags, venue or date overrides, links) fetches nothing. A DOI dropped from the overlay
+drops out of the file. There is no cache to clear.
+
+To refetch on purpose:
+
+```bash
+REFRESH_PUBLICATIONS=1 npx astro sync   # every DOI (needs a minute; set OPENALEX_API_KEY)
+```
+
+or delete one entry's record from the JSON and build. A change to the *loader*'s
+lookups (`openalexByDoi`, `crossrefByDoi`, `resolve`) reaches the recorded metadata
+only on a refresh; a change to what it builds from them (`tidyVenue`, the marks)
+applies on the next build.
 
 Check the result on `/publications/` and in `/publications.json`,
 `/publications.bib` and `/publications.csl.json`, which are generated from the same

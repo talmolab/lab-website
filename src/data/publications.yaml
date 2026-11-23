@@ -22,8 +22,10 @@
 #               A name not in the author list fails the build. Copy all three from the
 #               publisher's page; never guess.
 #
-# Metadata is NOT duplicated here. Titles, authors, venues and dates come from the
-# API at build time; anything written here overrides them.
+# Metadata is NOT duplicated here. Titles, authors, venues and dates come from OpenAlex
+# and Crossref, recorded per DOI in publications.resolved.json beside this file; anything
+# written here overrides them. A build fetches only DOIs that file lacks and adds them,
+# so commit it with any change to a DOI here.
 
 # Added 2026-11-20 from the Google Scholar profile and the discovery report.
 # Thumbnails added 2026-11-22 (figure source noted on each); an entry without one
