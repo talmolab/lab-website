@@ -10,6 +10,7 @@ appointments:
 links:
   email: "lscaria@salk.edu"
   linkedin: "lara-scaria-7a289018a"
+  orcid: "0000-0003-2417-9036"
 ---
 
 Lara Scaria is a PhD student in the UC San Diego Neurosciences Graduate Program, co-advised
