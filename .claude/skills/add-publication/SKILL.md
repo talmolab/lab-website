@@ -42,7 +42,7 @@ bug.
    ```
 
 3. `npm run build`. The loader resolves the rest and adds the DOI's record to
-   `src/data/publications.resolved.json`; the log says `1 fetched from
+   `src/data/publications.resolved.json`; the log says `1 requested from
    OpenAlex/Crossref`. Commit both files. If the DOI cannot be resolved the build fails
    loudly rather than shipping a blank entry.
 

@@ -24,7 +24,15 @@ try {
 const after = parse(existsSync(FILE) ? readFileSync(FILE, 'utf8') : '');
 
 const FIELDS = ['title', 'authors', 'venue', 'date', 'doi', 'url', 'type'];
-const show = (v) => (v === undefined ? '(none)' : Array.isArray(v) ? `${v.length} authors` : `"${v}"`);
+const show = (v) => (v === undefined ? '(none)' : `"${v}"`);
+/** One field's change, in words. Author lists say who came and went, since a respelt
+ *  name is exactly what breaks an `equal`/`corresponding`/`senior` mark. */
+function describe(f, a, b) {
+  if (f !== 'authors') return `${f} ${show(a)} → ${show(b)}`;
+  const [was, is] = [a ?? [], b ?? []];
+  const moves = [...was.filter((n) => !is.includes(n)).map((n) => `−${n}`), ...is.filter((n) => !was.includes(n)).map((n) => `+${n}`)];
+  return `authors ${moves.length ? moves.join(', ') : 'reordered'}`;
+}
 const flat = (snap) =>
   new Map(Object.entries(snap).flatMap(([key, dois]) => Object.entries(dois).map(([doi, m]) => [`${key} ${doi}`, m])));
 
@@ -47,7 +55,7 @@ for (const [id, m] of now) {
     continue;
   }
   const changed = FIELDS.filter((f) => JSON.stringify(o[f]) !== JSON.stringify(m[f]));
-  if (changed.length) other.push(`${label}: ${changed.map((f) => `${f} ${show(o[f])} → ${show(m[f])}`).join('; ')}`);
+  if (changed.length) other.push(`${label}: ${changed.map((f) => describe(f, o[f], m[f])).join('; ')}`);
   if (o.citations !== m.citations) {
     moved++;
     delta += (m.citations ?? 0) - (o.citations ?? 0);

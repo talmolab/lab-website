@@ -281,7 +281,17 @@ export function publications(
           return keep(held[doi]);
         }
         asked.push(`${key} (${ref.doi})`);
-        const { meta, complete } = await resolve(ref, logger);
+        let result: Resolved;
+        try {
+          result = await resolve(ref, logger);
+        } catch (e) {
+          // The network never answered. With nothing to fall back on the build fails, as
+          // it always has; on a refresh, last week's record stands.
+          if (!has) throw e;
+          logger.warn(`${key}: ${String(e)}; keeping the snapshot's record`);
+          return keep(held[doi]);
+        }
+        const { meta, complete } = result;
         // A complete answer replaces what the snapshot held, unless it would replace a
         // record with nothing: a DOI does not stop existing, an API has a bad day.
         if (complete && (meta || !held[doi])) return keep(meta);
@@ -354,7 +364,7 @@ export function publications(
       const keys = new Set(overlay.map((e) => e.key));
       for (const id of store.keys()) if (!keys.has(id)) store.delete(id);
 
-      logger.info(`${reused} DOIs from ${snapshotFile}, ${asked.length} fetched from OpenAlex/Crossref`);
+      logger.info(`${reused} DOIs from ${snapshotFile}, ${asked.length} requested from OpenAlex/Crossref`);
       if (asked.length && !refresh) {
         const msg =
           `${asked.length} DOI(s) not in ${snapshotFile} were fetched: ${asked.join(', ')}. ` +
