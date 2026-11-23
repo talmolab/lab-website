@@ -1,67 +1,114 @@
 # talmolab.org
 
-The website of the lab of Talmo Pereira at the Salk Institute.
+The website of the Talmo Lab at the Salk Institute: research, publications, software
+and people. It is a static site built with [Astro](https://astro.build) and served by
+Cloudflare Workers.
 
-**Live:** https://talmolab.org, deployed from `main` on every merge.
-**Preview:** https://talmolab-next.talmo-lab.workers.dev, the same build kept out of
-search indexes.
+- **Live:** https://talmolab.org
+- **Preview:** https://talmolab-next.talmo-lab.workers.dev (the same site, hidden from
+  search engines)
 
-This site replaced the Jekyll site in
-[`talmolab/lab-website-legacy`](https://github.com/talmolab/lab-website-legacy) (named `lab-website` until then) on 2026-11-20. That repo
-still serves the old site on GitHub Pages as the rollback for a few weeks;
-[`docs/cutover.md`](docs/cutover.md) records how the switch was made and how to undo it.
-[`docs/parity.md`](docs/parity.md) maps every page, image and file of the old site to
-where it lands here, and `scripts/check-urls.sh` holds every old URL to it.
+## How changes reach the site
 
-## Commands
+Every change goes through a pull request, and merging is publishing: there is no
+separate deploy step.
+
+1. **Open a pull request.** GitHub builds the site and checks the content. A misspelled
+   member name, a missing image or a malformed entry fails the build at this point.
+   `main` only accepts pull requests whose build passes.
+2. **Merge it.** The site rebuilds, goes to the preview, has every address checked, and
+   only then goes to talmolab.org, where the checks run once more. This takes a few
+   minutes.
+
+Pull requests are built but not put online anywhere. To see a change before merging,
+run the site locally (below).
+
+## What runs on its own
+
+| Workflow | When | What it does |
+|---|---|---|
+| **Deploy** | Every merge to `main`, and Mondays | Builds and publishes the site. The Monday rebuild picks up new paper and repository details without needing a commit. |
+| **Discover** | Mondays | Looks for new papers by the lab (OpenAlex, Crossref) and new releases of the lab's software (GitHub). Proposes them in a pull request, and keeps the **Discovery report** issue up to date with anything that needs a decision. It never publishes anything itself. |
+| **Member update** | When a *Lab member update* issue is opened or edited | Turns the form into a pull request that edits that person's entry on the team page. |
+
+The workflow files are in [`.github/workflows/`](.github/workflows/).
+
+## Making common changes
+
+**Joining the lab, updating your entry, or leaving.** Open a
+[Lab member update](../../issues/new?template=member.yml) issue. A pull request appears
+a few minutes later; edit the issue to change it. A maintainer checks it and merges.
+The form works for people with access to this repository.
+
+**Publications.** [`src/data/publications.yaml`](src/data/publications.yaml) is the list
+of papers on the site: a paper that is not in it does not appear. An entry is a
+permanent key and a DOI, plus the preprint's DOI if there is one. Title, authors and
+venue are fetched when the site builds. To add a thumbnail, run
+`node scripts/paper-thumb.mjs <key> <figure.png>`.
+
+**Software.** [`src/data/repos.yaml`](src/data/repos.yaml) lists the repositories on the
+Tools page, in the order shown. Descriptions can be written there; the rest comes from
+GitHub.
+
+**Research.** One Markdown file per research direction, in
+[`src/content/areas/`](src/content/areas/).
+
+**Videos.** `scripts/encode-clip.sh <source> <name>` makes a silent web video and a
+poster image in `public/media/`, and prints the lines to paste into a research area or
+a repository entry.
+
+All of this is checked when the site builds (the schema is in
+[`src/content.config.ts`](src/content.config.ts)), so a typo in a name, DOI or file path
+fails the build rather than breaking a page.
+
+If you use Claude Code, [`.claude/skills/`](.claude/skills/) has guided routines for
+adding a member or a publication, making a roster, and testing locally.
+
+## Running it locally
+
+You need Node 24.
 
 ```bash
-npm run dev        # astro dev on :4321
-npm run build      # astro check && astro build
-npm run preview    # wrangler dev over dist/, the way Workers serves it
-npm run deploy     # build, then wrangler deploy to the preview
-
-./scripts/check-urls.sh <base>         # every URL the live site serves still resolves
-./scripts/check-production.sh <base>   # the build is the production one
+npm ci
+export GITHUB_TOKEN=$(gh auth token)   # the Tools page calls the GitHub API
+npm run dev                            # http://localhost:4321
 ```
 
-Set `GITHUB_TOKEN` (e.g. `export GITHUB_TOKEN=$(gh auth token)`) before building: the tools
-page enriches `src/data/repos.yaml` from the GitHub API, and unauthenticated calls run out
-quickly. Publications come from OpenAlex and need no key.
+| Command | Does |
+|---|---|
+| `npm run dev` | Development server that reloads as you edit |
+| `npm run build` | Checks types and content, then builds the site into `dist/` |
+| `npm run preview` | Serves `dist/` the way Cloudflare does, redirects included |
+| `./scripts/check-urls.sh <url>` | Checks that every address in `test/live-urls.txt` still resolves |
 
-## Keeping it current
+Without `GITHUB_TOKEN`, the GitHub API runs out of anonymous requests after a few
+builds. Paper details come from OpenAlex, which needs no key but slows down repeated
+requests; set `OPENALEX_API_KEY` if you rebuild often.
 
-- **Lab members** open a [Lab member update](../../issues/new?template=member.yml) issue to
-  join the team page, update their entry, record a new role or record leaving. A workflow
-  turns it into a pull request; a maintainer reviews and merges.
-- **Publications** are discovered weekly from OpenAlex and Crossref. New papers and
-  preprint links arrive as a pull request; anything that needs a decision is listed in
-  the standing "Discovery report" issue.
-- **Deploys** happen on every merge to `main`, and on Mondays to refresh citation counts:
-  to the preview, then to talmolab.org, each followed by the URL checks. A merge is a
-  release, so `main` takes changes only through pull requests with a passing build.
+## Where things are
 
-`CLAUDE.md` has the details.
+```
+src/content/people/   one file per lab member, past and present
+src/content/areas/    the research directions
+src/data/             publications, software, projects, graduate programs
+src/pages/            one file per page, including the text of pages like Home and Join
+src/styles/global.css the site's shared styles
+public/               files served as they are: videos, icons, redirects
+brand/                logo, colours and type (see brand/README.md)
+scripts/              the discovery, member, thumbnail, video and URL-check scripts
+```
 
-## What came from where
+## Old links
 
-Content, schemas and loaders are carried over from `lab-website-legacy` (branch `astro-migration`),
-so the rules in its `CLAUDE.md` still hold: alumni status is derived from `end`, the
-publications overlay is an allowlist, keys are permanent. `docs/parity.md` maps every page
-of the live site to this one.
+Addresses from the lab's previous website keep working. [`test/live-urls.txt`](test/live-urls.txt)
+lists every one of them and [`public/_redirects`](public/_redirects) points each to its
+new home. Every deploy checks the whole list, so a change that breaks an old link never
+reaches talmolab.org.
 
-Media is only what talmolab.org already shows: lab photos, portraits, paper thumbnails,
-and three research figures (two GIFs, re-encoded as muted loops, and a diagram). New
-footage is added one clip at a time: `scripts/encode-clip.sh`, then a `media:` entry in
-an area or a repo (see `CLAUDE.md`).
+## More detail
 
-## Design
-
-Light paper first, with a dark theme that follows the system or the header switch. v003
-brand: ink `#1e1a29`, logo violet `#8b6dd2`, links `#805fc9` on paper and `#8c6bd6` on the
-dark ground. The logo is always the SVG lockup. Type is Source Sans 3 alone, self-hosted:
-no serif, no monospace.
-
-One structure recurs on every page: a narrow label column beside the content (`.ledger`
-in `src/styles/global.css`, which holds the whole system). Clips play only while on screen,
-never automatically under reduced motion, and each has its own pause button.
+- [`CLAUDE.md`](CLAUDE.md): the maintainer's reference, with the content rules, design
+  rules and known pitfalls.
+- [`brand/README.md`](brand/README.md): logo, colours and typography.
+- [`docs/cutover.md`](docs/cutover.md): how talmolab.org is connected to Cloudflare, and
+  how to switch back to the old site.
