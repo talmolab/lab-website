@@ -9,7 +9,6 @@ appointments:
     coAdvisor: "Eiman Azim"
 links:
   linkedin: "gniyo"
-  scholar: "https://scholar.google.com/citations?user=npJwqsQAAAAJ"
 ---
 
 Grace Niyo is a postdoctoral fellow who joined the lab in August 2026, jointly with the Azim
