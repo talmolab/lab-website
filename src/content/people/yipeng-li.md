@@ -14,7 +14,9 @@ appointments:
     coAdvisor: "Kuo-Fen Lee"
     program: ngp
 links:
+  email: ["leli@salk.edu", "y9li@health.ucsd.edu"]
   github: "LeoMeow123"
+  orcid: "0009-0000-9268-1306"
 ---
 
 Yipeng "Leo" Li is a PhD student in the UC San Diego Neurosciences Graduate Program,
