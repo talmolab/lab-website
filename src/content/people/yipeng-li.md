@@ -1,5 +1,6 @@
 ---
 name: "Yipeng Li"
+image: ../../assets/people/yipeng-li.jpg
 # Goes by Leo; his Salk account is in that name.
 aliases: ["Leo Li"]
 projects: ["pheno"]
