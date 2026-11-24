@@ -1,5 +1,6 @@
 ---
 name: "Grace Niyo"
+image: ../../assets/people/grace-niyo.jpg
 projects: ["vnl"]
 appointments:
   - role: postdoc
