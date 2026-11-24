@@ -32,8 +32,9 @@ const initials = d.name.split(/\s+/).map((w) => w[0]).join('').slice(0, 2);
 
 const l = d.links ?? {};
 const strip = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const emails = l.email ? [l.email].flat() : [];
 const links = [
-  l.email && { label: 'Email', href: `mailto:${l.email}`, show: l.email },
+  ...emails.map((e) => ({ label: 'Email', href: `mailto:${e}`, show: e })),
   l['home-page'] && { label: 'Website', href: l['home-page'], show: strip(l['home-page']) },
   l.github && { label: 'GitHub', href: `https://github.com/${l.github}`, show: l.github },
   l.scholar && {

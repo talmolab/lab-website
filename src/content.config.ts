@@ -178,7 +178,8 @@ const people = defineCollection({
         .optional(),
       links: z
         .object({
-          email: z.string().optional(),
+          /** One address, or a list when someone needs more than one (Salk and UCSD). */
+          email: z.union([z.string(), z.array(z.string()).min(1)]).optional(),
           github: z.string().optional(),
           linkedin: z.string().optional(),
           /** A Bluesky handle ("talmo.bsky.social", or a custom domain), without the @. */

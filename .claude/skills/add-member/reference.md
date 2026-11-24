@@ -28,7 +28,7 @@ next:                                      # optional, for alumni
   what: "PhD in Brain and Cognitive Sciences"
   url: "https://bcs.mit.edu"
 links:                                     # all optional
-  email: "name@salk.edu"
+  email: "name@salk.edu"                   # or a list: ["name@salk.edu", "name@ucsd.edu"]
   github: "username"
   linkedin: "username"                     # or a full URL
   bluesky: "name.bsky.social"              # the handle, without the @
