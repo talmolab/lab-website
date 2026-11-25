@@ -96,7 +96,8 @@ guardrail on content.
   `###` headings in the prose are the direction's threads: the Research overview lists
   and links them, so keep them short and unique across areas.
   In `media:`, the first item leads: it opens the section (and is the home page's
-  figure). Every later item names the thread it illustrates, `thread: plant-roots` (the
+  figure, unless an optional `home:` item replaces it there, as virtual-biology's
+  landscape crop of its portrait turntable does). Every later item names the thread it illustrates, `thread: plant-roots` (the
   heading's slug); Research sets it beside that thread from 960 px and after the
   thread's text below that, and an unknown slug fails the build. List them in thread
   order.

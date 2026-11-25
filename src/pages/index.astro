@@ -40,7 +40,7 @@ const letters = 'abcdefghij';
       </div>
       <ol class="panel" role="list" style="list-style: none; padding: 0">
         {areas.map((a, i) => {
-          const m = a.data.media[0];
+          const m = a.data.home ?? a.data.media[0];
           return (
             <li class="panel-item" style={m ? `--ar: ${(m.width / m.height).toFixed(4)}` : '--ar: 2'}>
               <a href={`/research/#${a.id}`}>

@@ -3,11 +3,18 @@ name: "Virtual biology"
 summary: "Computational models that emulate biological systems closely enough to run experiments in simulation."
 goal: "Develop computational models that emulate biological systems faithfully enough to permit in silico experiments: ones that generate hypotheses we can test in the lab, and that are refined by the outcomes."
 order: 3
+home:
+  src: /media/mimic-mjx-turntable-wide.mp4
+  poster: /media/mimic-mjx-turntable-wide.jpg
+  width: 960
+  height: 768
+  alt: "A slow turntable around rendered body models of a hooded rat, a fruit fly, a stick insect, a translucent green C. elegans worm and a mouse forelimb with red muscles, posed on a blue checkered arena against black."
 media:
-  - src: /media/mimic-mjx-arena.jpg
-    width: 1600
-    height: 1114
-    alt: "Rendered body models of a hooded rat, a fruit fly, a stick insect, a translucent green C. elegans worm and a mouse forelimb with red muscles, posed on a blue checkered arena against black."
+  - src: /media/mimic-mjx-turntable.mp4
+    poster: /media/mimic-mjx-turntable.jpg
+    width: 1080
+    height: 1446
+    alt: "A slow turntable around rendered body models of a hooded rat, a fruit fly, a stick insect, a translucent green C. elegans worm and a mouse forelimb with red muscles, posed on a blue checkered arena against black."
     caption: "The five MIMIC-MJX body models, each posed from a frame of real motion."
   - src: /media/mimic-mjx-species.mp4
     thread: embodied-neuromechanics
