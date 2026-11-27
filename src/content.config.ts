@@ -281,6 +281,9 @@ const areas = defineCollection({
     order: z.number().default(99),
     /** The first item leads the area on Research and stands for it on Home. */
     media: z.array(mediaItem).default([]),
+    /** Stands for the area on Home instead of the first `media` item: for a lead
+     *  figure whose shape does not suit Home's row (a portrait clip, say). */
+    home: mediaItem.optional(),
     /** Repos (ids from repos.yaml, "owner/name") and papers (overlay keys) that belong
      *  to this area. reference() so a typo fails the build. */
     tools: z.array(reference('repos')).default([]),
